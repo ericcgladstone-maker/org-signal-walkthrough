@@ -1,4 +1,6 @@
-# Learning social network analysis by doing it
+# Analyzing Social Network Data
+
+*An interactive walkthrough using Org Signal, a browser-based environment I built for social network analysis*
 
 Eric Gladstone · teaching walkthrough · October 2026.
 

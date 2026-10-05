@@ -27,10 +27,12 @@
 .sp *, .sp *::before, .sp *::after { box-sizing: border-box; }
 
 /* ---- composition ---------------------------------------------------------
-   Up to 1400px of player width: stage full width, controls, then the passage in a
+   Up to 1040px of player width: stage full width, controls, then the passage in a
    centred reading column (the Talks page's ~1184px article shows it this way, with
    the stage at about 0.62 scale instead of 0.42 side by side).
-   From 1400px: stage and current passage side by side, ~71/29. */
+   From 1040px: stage and current passage side by side, ~71/29, as in Eric's
+   other talks (the Talks page embed is side by side, at Eric's request,
+   2026-10-05; Expand gives the larger stage with the passage as a caption). */
 .sp .sp-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -41,7 +43,7 @@
 .sp .sp-controls { grid-area: controls; }
 .sp .sp-full { grid-area: full; }
 .sp .sp-full.sp-sources { grid-area: sources; margin-top: 0; }
-@container (min-width: 1400px) {
+@container (min-width: 1040px) {
   .sp .sp-grid {
     grid-template-columns: minmax(0, 71fr) minmax(0, 29fr);
     column-gap: 32px;
@@ -185,7 +187,7 @@
 .sp .sp-tap { display: none; }
 
 /* stacked: the passage as a centred reading column, a little larger */
-@container (max-width: 1399.98px) {
+@container (max-width: 1039.98px) {
   .sp .sp-now { max-width: 46rem; width: 100%; justify-self: center; }
   .sp .sp-now__text p { font-size: 18px; line-height: 1.62; }
   .sp .sp-heading { font-size: 21px; }

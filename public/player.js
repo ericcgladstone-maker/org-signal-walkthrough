@@ -352,7 +352,7 @@
         t = deck.__time ? Math.min(deck.__time(), T[cur].duration) : 0; renderTime();
       }
       else if (playing) {
-        var held = deck.__holding && deck.__holding();
+        var held = (deck.__holding && deck.__holding()) || (speed > 2 && deck.__busy && deck.__busy());
         root.classList.toggle('sp-held', !!held);
         if (!held) t += dt * speed;
         if (t >= T[cur].duration) {

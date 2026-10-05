@@ -495,6 +495,7 @@
   /* ---- running actions -------------------------------------------------- */
   var running = { i: -1, k: -1, fast: true };
   var holding = 0;   // >0 while playback waits for the app (the player holds its clock)
+  var waitingClock = 0;   // >0 while a step waits for the player's clock (never hold the clock then)
   var hurry = false;
   function isFast() { return running.fast || hurry || STILL; }
   var ctx = {
@@ -680,7 +681,8 @@
         var ci = running.i, ck = running.k, c0 = cueOf(ci, ck), ps0 = (TL[ci] && TL[ci].paragraphs) || [];
         var c1 = ps0[ck + 1] ? ps0[ck + 1].at : (TL[ci] ? TL[ci].duration : c0 + 10);
         var target = c0 + a.share * (c1 - c0);
-        while (clock < target && !stale() && !hurry) await sleep(50);
+        waitingClock++;
+        try { while (clock < target && !stale() && !hurry) await sleep(50); } finally { waitingClock--; }
         return;
       case 'waitFor':
         if (typeof a.sel === 'function') { var until = Date.now() + (a.timeout || 30000); while (!a.sel(ctx) && Date.now() < until) await sleep(80); if (!a.sel(ctx)) fail('waitFor timed out'); }
@@ -893,6 +895,9 @@
   // The player holds its clock while this is true: a state is being prepared (behind the veil) or
   // playback waits for the app (an import, a generation).
   window.__holding = function () { return !!(ready && (resetting || holding > 0)); };
+  // True while a step is still running (cursor travel, clicks, loads). The player waits on it at
+  // reading speeds above 2x, so each step finishes before the next passage starts.
+  window.__busy = function () { return !!(ready && pumping && !waitingClock); };
   window.__cam = function () { return cam; };
   window.__frameDebug = function () {
     var sels = marks.filter(function (m) { return m.kind === 'hl' && m.sel && !m.opt.noFrame; }).map(function (m) { return m.sel; });

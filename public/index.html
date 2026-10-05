@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning social network analysis by doing it · Eric Gladstone</title>
+<meta name="description" content="A narrated walkthrough of doing network analysis with Org Signal: drawing small networks, interviewing, surveying a group, reading a Slack export, constructing ties, finding brokers and silos, classic datasets, and reporting a claim you can defend. Synthetic data and published classic studies only.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Learning social network analysis by doing it">
+<meta property="og:description" content="A narrated walkthrough of doing network analysis with Org Signal, from a drawn network to a claim you can defend.">
+<meta property="og:image" content="https://orgsignalwalkthrough.eric-c-gladstone.workers.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="player.css">
+<script src="embed.js"></script>
+<style>
+  @font-face{font-family:"Geist Variable";font-style:normal;font-weight:100 900;font-display:swap;src:url(app/assets/fonts/geist-latin-wght-normal.woff2) format("woff2-variations")}
+  @font-face{font-family:"Geist Mono Variable";font-style:normal;font-weight:100 900;font-display:swap;src:url(app/assets/fonts/geist-mono-latin-wght-normal.woff2) format("woff2-variations")}
+  :root { --sans: "Geist Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --mono: "Geist Mono Variable", ui-monospace, Menlo, monospace; }
+  html, body { margin: 0; background: #051521; }
+  main { max-width: 1600px; margin: 0 auto; padding: 16px; }
+  .talk-head { margin: 24px 0 28px; font-family: var(--sans); }
+  .talk-head .kicker { margin: 0 0 10px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #6FD8BE; }
+  .talk-head h1 { margin: 0 0 8px; font-size: 28px; font-weight: 600; letter-spacing: -0.015em; color: #F6FAFD; }
+  .talk-head p.meta { margin: 0; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: #9FB2C1; }
+  .embed main { padding: 0 6px 0 0; }
+  html.embed, .embed body { background: transparent; }
+  .embed .talk-head, .embed .sp-full { display: none; }
+  .sp optgroup { background: var(--sp-deep); color: var(--sp-muted); font-style: normal; }
+</style>
+</head>
+<body>
+<main>
+<header class="talk-head">
+  <p class="kicker">Talks · Network analysis, by doing it</p>
+  <h1>Learning social network analysis by doing it: a walkthrough of Org Signal</h1>
+  <p class="meta">Eric Gladstone · synthetic data and published classic studies; the organizations and people are fictional</p>
+</header>
+<!-- PLAYER START: this block is what an embedding page copies -->
+<div class="sp" data-sp="root">
+ <div class="sp-grid">
+  <div class="sp-stage" data-sp="stage">
+    <iframe data-sp="deck" src="stage/index.html" title="Org Signal, driven by the walkthrough" allow="fullscreen"></iframe>
+    <button type="button" class="sp-tap" data-sp="tap" aria-label="Enlarge the screen, with its text">⤢ Tap to enlarge</button>
+  </div>
+
+  <aside class="sp-now" aria-label="Text for the current passage">
+    <div class="sp-head" data-sp="head">
+      <p class="sp-chapter" data-sp="chapter"></p>
+      <h2 class="sp-heading" data-sp="heading"></h2>
+      <a class="sp-try" data-sp="try" href="https://orgsignal.graystoneindustries.co/" target="_blank" rel="noopener" hidden></a>
+    </div>
+    <p class="sp-kicker"><span class="sp-steps"><button type="button" class="sp-step" data-sp="pprev" aria-label="Previous passage in this part">‹</button><span data-sp="pos"></span><button type="button" class="sp-step" data-sp="pnext" aria-label="Next passage in this part">›</button></span></p>
+    <div class="sp-now__text" data-sp="now" aria-live="polite"></div>
+  </aside>
+
+  <div class="sp-controls">
+    <div class="sp-bar" role="group" aria-label="Walkthrough playback">
+      <button type="button" class="sp-btn" data-sp="prev" aria-label="Previous part" title="Previous">‹</button>
+      <button type="button" class="sp-btn sp-play" data-sp="play" aria-label="Play" title="Play">▶</button>
+      <button type="button" class="sp-btn" data-sp="next" aria-label="Next part" title="Next">›</button>
+      <div class="sp-track" data-sp="track" aria-hidden="true"></div>
+      <span class="sp-time"><span data-sp="elapsed">0:00</span> / <span data-sp="total">0:00</span></span>
+      <label class="sp-sr" for="sp-speed">Reading speed</label>
+      <select class="sp-select sp-speed" id="sp-speed" data-sp="speed" title="Reading speed">
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+        <option value="3">3×</option>
+        <option value="4">4×</option>
+      </select>
+    </div>
+    <div class="sp-where">
+      <label class="sp-sr" for="sp-jump">Jump to a chapter</label>
+      <select class="sp-quiet" id="sp-jump" data-sp="jump"></select>
+      <button type="button" class="sp-quiet" data-sp="restart" aria-label="Restart from the beginning">↺ Restart</button>
+      <button type="button" class="sp-quiet" data-sp="expand" aria-label="Show the walkthrough full screen, with its text">⤢ Expand</button>
+      <a class="sp-quiet sp-app" href="https://orgsignal.graystoneindustries.co/" target="_blank" rel="noopener">Open Org Signal ↗</a>
+      <button type="button" class="sp-quiet sp-caption" data-sp="caption" aria-pressed="true">Hide text</button>
+      <span class="sp-hint">The left side is Org Signal itself · click it or use ‹ › to step · Expand for a larger screen with the text</span>
+      <span class="sp-sr" data-sp="count" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <details class="sp-full">
+    <summary>Full text</summary>
+    <section class="sp-transcript" aria-label="Full text">
+      <div data-sp="prose"></div>
+    </section>
+  </details>
+ </div>
+</div>
+<script src="timeline.js"></script>
+<script src="player.js"></script>
+<!-- PLAYER END -->
+</main>
+</body>
+</html>

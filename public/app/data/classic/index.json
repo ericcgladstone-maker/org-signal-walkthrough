@@ -1,0 +1,615 @@
+{
+ "version": 1,
+ "generated": "2026-10-03",
+ "datasets": [
+  {
+   "id": "karate",
+   "nodes": 34,
+   "ties": 78,
+   "tiesBy": {
+    "tie": 78
+   },
+   "mode": "one",
+   "title": "Zachary's karate club",
+   "year": 1977,
+   "description": "Friendships among 34 members of a university karate club that later split into two groups following a conflict between the instructor and administrator.",
+   "relations": [
+    "friendship (interaction outside club meetings)"
+   ],
+   "directed": false,
+   "valued": true,
+   "timePoints": [],
+   "valuedNote": "Each tie carries the number of settings in which the two interacted (Zachary's strength, 1 to 7); it is the tie weight and the tie field \"contexts\".",
+   "knownAnswers": [
+    {
+     "key": "faction",
+     "meaning": "The club each member joined after the split: \"Mr. Hi\" (the instructor's new club, 17 members) or \"Officer\" (the administrator's, 17)."
+    }
+   ],
+   "findings": "Zachary observed the club from 1970 to 1972. A conflict between the instructor (\"Mr. Hi\") and the administrator (\"John A.\") split it into two clubs. Zachary modeled the network as a flow network and cut it at its weakest point (maximum flow, minimum cut); the cut predicted which club each member joined correctly for all but one member, person 9 (Zachary 1977).",
+   "assignment": {
+    "a": [
+     "A1",
+     "A4"
+    ],
+    "text": "Find the communities and compare them with the faction attribute (Groups, color by faction). Who are the brokers? Would you have predicted the split from the network alone?"
+   },
+   "citation": "Zachary, W. W. (1977). An information flow model for conflict and fission in small groups. Journal of Anthropological Research, 33(4), 452-473. https://doi.org/10.1086/jar.33.4.3629752",
+   "sourceUrls": [
+    "https://networkx.org/documentation/stable/reference/generated/networkx.generators.social.karate_club_graph.html",
+    "http://www-personal.umich.edu/~mejn/netdata/",
+    "https://networks.skewed.de/net/karate"
+   ],
+   "license": "Published in the original article; redistributed by networkx 3.2.1 (BSD-3-Clause), which ships this graph, and on Mark Newman's data page (\"free for scientific use\"). Bundled.",
+   "ethics": null,
+   "lookFor": [
+    "The Network header reads 34 people and 78 ties (density 0.139).",
+    "1 Mr. Hi has the highest betweenness (0.438) and 34 John A. the second (0.304): the two leaders whose conflict split the club. John A. has the most contacts (17), Mr. Hi 16.",
+    "In Groups, choose faction: E-I index -0.718, so most ties stay inside the side each member later joined.",
+    "Network finds 4 communities; 33 of the 34 members share a community with mostly their own faction. Who is the exception?"
+   ],
+   "distribution": "bundled",
+   "file": "karate.json",
+   "bytes": 8334
+  },
+  {
+   "id": "florentine",
+   "nodes": 16,
+   "ties": 35,
+   "tiesBy": {
+    "marriage": 20,
+    "business": 15
+   },
+   "mode": "one",
+   "title": "Padgett's Florentine families",
+   "year": 1993,
+   "description": "Marriage and business ties among leading families in fifteenth-century Florence, together with family wealth and representation on the city council. The network opens on marriage ties. Construction settings can switch to business ties or combine the two relations.",
+   "relations": [
+    "marriage",
+    "business"
+   ],
+   "directed": false,
+   "valued": false,
+   "timePoints": [],
+   "knownAnswers": [
+    {
+     "key": null,
+     "meaning": "A position, not a grouping: the Medici have the highest betweenness in the marriage network."
+    }
+   ],
+   "findings": "Padgett and Ansell (1993) argued that the Medici rose to power in the 1430s through their network position: they married into old patrician families and did business with newer families that were not tied to each other, so the Medici stood between groups that could reach each other only through them (\"robust action\"). The opposing oligarchs were densely intermarried among themselves.",
+   "assignment": {
+    "a": [
+     "A1",
+     "A2"
+    ],
+    "text": "Who connects the most families? Compare the number of marriage ties (degree) with betweenness: the Medici have 6 ties, the Strozzi 4 and the Guadagni 4, but betweenness separates them far more."
+   },
+   "citation": "Padgett, J. F., & Ansell, C. K. (1993). Robust action and the rise of the Medici, 1400-1434. American Journal of Sociology, 98(6), 1259-1319. https://doi.org/10.1086/230190. Data as subset by Breiger, R. L., & Pattison, P. E. (1986). Cumulated social roles. Social Networks, 8, 215-256.",
+   "sourceUrls": [
+    "https://networkx.org/documentation/stable/reference/generated/networkx.generators.social.florentine_families_graph.html",
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#padgett"
+   ],
+   "license": "UCINET IV collection (PADGETT.DAT, PADGW.DAT; no license stated). The marriage ties are identical to networkx 3.2.1 (BSD-3-Clause), which ships this graph. Bundled as facts from the published study, with the citation.",
+   "ethics": null,
+   "lookFor": [
+    "16 families and 20 marriage ties. Pucci married into none of the other families, so the network has 2 components.",
+    "The Medici have betweenness 0.452, about twice the next family (Guadagni, 0.221), but only 6 marriage ties against 4 for the Guadagni and the Strozzi.",
+    "In People, sort by Betweenness, then by Contacts: having many ties and standing between families are different things.",
+    "Switch the tie filter in Construction settings to business: 15 ties in 6 pieces, and the Barbadori (0.238) edge out the Medici (0.229). With both relations (27 family pairs) the Medici lead again at 0.413: Padgett's argument rests on the two networks together."
+   ],
+   "distribution": "bundled",
+   "file": "florentine.json",
+   "bytes": 5115
+  },
+  {
+   "id": "krackhardt",
+   "nodes": 21,
+   "ties": 312,
+   "tiesBy": {
+    "advice": 190,
+    "friendship": 102,
+    "reports to": 20
+   },
+   "mode": "one",
+   "title": "Krackhardt's high-tech managers",
+   "year": 1987,
+   "description": "Twenty-one managers in a small technology firm, with advice, friendship, and reporting relations plus each manager’s perception of the network.",
+   "relations": [
+    "advice",
+    "friendship",
+    "reports to"
+   ],
+   "directed": true,
+   "valued": false,
+   "timePoints": [],
+   "knownAnswers": [
+    {
+     "key": "level",
+     "meaning": "Formal rank: CEO (1), Vice president (4), Manager (16)."
+    },
+    {
+     "key": "department",
+     "meaning": "Department 1 to 4 (the CEO has none)."
+    }
+   ],
+   "findings": "Krackhardt (1987) asked each manager about every pair of managers, not only their own ties, and introduced cognitive social structures: the network as each person perceives it. He showed that different ways of combining the reports (each tie judged by the two people involved, or by the consensus of all) give different networks, and that individuals differ in how accurately they perceive the network.",
+   "assignment": {
+    "a": [
+     "A11"
+    ],
+    "text": "Open the managers' perceptions in Build > Perceived (advice). Who perceives the advice network best? Is the most accurate perceiver central in the advice network?"
+   },
+   "citation": "Krackhardt, D. (1987). Cognitive social structures. Social Networks, 9(2), 109-134. https://doi.org/10.1016/0378-8733(87)90009-8",
+   "sourceUrls": [
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#krackhardt",
+    "https://cran.r-project.org/src/contrib/Archive/NetData/"
+   ],
+   "license": "UCINET IV dataset collection (no license stated); attributes and reports-to from the NetData R package (GPL-2, ported from UCINET). Bundled as facts from the published study, with the citation.",
+   "ethics": "The managers are anonymous (numbers only).",
+   "lookFor": [
+    "21 managers; by default only advice ties (190). Add friendship (102) or reports-to (20) in Settings, tie fields.",
+    "Manager 2 is asked for advice by 18 of the 20 others, the most; Manager 18 has the highest advice betweenness (0.234).",
+    "Advice reciprocity is 0.474: fewer than half of the advice ties are returned.",
+    "Each manager also reported every other pair: open those perceptions in Build > Perceived. Scored against the consensus of the other 20 managers, Manager 8 perceives the advice network best (Jaccard 0.58)."
+   ],
+   "distribution": "bundled",
+   "file": "krackhardt.json",
+   "bytes": 23019,
+   "perceived": {
+    "file": "krackhardt-css.json",
+    "relations": [
+     "advice",
+     "friendship"
+    ]
+   }
+  },
+  {
+   "id": "sampson",
+   "nodes": 25,
+   "ties": 430,
+   "tiesBy": {
+    "like (T3)": 57,
+    "dislike (T4)": 47,
+    "like (T2)": 55,
+    "like (T4)": 56,
+    "dislike (T3)": 48,
+    "dislike (T2)": 49,
+    "like (T1)": 39,
+    "like (T5)": 21,
+    "dislike (T1)": 37,
+    "dislike (T5)": 21
+   },
+   "mode": "one",
+   "title": "Sampson's monastery",
+   "year": 1968,
+   "description": "Interpersonal nominations among novices in a New England monastery, observed at five points before and during a conflict that ended with several members leaving.",
+   "relations": [
+    "like",
+    "dislike"
+   ],
+   "directed": true,
+   "valued": true,
+   "timePoints": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5"
+   ],
+   "valuedNote": "Weight 3 is the first choice, 1 the third; the tie field \"choice\" says 1 for the first choice. The source has no dates, so the time point is the tie field \"wave\".",
+   "knownAnswers": [
+    {
+     "key": "faction",
+     "meaning": "Sampson's four groups at T4: Young Turks (7), Loyal Opposition (5), Outcasts (3), Interstitial (3)."
+    },
+    {
+     "key": "outcome",
+     "meaning": "Expelled (4), left (10) or stayed (4) after the crisis."
+    }
+   ],
+   "findings": "Sampson (1968) lived in the monastery while a conflict over reforms divided the novices: the Loyal Opposition (who had entered first) defended existing practice, the Young Turks (later arrivals) questioned it, and the Outcasts were not accepted by either. Shortly after T4 four novices were expelled and most of the rest left. Breiger, Boorman and Arabie (1975) found Sampson's groups again with blockmodels of these rankings.",
+   "assignment": {
+    "a": [
+     "A4",
+     "A10"
+    ],
+    "text": "At T4 (the default), do the communities match Sampson's factions? Then filter the wave to T2 and T3 (Settings, tie fields): when do the factions become visible?"
+   },
+   "citation": "Sampson, S. F. (1968). A novitiate in a period of change: An experimental and case study of social relationships. PhD dissertation, Cornell University. Coded by de Nooy, Mrvar and Batagelj (2005), Exploratory Social Network Analysis with Pajek, chapter 4.",
+   "sourceUrls": [
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/esna/sampson.htm",
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#sampson"
+   ],
+   "license": "Pajek ESNA collection (\"Copyright: No living author traced\") and UCINET IV collection (no license stated). Bundled as facts from the published study, with the citation.",
+   "ethics": "Real first names (religious names) of novices, as published.",
+   "lookFor": [
+    "By default: liking at T4, 56 ties. 25 novices appear over the five time points; the 7 not present at T4 show as isolated.",
+    "Liking ties at T1 to T5: 39, 55, 57, 56 and 21 (change the \"wave\" filter in Settings). T2 to T4 match UCINET's SAMPLK1 to SAMPLK3.",
+    "In Groups, choose faction: E-I index -0.357 and assortativity 0.542, so liking mostly stays inside Sampson's groups.",
+    "Gregory, Bonaventure and Winfrid are each liked by 6 others at T4, the most. Gregory was expelled a week later."
+   ],
+   "distribution": "bundled",
+   "file": "sampson.json",
+   "bytes": 39851
+  },
+  {
+   "id": "kapferer",
+   "nodes": 39,
+   "ties": 637,
+   "tiesBy": {
+    "sociational (Time 1)": 158,
+    "sociational (Time 2)": 223,
+    "instrumental (Time 1)": 109,
+    "instrumental (Time 2)": 147
+   },
+   "mode": "one",
+   "title": "Kapferer's tailor shop",
+   "year": 1972,
+   "description": "Interaction among 39 workers in a tailor shop in Kabwe, Zambia, observed twice across a seven-month period that included a wage dispute.",
+   "relations": [
+    "sociational",
+    "instrumental"
+   ],
+   "directed": "mixed",
+   "valued": false,
+   "timePoints": [
+    "Time 1 (June 1965)",
+    "Time 2 (January 1966)"
+   ],
+   "knownAnswers": [
+    {
+     "key": "time",
+     "meaning": "Tie field: an abortive strike followed Time 1, a successful strike followed Time 2."
+    }
+   ],
+   "findings": "Kapferer (1972) followed a dispute over wages in an Indian-owned tailor shop. An attempted strike after the first observation period failed; a strike after the second succeeded. Between the two periods the workers' sociational (friendly, sociable) ties increased from 158 to 223, and Kapferer related the successful mobilization to how the shop's network of relations had changed.",
+   "assignment": {
+    "a": [
+     "A10"
+    ],
+    "text": "In Time, compare Time 1 and Time 2: how much denser is the sociational network, and who gained the most ties? Then add the instrumental ties (Settings, tie fields)."
+   },
+   "citation": "Kapferer, B. (1972). Strategy and transaction in an African factory. Manchester University Press.",
+   "sourceUrls": [
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#kaptail",
+    "https://search.r-project.org/CRAN/refmans/ergm/html/kapferer.html"
+   ],
+   "license": "UCINET IV collection (no license stated); the UCI Network Data Repository copy says CC BY-NC-ND 2.5 unless the source says otherwise. Bundled as facts from the published study, with the citation.",
+   "ethics": "Workers' names as Kapferer published them.",
+   "lookFor": [
+    "39 workers. By default the sociational ties of both periods: 278 pairs.",
+    "Filter \"time\" to Time 1, then Time 2 (Settings, tie fields): sociational ties go from 158 to 223, density from 0.213 to 0.301.",
+    "Chisokone has the most sociational ties at Time 1 (24), Mukubwa at Time 2 (25).",
+    "Add the instrumental relation: 109 one-way ties at Time 1, 147 at Time 2."
+   ],
+   "distribution": "bundled",
+   "file": "kapferer.json",
+   "bytes": 60873
+  },
+  {
+   "id": "newcomb",
+   "nodes": 17,
+   "ties": 4080,
+   "tiesBy": {
+    "tie (week 0)": 272,
+    "tie (week 1)": 272,
+    "tie (week 2)": 272,
+    "tie (week 3)": 272,
+    "tie (week 4)": 272,
+    "tie (week 5)": 272,
+    "tie (week 6)": 272,
+    "tie (week 7)": 272,
+    "tie (week 8)": 272,
+    "tie (week 10)": 272,
+    "tie (week 11)": 272,
+    "tie (week 12)": 272,
+    "tie (week 13)": 272,
+    "tie (week 14)": 272,
+    "tie (week 15)": 272
+   },
+   "mode": "one",
+   "title": "Newcomb's fraternity",
+   "year": 1961,
+   "description": "Seventeen men who began as strangers lived together at the University of Michigan and ranked one another weekly from most to least liked.",
+   "relations": [
+    "preference ranking"
+   ],
+   "directed": true,
+   "valued": true,
+   "timePoints": [
+    "weeks 0-15 (week 9 missing)"
+   ],
+   "valuedNote": "Rank r (1 = most liked, 16 = least) becomes weight 17 - r, so a first choice weighs 16; \"rank\" and \"week\" are tie fields. By default only each man's top three choices are kept (a tie-field filter, rank at most 3); remove it in Settings to use the full rankings. Dates are a placeholder calendar (week 0 shown as the week of 24 Sep 1956); only the week numbers are in the source.",
+   "knownAnswers": [
+    {
+     "key": "week",
+     "meaning": "Tie field: the week of the ranking."
+    }
+   ],
+   "findings": "Newcomb (1961) studied how strangers become friends. Early liking followed proximity and first impressions; as the men came to know each other, they increasingly liked those whose attitudes agreed with their own, and the rankings settled into a stable structure. Nordlie (1958) analyzed this cohort's weekly rankings.",
+   "assignment": {
+    "a": [
+     "A10"
+    ],
+    "text": "In Time, follow the top-three choices week by week. Which mutual pairs form early and last? Does reciprocity rise as the men get to know each other?"
+   },
+   "citation": "Newcomb, T. M. (1961). The acquaintance process. Holt, Rinehart and Winston. Nordlie, P. G. (1958). A longitudinal study of interpersonal attraction in a natural group setting. PhD dissertation, University of Michigan.",
+   "sourceUrls": [
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#newfrat"
+   ],
+   "license": "UCINET IV collection (no license stated). Bundled as facts from the published study, with the citation.",
+   "ethics": "The men are anonymous (numbers only).",
+   "lookFor": [
+    "17 men ranked each other in 15 weeks (week 9 is missing): 272 ranked pairs a week, 4,080 in all.",
+    "By default only the top three choices count: 129 different ties over the term, reciprocity 0.558.",
+    "Top-three reciprocity within a single week does not rise: 0.471 in week 0 and 0.353 in week 15. Check it week by week in Time.",
+    "Student 9 and Student 17 were each in the top three of 14 different men at some point in the term, the most."
+   ],
+   "distribution": "bundled",
+   "file": "newcomb.json",
+   "bytes": 278732
+  },
+  {
+   "id": "wiring",
+   "nodes": 14,
+   "ties": 110,
+   "tiesBy": {
+    "games": 28,
+    "window arguments": 19,
+    "friendship": 13,
+    "antagonism": 19,
+    "helping": 24,
+    "job trading": 7
+   },
+   "mode": "one",
+   "title": "Bank wiring room",
+   "year": 1939,
+   "description": "Fourteen workers in Western Electric’s bank wiring room, with observed friendship, antagonism, games, help, arguments, and job trading.",
+   "relations": [
+    "games",
+    "window arguments",
+    "friendship",
+    "antagonism",
+    "helping",
+    "job trading"
+   ],
+   "directed": "mixed",
+   "valued": true,
+   "timePoints": [],
+   "valuedNote": "Job trading counts how often two men traded jobs (tie field \"times\"); the other relations are present or absent. By default only friendship is used (a tie-field filter); choose other relations in Settings.",
+   "knownAnswers": [
+    {
+     "key": "clique",
+     "meaning": "Homans's cliques: A (W1, W3, W4, S1, I1) and B (W7, W8, W9, S4); W2 and W6 were on the edges of A and B (clique_note); W5, S2 and I3 belonged to neither."
+    }
+   ],
+   "findings": "Roethlisberger and Dickson (1939) observed the room for months as part of the Hawthorne studies and found an informal organization that held output to a group norm. Homans (1950) read their observations as two cliques, one at the front of the room and one at the back, with a few men outside both; Breiger, Boorman and Arabie (1975) recovered a similar division with blockmodels.",
+   "assignment": {
+    "a": [
+     "A6"
+    ],
+    "text": "In Groups, choose clique: are the cliques closed (E-I index)? Which relations tie the cliques together and which keep them apart (filter by relation)?"
+   },
+   "citation": "Roethlisberger, F. J., & Dickson, W. J. (1939). Management and the worker. Harvard University Press. Homans, G. C. (1950). The human group. Harcourt, Brace.",
+   "sourceUrls": [
+    "http://vlado.fmf.uni-lj.si/pub/networks/data/ucinet/ucidata.htm#wiring",
+    "https://kuscholarworks.ku.edu/server/api/core/bitstreams/aaf32410-9e1c-49f5-a973-4154e3599ff2/content"
+   ],
+   "license": "UCINET IV collection (no license stated). Bundled as facts from the published study, with the citation.",
+   "ethics": "The men are known only by job codes.",
+   "lookFor": [
+    "14 men. By default only friendship (13 ties); games 28, antagonism 19, window arguments 19, helping 24 one-way, job trading 7 (Settings, tie fields).",
+    "In Groups, choose clique: 12 of the 13 friendships stay inside clique A or B (E-I index -0.846); the five men in neither clique have no friendships.",
+    "Switch the relation to antagonism: E-I index +0.579. Antagonism runs between the cliques and the men outside them, most of it between clique B and the outsiders (11 of the 19 ties)."
+   ],
+   "distribution": "bundled",
+   "file": "wiring.json",
+   "bytes": 10832
+  },
+  {
+   "id": "davis",
+   "nodes": 32,
+   "ties": 89,
+   "tiesBy": {
+    "tie": 89
+   },
+   "mode": "two",
+   "modes": {
+    "Women": 18,
+    "Events": 14
+   },
+   "title": "Davis's Southern Women",
+   "year": 1941,
+   "description": "Attendance by 18 women at 14 informal social events over a nine-month period. The original data form a two-mode network of women and events.",
+   "relations": [
+    "attended"
+   ],
+   "directed": false,
+   "valued": false,
+   "timePoints": [
+    "14 dated events, 23 Feb to 21 Nov 1936"
+   ],
+   "knownAnswers": [
+    {
+     "key": "dgg_group",
+     "meaning": "The authors' own two overlapping groups: women 1-9 and 9-18 (Ruth, number 9, in both)."
+    },
+    {
+     "key": "consensus_group",
+     "meaning": "Freeman's (2003) consensus of 21 analyses: women 1-9 and 10-18."
+    },
+    {
+     "key": "dgg_position",
+     "meaning": "Core, primary or secondary member, as Davis, Gardner and Gardner placed them."
+    }
+   ],
+   "findings": "Davis, Gardner and Gardner studied how informal social life follows social class in a Mississippi town. From the attendance table they described two overlapping groups of women, each with core, primary and secondary members. Breiger (1974) used the table to show the duality of persons and groups; Freeman (2003) compared 21 analyses of it and found a clear consensus: women 1-9 and 10-18.",
+   "assignment": {
+    "a": [
+     "A12"
+    ],
+    "text": "Analyze it as two-mode (women and events), then as a women-by-women projection. Do the communities match the consensus groups? Which events bring the groups together?"
+   },
+   "citation": "Davis, A., Gardner, B. B., & Gardner, M. R. (1941). Deep South: A social anthropological study of caste and class. University of Chicago Press. Freeman, L. C. (2003). Finding social groups: A meta-analysis of the Southern Women data. In Breiger, Carley & Pattison (eds.), Dynamic Social Network Modeling and Analysis, 39-97. National Academies Press.",
+   "sourceUrls": [
+    "https://networkx.org/documentation/stable/reference/generated/networkx.generators.social.davis_southern_women_graph.html",
+    "http://moreno.ss.uci.edu/85.pdf"
+   ],
+   "license": "networkx 3.2.1 (BSD-3-Clause), which ships this graph. Event dates and the groups are facts from the cited publications. Bundled.",
+   "ethics": "The names are those printed in the book.",
+   "lookFor": [
+    "Network reads 32 nodes: 18 women and 14 events, with 89 attendances.",
+    "Event E8 (16 Sep) drew 14 of the 18 women, the most; Evelyn Jefferson, Theresa Anderson and Nora Fayette attended 8 events each.",
+    "Network finds 2 communities: one holds 8 of women 1-9, the other all of women 10-18 and one of women 1-9. Which woman is it (People, community), and does consensus_group agree?",
+    "Show women only (Settings, two-mode): 139 pairs of women attended at least one event together."
+   ],
+   "distribution": "bundled",
+   "file": "davis.json",
+   "bytes": 9901
+  },
+  {
+   "id": "lesmis",
+   "nodes": 77,
+   "ties": 254,
+   "tiesBy": {
+    "tie": 254
+   },
+   "mode": "one",
+   "title": "Les Miserables co-appearances",
+   "year": 1993,
+   "description": "Characters in Victor Hugo’s novel, tied when they appear in the same chapter. Tie weight records the number of chapters shared.",
+   "relations": [
+    "appear in the same chapter"
+   ],
+   "directed": false,
+   "valued": true,
+   "timePoints": [],
+   "valuedNote": "The weight (and the tie field \"chapters\") is the number of chapters in which both characters appear.",
+   "knownAnswers": [
+    {
+     "key": null,
+     "meaning": "A position, not a grouping: Valjean has the most co-appearances and the highest betweenness."
+    }
+   ],
+   "findings": "Knuth compiled the co-appearances as a test graph for algorithms, not as a social study. Newman and Girvan (2004) used it to show community detection: the groups found follow the novel's subplots, with Jean Valjean at the center tying them together.",
+   "assignment": {
+    "a": [
+     "A1"
+    ],
+    "text": "Compare contacts (degree), strength (weighted by chapters) and betweenness: who is central by each? Why is Valjean central in all three, and who ranks very differently by betweenness?"
+   },
+   "citation": "Knuth, D. E. (1993). The Stanford GraphBase: A platform for combinatorial computing. Addison-Wesley. Network as compiled by Newman, M. E. J., & Girvan, M. (2004). Finding and evaluating community structure in networks. Physical Review E, 69, 026113.",
+   "sourceUrls": [
+    "http://www-personal.umich.edu/~mejn/netdata/",
+    "https://www-cs-faculty.stanford.edu/~knuth/sgb.html"
+   ],
+   "license": "Stanford GraphBase data are public domain (\"Public-domain sources for all programs and data\", Knuth). Bundled.",
+   "ethics": null,
+   "lookFor": [
+    "77 characters and 254 ties; the weights add up to 820 shared chapters.",
+    "Valjean: 36 contacts, strength 158 and betweenness 0.570, more than three times the next (Myriel, 0.177).",
+    "Myriel has only 10 contacts but the second-highest betweenness: he ties the opening chapters to the rest of the novel."
+   ],
+   "distribution": "bundled",
+   "file": "lesmis.json",
+   "bytes": 18736
+  },
+  {
+   "id": "dolphins",
+   "nodes": 62,
+   "ties": 159,
+   "tiesBy": {
+    "tie": 159
+   },
+   "mode": "one",
+   "title": "Lusseau's bottlenose dolphins",
+   "year": 2003,
+   "description": "Associations among 62 bottlenose dolphins in Doubtful Sound, New Zealand, based on repeated observations from 1994 to 2001.",
+   "relations": [
+    "frequent association"
+   ],
+   "directed": false,
+   "valued": false,
+   "timePoints": [],
+   "knownAnswers": [
+    {
+     "key": "split_2004",
+     "meaning": "The two groups of the first Girvan-Newman split (41 and 21), which Newman and Girvan (2004) report match a division Lusseau observed in the field."
+    }
+   ],
+   "findings": "Lusseau and colleagues found that this isolated community had an unusually large share of long-lasting associations. Newman and Girvan (2004) showed that the network splits into two groups that match a split observed in the field: for about two years the community separated along those lines after some dolphins on the boundary disappeared, and joined again when they returned.",
+   "assignment": {
+    "a": [
+     "A4"
+    ],
+    "text": "Find the communities and compare them with split_2004 (Groups). Which dolphins sit between the two groups (betweenness)? Would losing them split the community?"
+   },
+   "citation": "Lusseau, D., Schneider, K., Boisseau, O. J., Haase, P., Slooten, E., & Dawson, S. M. (2003). The bottlenose dolphin community of Doubtful Sound features a large proportion of long-lasting associations. Behavioral Ecology and Sociobiology, 54, 396-405. https://doi.org/10.1007/s00265-003-0651-y",
+   "sourceUrls": [
+    "http://www-personal.umich.edu/~mejn/netdata/",
+    "https://networks.skewed.de/net/dolphins"
+   ],
+   "license": "Mark Newman's data page, posted with David Lusseau's permission, \"free for scientific use\". Bundled.",
+   "ethics": null,
+   "lookFor": [
+    "62 dolphins and 159 ties (density 0.084).",
+    "In Groups, choose split_2004: only 6 of the 159 ties cross between the two groups (E-I index -0.925).",
+    "SN100 has the highest betweenness (0.248), then Beescratch (0.213): each has ties into both groups. Newman and Girvan relate the split seen in the field to the disappearance of dolphins on the boundary between the groups."
+   ],
+   "distribution": "bundled",
+   "file": "dolphins.json",
+   "bytes": 11219
+  },
+  {
+   "id": "enron",
+   "nodes": 148,
+   "ties": 21052,
+   "tiesBy": {
+    "tie": 21052
+   },
+   "mode": "one",
+   "title": "Enron email (core employees, headers only)",
+   "year": 2004,
+   "description": "Email headers among the 148 Enron employees whose mailboxes were released, covering 1998 to 2002. The included data contain sender, recipients, time, message identifiers, and thread identifiers. Message text and subject lines are excluded.",
+   "relations": [
+    "email (to, cc, bcc)"
+   ],
+   "directed": true,
+   "valued": false,
+   "timePoints": [
+    "Nov 1998 - Jun 2002"
+   ],
+   "knownAnswers": [
+    {
+     "key": "position",
+     "meaning": "Position from the EnronData.org custodian list, grouped: CEO or President, Vice President, Director, Manager, Trader, In-house lawyer, Employee, Not recorded (title has the detail)."
+    }
+   ],
+   "findings": "Released by the US Federal Energy Regulatory Commission during its investigation of Enron, the corpus became the standard real email dataset. Klimt and Yang (2004) described it. Diesner, Frantz and Carley (2005) found that during the crisis of late 2001 the network was denser, more centralized and more connected than in normal times, and that communication spread across formal roles, bypassing the formal chain of command.",
+   "assignment": {
+    "a": [
+     "A8",
+     "A10"
+    ],
+    "text": "Build the network from To only, then To + Cc (Settings, rules): how do the top five change? In Time, what happens around October-December 2001?"
+   },
+   "citation": "Klimt, B., & Yang, Y. (2004). The Enron corpus: A new dataset for email classification research. ECML 2004. Diesner, J., Frantz, T. L., & Carley, K. M. (2005). Communication networks from the Enron email corpus. Computational and Mathematical Organization Theory, 11(3), 201-228. Corpus: Cohen, W. W., Enron Email Dataset (May 7, 2015 version), Carnegie Mellon University. Custodian names and titles: EnronData.org (CC BY 3.0 US).",
+   "sourceUrls": [
+    "https://www.cs.cmu.edu/~enron/",
+    "https://github.com/enrondata/enrondata/blob/master/data/misc/edo_enron-custodians-data.html"
+   ],
+   "license": "Made public by FERC; CMU distributes it \"as a resource for researchers\" with no license. Custodian names and titles: EnronData.org, CC BY 3.0 US. Bundled as headers only (who wrote to whom, and when), with the ethics note.",
+   "ethics": "These are real people's workplace communications, released during a public investigation without their consent; many were not involved in the wrongdoing. Some messages were removed at employees' request, and in 2026 forensic analyses questioned whether some mailboxes contain forged messages. This subset keeps only who wrote to whom and when (no text, no subjects), but the pattern of a named person's contacts is still personal: use it to learn methods, not to make claims about individuals.",
+   "lookFor": [
+    "148 people and 21,052 messages among them, Nov 1998 to Jun 2002: 2,440 directed ties.",
+    "Louise Kitchen and John Lavorato have the most contacts (61 each); Lavorato receives mail from the most colleagues (48).",
+    "Messages peak in October 2001 (1,813), the month Enron announced its losses and the SEC inquiry began.",
+    "Turn off the cc and bcc rules (Settings): the network keeps 2,292 of the 2,440 ties."
+   ],
+   "distribution": "bundled",
+   "file": "enron.json.gz",
+   "bytes": 617638
+  }
+ ]
+}

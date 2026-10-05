@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<title>Org Signal walkthrough · stage</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="stage.css">
+</head>
+<body>
+<!-- The stage: a 1920x1080 page the player scales to fit. The frozen Org
+     Signal build runs in #app at a 1600x900 CSS viewport, scaled 1.2 to fill
+     the stage; #cam zooms and pans it. #overlay draws the cursor, highlight
+     boxes and callouts above it, and catches pointer input so a visitor's
+     click steps the talk instead of changing the app. -->
+<div id="stage">
+  <div id="cam">
+    <!-- inert: the viewer reaches the app only through the player (M10); the engine dispatches its own events -->
+    <div id="appbox" inert><iframe id="app" title="Org Signal, driven by the talk" tabindex="-1"></iframe></div>
+  </div>
+  <div id="pip" hidden inert>
+    <div class="pip__bar"><span class="pip__dots"><i></i><i></i><i></i></span><span class="pip__title" id="pip-title">A respondent's browser</span></div>
+    <div class="pip__view"><iframe id="pipframe" title="Respondent's view" tabindex="-1"></iframe></div>
+  </div>
+  <div id="overlay" role="button" tabindex="0" aria-label="Step the walkthrough: Enter or Space shows the next passage">
+    <div id="hls" aria-hidden="true"></div>
+    <div id="cursor"><svg viewBox="0 0 28 28" width="34" height="34"><path d="M5 3 L5 23 L10.5 18 L14.2 26 L17.6 24.5 L14 16.6 L21.5 16.4 Z" /></svg></div>
+  </div>
+  <div id="card" hidden><p class="card__k" id="card-k"></p><p class="card__h" id="card-h"></p></div>
+  <div id="veil" hidden><p>Preparing this part of the walkthrough</p></div>
+</div>
+<script src="../timeline.js"></script>
+<script src="actions.js"></script>
+<script src="scenes/00-opening.js"></script>
+<script src="scenes/01-who-matters.js"></script>
+<script src="scenes/02-hand-calculation.js"></script>
+<script src="scenes/03-ego.js"></script>
+<script src="scenes/04-roster.js"></script>
+<script src="scenes/05-traces.js"></script>
+<script src="scenes/06-what-is-a-tie.js"></script>
+<script src="scenes/07-brokers.js"></script>
+<script src="scenes/08-silos.js"></script>
+<script src="scenes/09-karate.js"></script>
+<script src="scenes/10-perception.js"></script>
+<script src="scenes/11-claims.js"></script>
+<script src="engine.js"></script>
+</body>
+</html>

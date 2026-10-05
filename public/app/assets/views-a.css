@@ -1,0 +1,134 @@
+/* Network and People views (UX pass, 2026-10-02). Loaded after app.css. */
+
+/* ---------- measure names with a plain gloss (decision 3) ---------- */
+.metric-name{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.metric-name__gloss{font-size:.75rem;line-height:1.4;color:var(--text-muted);max-width:40ch}
+/* Glossary underlines only on hover and focus inside measure rows (V23). */
+.split__side .metric-row .tip-trigger{text-decoration-color:transparent}
+.split__side .metric-row .tip-trigger:hover,.split__side .metric-row .tip-trigger:focus-visible{text-decoration-color:var(--rule-strong)}
+.metric-row__val .swatch{margin-right:.3rem;vertical-align:-.05rem}
+
+/* ---------- network ---------- */
+.net-banner{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .9rem;padding:.6rem 0;margin-bottom:.75rem;border-block:1px solid var(--rule);font-size:.8125rem;color:var(--text-2)}
+.net-search__list{position:absolute;top:100%;left:0;right:0;z-index:20;list-style:none;margin:0;padding:0;background:var(--bg-deep);border:1px solid var(--rule-strong)}
+.net-search__list li{padding:.45rem .6rem;cursor:pointer;font-size:.85rem;color:var(--text-2)}
+.net-search__list li.is-active{background:rgba(111,216,190,.08);color:var(--text)}
+.net-sel__name{font-size:1.125rem;font-weight:600;letter-spacing:-.012em;color:var(--text);margin:0}
+.net-legend{padding-top:0}
+/* Many groups (highlight mode): the full list scrolls; groups past the eighth
+   sit indented under their "Other groups" row. "Not recorded" wears a ring so
+   it never reads as one more gray group. */
+.net-legend__lead{margin:0 0 .4rem}
+.legend--scroll{max-height:min(22rem,50vh);overflow-y:auto;overscroll-behavior:contain;padding-right:.35rem;border-block:1px solid var(--rule)}
+.legend__item--sub{padding-left:1.15rem}
+.legend__item--sub .swatch{width:.5rem;height:.5rem;margin-inline:.1rem}
+.legend__more{margin:.2rem 0 .2rem 1.15rem}
+.swatch--missing{box-shadow:inset 0 0 0 1.5px var(--text-muted)}
+@media (max-width:1060px){.legend--scroll{max-height:16rem}}
+.split__side > .section:first-child{border-top:0}
+.net-summary > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:.4rem;min-height:var(--target,1.5rem);margin-bottom:.4rem}
+.net-summary > summary::-webkit-details-marker{display:none}
+.net-summary > summary::after{content:'';width:.4rem;height:.4rem;border-right:1.5px solid var(--text-muted);border-bottom:1.5px solid var(--text-muted);transform:rotate(-45deg);margin-left:.2rem}
+.net-summary[open] > summary::after{transform:rotate(45deg) translateY(-.15rem)}
+.net-ties{list-style:none;margin:0 0 .5rem;padding:0}
+.net-ties li{padding:.3rem 0;border-bottom:1px solid var(--rule);font-size:.8125rem}
+.net-ties__btn{display:flex;width:100%;gap:.75rem;align-items:center;text-decoration:none}
+.net-ties__btn .grow{text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:.2em}
+.net-ties__btn:hover .grow,.net-ties__btn:focus-visible .grow{text-decoration-color:var(--accent)}
+.net-ties__btn .tnum{color:var(--text);margin-left:auto}
+.net-ties .metric-row__sub{display:block}
+.net-evidence{list-style:none;margin:0;padding:0}
+.net-evidence li{padding:.5rem 0;border-bottom:1px solid var(--rule);font-size:.8125rem}
+.net-export{display:inline-flex;align-items:center;gap:.6rem;white-space:nowrap}
+/* The selected person, right under the map on narrow screens, where the
+   side panel sits far below (S21). */
+.net-selbar{display:none}
+@media (max-width:1060px){
+  .net-selbar{display:flex;align-items:center;gap:.4rem 1rem;padding:.55rem 0;border-bottom:1px solid var(--rule);font-size:.875rem}
+  .net-selbar .grow{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+
+/* ---------- people ---------- */
+.people-cols{position:relative}
+.people-cols > summary{cursor:pointer;list-style:none;font-size:var(--fs-small,.875rem);font-weight:600;color:var(--accent);min-height:var(--target,1.5rem);display:inline-flex;align-items:center}
+.people-cols > summary::-webkit-details-marker{display:none}
+.people-cols__panel{position:absolute;z-index:30;top:100%;right:0;width:min(30rem,calc(100vw - 2rem));max-height:60vh;overflow:auto;background:var(--bg-deep);border:1px solid var(--rule-strong);padding:.8rem 1rem;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.people-cols__panel fieldset{border:0;padding:0;margin:0 0 .6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(12rem,1fr));gap:0 1rem}
+.people-cols__panel legend{padding:0;margin-bottom:.3rem}
+.stab{margin:0 0 1rem;padding:.75rem 0;border-block:1px solid var(--rule)}
+.stab__list{list-style:none;margin:.4rem 0 0;padding:0;display:grid;gap:.15rem}
+.stab__row{display:grid;grid-template-columns:minmax(7rem,13rem) minmax(8rem,1fr) 4.5rem;gap:.75rem;align-items:center;font-size:.8125rem}
+.stab__row .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.stab__bar{position:relative;height:14px}
+.stab__bar .axis{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rule)}
+.stab__bar .span{position:absolute;top:calc(50% - 1px);height:2px;background:var(--cat-1,#228f61)}
+.stab__bar .dot{position:absolute;top:calc(50% - 4px);width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--cat-1,#228f61);box-shadow:0 0 0 2px var(--bg)}
+.stab__row .tnum{text-align:right;color:var(--text-2)}
+.profile-skip{display:flex;flex-wrap:wrap;gap:.25rem 1rem;margin:0 0 .6rem}
+.profile-head{font-size:1.25rem;font-weight:600;letter-spacing:-.015em;margin:0}
+
+.stab > summary{cursor:pointer;list-style:none}
+.stab > summary::-webkit-details-marker{display:none}
+
+/* People table name cell: the name truncates; swatch and badges keep their size. */
+.vt-name{display:flex;align-items:center;gap:.4rem;min-width:0;max-width:100%}
+.vt-name__text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vt-name>:not(.vt-name__text){flex:none}
+
+/* ---------- Network: who stands out, verdicts, fragility (round 2) ---------- */
+.standout{margin:0 0 1rem;padding:.7rem 0 .8rem;border-block:1px solid var(--rule)}
+.standout .label{margin:0 0 .45rem}
+.standout__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.6rem 2rem}
+.standout__item{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.standout__q{font-size:.8125rem;color:var(--text-2)}
+.standout__a{font-size:1rem;font-weight:600;color:var(--text);overflow-wrap:anywhere}
+.standout__name{font-weight:600}
+.standout__v{font-weight:400;color:var(--text-2);font-variant-numeric:tabular-nums;margin-left:.25rem}
+.standout__sub{font-size:.75rem;color:var(--text-muted)}
+.standout__sub .tlink{font-size:.75rem}
+.metric-row .net-verdict{grid-column:1 / -1;margin-top:.3rem}
+.net-verdict .verdict__claim,.net-frag .verdict__claim{font-size:.8125rem;color:var(--text);margin:0}
+.net-verdict .verdict__plain,.net-frag .verdict__plain{font-size:.8125rem;color:var(--text-2);margin:.15rem 0 0}
+.net-verdict .verdict__details{margin:.15rem 0 0}
+.net-frag .label{margin-top:0}
+.net-frag .verdict{margin:.6rem 0 .4rem}
+.net-frag__table{width:100%;border-collapse:collapse;margin:.6rem 0 .3rem;font-size:.8125rem}
+.net-frag__table caption{text-align:left;margin-bottom:.3rem}
+.net-frag__table th,.net-frag__table td{padding:.3rem .4rem .3rem 0;border-bottom:1px solid var(--rule);text-align:right;font-variant-numeric:tabular-nums}
+.net-frag__table th[scope=row],.net-frag__table thead th:first-child{text-align:left;font-weight:400;color:var(--text-2)}
+.net-frag__table thead th{font-weight:600;color:var(--text-2);font-size:.75rem}
+
+/* ---------- People: dot key, stability readings, phone list (round 2) ---------- */
+.people-sorted{margin:0 0 .5rem}
+.dot-key{color:var(--text-muted)}
+.dot-key .nowrap{margin-left:.35rem}
+.dot-key .swatch{margin-right:.25rem}
+.stab__verdict .verdict__claim{font-size:.875rem;color:var(--text);margin:.5rem 0 0}
+.stab__verdict .verdict__plain{font-size:.8125rem;color:var(--text-2);margin:.2rem 0 0}
+.stab__row{row-gap:0}
+.stab__read{grid-column:1 / -1;font-size:.75rem;color:var(--text-muted);margin:-.1rem 0 .3rem}
+.stab__row--after .name,.stab__row--after .tnum{color:var(--text-muted)}
+.stab__row .name .flag{margin-left:.3rem}
+.profile-note{display:inline-block;margin-top:.25rem;color:var(--text-muted);font-size:.75rem;line-height:1.45}
+/* The name column stays in place while the measures scroll sideways (M15). */
+.people-table .vt__head > :first-child,.people-table .vt__row > :first-child{position:sticky;left:0;z-index:1;background:var(--bg)}
+.people-table .vt__head > :first-child{z-index:3}
+.people-table .vt__row.is-selected > :first-child{background:linear-gradient(rgba(111,216,190,.08),rgba(111,216,190,.08)),var(--bg)}
+.people-list .field{max-width:20rem}
+.people-list__items{list-style:none;margin:.6rem 0 .4rem;padding:0;border-top:1px solid var(--rule)}
+.people-list__row{display:grid;grid-template-columns:2rem minmax(0,1fr) auto;gap:.5rem;align-items:center;width:100%;min-height:2.75rem;padding:.35rem 0;background:none;border:0;border-bottom:1px solid var(--rule);color:var(--text);font:inherit;font-size:.875rem;text-align:left;cursor:pointer}
+.people-list__rank{color:var(--text-muted);font-size:.75rem}
+.people-list__val{color:var(--text-2)}
+
+/* A worked example's "what to look for", under Who stands out. */
+.standout__example{margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--rule)}
+/* Two-mode networks: one block of standouts per kind of node. */
+.standout__mode+.standout__mode{margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--rule)}
+.standout__modeh{font-size:.875rem;font-weight:600;color:var(--text);margin:0 0 .35rem}
+.standout__modeh .meta{margin-left:.4rem}
+.standout--twomode .basis{margin-top:.6rem}
+.standout__example ul{margin:.3rem 0 0;padding-left:1.1rem}
+.classic-facts{margin-top:.6rem}
+.classic-facts summary{cursor:pointer;color:var(--text-2)}
+.classic-facts .concept__dl{margin:.5rem 0}
+.classic-facts dd p{margin:0 0 .3rem}

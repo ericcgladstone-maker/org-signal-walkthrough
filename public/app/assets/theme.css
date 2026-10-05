@@ -1,0 +1,94 @@
+/* Org Signal theme. Tokens are taken from graystoneindustries.co
+   (Website Graystone Industries/site/src/styles/global.css) so the tool reads
+   as part of the same body of work: deep blue ground, near-white type, a mint
+   accent, Geist throughout, thin rules rather than cards. No gradients, no
+   glass, no pills, no badges. Change the site's tokens, change these. */
+
+@font-face{font-family:'Geist Variable';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url('fonts/geist-latin-wght-normal.woff2') format('woff2-variations')}
+@font-face{font-family:'Geist Variable';font-style:italic;font-weight:100 900;font-display:swap;
+  src:url('fonts/geist-latin-wght-italic.woff2') format('woff2-variations')}
+@font-face{font-family:'Geist Mono Variable';font-style:normal;font-weight:100 900;font-display:swap;
+  src:url('fonts/geist-mono-latin-wght-normal.woff2') format('woff2-variations')}
+
+:root{
+  /* ---- site tokens, verbatim ---- */
+  --bg:#071A2B;
+  --bg-deep:#051521;
+  --text:#F6FAFD;
+  --text-2:#C6D3DE;
+  --text-muted:#9FB2C1;
+  --rule:rgba(255,255,255,.14);
+  --rule-strong:rgba(255,255,255,.26);
+  --node:#D8F2FF;
+  --edge:#6FA79B;
+  --pulse:#A8E4D2;
+  --accent:#6FD8BE;
+  --accent-dim:rgba(111,216,190,.45);
+  --bg-rgb:7,26,43;
+  --bg-deep-rgb:5,21,33;
+
+  --sans:'Geist Variable',system-ui,-apple-system,sans-serif;
+  --mono:'Geist Mono Variable',ui-monospace,Menlo,monospace;
+
+  /* Type scale (UX pass 2026-10-02, design rule 1). The site sets body at
+     about 17.6px and titles near 45px; the app is an instrument and denser,
+     but the roles keep the site's proportions rather than shrinking to a
+     dashboard's. */
+  --fs-h1:clamp(1.9rem,1.5rem + 1.2vw,2.4rem);   /* view title */
+  --fs-h2:1.125rem;                               /* section heading */
+  --fs-h3:1rem;
+  --fs-body:1rem;
+  --fs-lead:1.0625rem;                            /* view intro */
+  --fs-small:.875rem;                             /* secondary text, controls */
+  --fs-foot:.8125rem;                             /* footnotes, basis lines, field labels */
+  --fs-meta:.75rem;
+  /* Mono labels: the site's "CURRENT RESEARCH THREADS" (12.74px at .12em).
+     Section labels, metadata and captions only; never form labels. */
+  --fs-mono:.75rem;
+  --ls-mono:.12em;
+  --fs-mono-th:.6875rem;                          /* table headers */
+  --ls-mono-th:.08em;
+  --lh-body:1.6;
+  --t:150ms ease;
+
+  /* Frame: the header and every view share one wrap; reading views cap their
+     content at --w-col, left-aligned in that wrap; prose at --measure. */
+  --w-frame:90rem;
+  --w-col:62rem;
+  --measure:66ch;
+  --pad-app:clamp(1rem,2.6vw,2.5rem);
+  --bar-h:4.25rem;                                /* the masthead bar */
+  --header-h:var(--bar-h);                        /* whole sticky header; grows on narrow screens when data is loaded */
+  /* Minimum target size for small controls (WCAG 2.5.8). */
+  --target:24px;
+
+  /* ---- app additions ---- */
+  --panel:#0A2236;           /* one step up from --bg, for side panels and inputs */
+  --panel-2:#0D2A42;
+  --warn:#E8C26A;
+  --critical:#E88A7A;
+  --good:var(--accent);
+}
+
+@media (prefers-reduced-motion:reduce){ :root{--t:0ms} }
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:var(--fs-body);line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+h1,h2,h3,h4{margin:0;line-height:1.22;letter-spacing:-.018em;font-weight:600}
+h1{font-size:var(--fs-h1);letter-spacing:-.03em;font-weight:500}
+h2{font-size:var(--fs-h2)}
+h3{font-size:var(--fs-h3)}
+p{margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:rgba(143,211,232,.28);color:#fff}
+.mono{font-family:var(--mono);font-size:var(--fs-mono);letter-spacing:var(--ls-mono);text-transform:uppercase;color:var(--text-muted)}
+.muted{color:var(--text-muted)}
+hr,.rule{border:0;border-top:1px solid var(--rule);margin:0}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

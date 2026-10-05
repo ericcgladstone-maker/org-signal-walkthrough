@@ -1,0 +1,100 @@
+/* Groups, Content and Time views (UX pass, 2026-10-02). Loaded after app.css.
+   Only these views' own pieces live here; tokens and shared classes come
+   from theme.css / app.css. */
+
+/* ---- time chart (Time, Content) ---- */
+.tchart__legend{display:flex;flex-wrap:wrap;gap:.25rem 1rem;margin:0 0 .35rem;font-size:var(--fs-foot);color:var(--text-2)}
+.tchart__key{display:inline-flex;align-items:center;gap:.4rem}
+.tchart__swatch{display:inline-block;width:14px;height:2px;border-radius:1px}
+.tchart__edge line{stroke:var(--text-muted);stroke-width:1;opacity:.45}
+.chart text.tchart__mark{fill:var(--text-2)}
+.tchart__table{margin-top:.25rem;border-top:0}
+.tchart__table > summary{font-size:var(--fs-foot);color:var(--text-muted);padding:.2rem 0;min-height:24px}
+.tchart__table .table-wrap{max-height:18rem;overflow:auto}
+
+/* ---- Time view ---- */
+.tview__bar{margin-bottom:.5rem}
+.tview__range{align-items:flex-end;padding-bottom:.35rem}
+.tview__range .field{min-width:9.5rem}
+.tview__period{margin:0 0 .75rem}
+.tview__note{margin:-.2rem 0 .75rem}
+.tview__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,22rem),1fr));gap:1.75rem 2rem;margin-top:.5rem;align-items:start}
+.tview__src-list{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.4rem}
+.tview__src{display:grid;grid-template-columns:minmax(8rem,16rem) minmax(0,1fr) minmax(0,16rem);gap:.4rem 1rem;align-items:center;font-size:var(--fs-foot)}
+.tview__src-name{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tview__src-track{position:relative;height:8px;background:var(--rule);display:block}
+.tview__src-bar{position:absolute;top:0;bottom:0;background:var(--cat-1);min-width:2px}
+.tview__src-dates{color:var(--text-muted);font-variant-numeric:tabular-nums}
+.tview__verdict{font-size:var(--fs-body, 1rem);color:var(--text);max-width:66ch;margin:0 0 .75rem}
+.tview__verdict p{margin:0 0 .35rem}
+.tview__rowbtn{background:none;border:0;padding:.15rem 0;color:var(--text);font:inherit;text-align:left;cursor:pointer;border-bottom:1px solid var(--accent-dim);min-height:24px}
+.tview__rowbtn:hover{border-bottom-color:var(--accent)}
+.tview__rowbtn[aria-expanded='true']{font-weight:600}
+.tview__shifts tr.is-open td{border-bottom-color:transparent}
+.tview__detail td{padding-top:0}
+.tview__detail p{max-width:70ch;margin:.25rem 0}
+.tview__detail-chart{max-width:52rem;margin-top:.5rem}
+.tview__caution{margin:.25rem 0 .75rem}
+.tview__edge-note{color:var(--warn)}
+.tview__hint{align-self:center}
+@media (max-width:640px){
+  .tview__src{grid-template-columns:1fr;gap:.2rem}
+  .tview__range .field{min-width:0;flex:1 1 8rem}
+}
+
+/* ---- Groups view ---- */
+.gview__members{margin:.25rem 0 .5rem;font-size:var(--fs-foot);color:var(--text-2);max-width:80ch}
+.gview__rowbtn{background:none;border:0;padding:.15rem 0;color:var(--text);font:inherit;text-align:left;cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;min-height:24px}
+.gview__rowbtn .gview__chev{width:.4rem;height:.4rem;border-right:1.5px solid var(--text-muted);border-bottom:1.5px solid var(--text-muted);transform:rotate(-45deg);transition:transform var(--t, .15s)}
+.gview__rowbtn[aria-expanded='true'] .gview__chev{transform:rotate(45deg)}
+.gview__rowbtn:hover{color:var(--accent)}
+.gview__detail td{padding-top:0}
+/* "The network changed partway through" banner (J2). */
+.gview__shift{margin:.25rem 0 1rem;max-width:62rem}
+.gview__shift p{margin:0 0 .4rem;max-width:var(--measure)}
+.gview__shift strong{color:var(--text)}
+.gview__shift-acts{display:flex;flex-wrap:wrap;gap:.4rem 1.25rem}
+.gview__shift-tbl{max-width:30rem;margin:.25rem 0 .5rem}
+.gview__shift .tlink{white-space:normal;text-align:left}
+@media (max-width:640px){
+  .gview__shift{display:block}
+  .gview__shift > .flag{display:inline-flex;margin-bottom:.25rem}
+}
+.reading .verdict + .verdict{margin-top:.9rem}
+.reading .howto{margin-top:.75rem}
+/* Mixing matrix as a real table: rotated column heads, colored cells. The
+   wrapper is the containing block of the cells' visually hidden values, so
+   they scroll with it instead of widening the page on phones. */
+.mx-wrap{position:relative}
+.mx{border-collapse:separate;border-spacing:2px;font-size:.75rem;font-variant-numeric:tabular-nums}
+.mx th{font-family:var(--sans);font-weight:400;color:var(--text-2);text-transform:none;letter-spacing:0}
+.mx thead th{height:7.5rem;vertical-align:bottom;padding:0;width:2.9rem;min-width:2.9rem}
+.mx thead th > span{display:inline-block;transform:translateX(1.1rem) rotate(-45deg);transform-origin:left bottom;white-space:nowrap;width:1.5rem;max-width:1.5rem;overflow:visible}
+.mx tbody th{text-align:right;padding:0 .6rem 0 0;white-space:nowrap;max-width:12rem;overflow:hidden;text-overflow:ellipsis}
+.mx td{width:2.9rem;height:2.4rem;min-width:2.9rem;text-align:center;padding:0;border:1px solid transparent}
+.mx td.mx__zero{background:var(--seq-zero);border-color:var(--rule)}
+.mx td.mx__diag{box-shadow:inset 0 0 0 1.5px var(--text-2)}
+.mx--narrow td,.mx--narrow thead th{width:1.9rem;min-width:1.9rem}
+.mx-legend{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;align-items:flex-end;margin-top:.75rem;font-size:var(--fs-foot);color:var(--text-muted)}
+.mx-legend .ramp{width:12rem}
+.mx-legend__diag{display:inline-block;width:1rem;height:1rem;box-shadow:inset 0 0 0 1.5px var(--text-2);vertical-align:middle;margin-right:.4rem}
+
+/* ---- Content view ---- */
+.cview__note{margin:0 0 .8rem}
+.bars{display:grid;grid-template-columns:minmax(6rem,14rem) minmax(0,26rem) 4rem;gap:.15rem .75rem;align-items:center;font-size:.8125rem;margin:0;padding:0;list-style:none}
+.bars li{display:contents}
+.bars__label{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:.2rem 0}
+.bars__track{position:relative;height:10px;display:block}
+.bars__axis{position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:var(--rule-strong)}
+.bars__bar{position:absolute;top:0;height:10px}
+.bars__val{color:var(--text);font-variant-numeric:tabular-nums;text-align:right}
+.bars__n{color:var(--text-muted);font-size:.75rem}
+.diff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:1.5rem 2rem;margin-top:.5rem}
+.diff-card h3{font-size:1rem;font-weight:600;margin:0 0 .15rem}
+.diff-card .kv{margin-top:.35rem}
+.diff-card details{margin-top:.25rem}
+.diff-card__room{margin:.35rem 0 0;color:var(--text-2)}
+.cview__tabintro{margin:0 0 .8rem;max-width:var(--measure)}
+@media (max-width:640px){
+  .bars{grid-template-columns:minmax(5rem,9rem) minmax(0,1fr) 3.25rem}
+}

@@ -1,0 +1,154 @@
+/* Data view and import flow (UX pass, 2026-10-02). Loaded after app.css.
+   Only Data-view layout lives here; buttons, links, inputs, .seg and tabs
+   come from the shared classes in theme.css / app.css. */
+
+/* Drop target: rules above and below, no dashed box; mint only while a file
+   is dragged over it. */
+.dv-drop{border:0;border-block:1px solid var(--rule);padding:clamp(1.1rem,3vw,1.75rem) 0;gap:.75rem;background:none}
+.dv-drop[data-over='true']{border-color:var(--accent);background:none}
+.dv-drop--compact{border-top:0;padding:.9rem 0;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.dv-drop--compact .drop__title{font-size:var(--fs-small);font-weight:600;margin:0}
+.dv-drop__row{gap:.5rem 1.5rem;align-items:center}
+.dv-dropline{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.25rem;padding:.6rem 0;border-block:1px solid transparent;font-size:var(--fs-small)}
+.dv-dropline[data-over='true']{border-color:var(--accent)}
+.dv-dropline__text{color:var(--text-2)}
+.dv-more{padding-top:1.1rem}
+.dv-stored{margin-top:.6rem;max-width:66ch}
+.dv-stored .tlink{margin-left:.35rem}
+
+/* Landing (copy 2026-10-04): orientation with the Networks Lab link, four ways in,
+   Learn, the import, classic datasets, synthetic networks, About. */
+.dv-empty{max-width:var(--w-col);padding-top:.25rem}
+.dv-empty .lead{max-width:58ch}
+.dv-orient h2{font-size:var(--fs-h2);font-weight:600;margin:0 0 .6rem}
+.dv-orient__text{max-width:var(--measure)}
+.dv-orient__text p + p{margin-top:.7rem}
+.dv-orient__lab{margin-top:1rem}
+.dv-lab{font-size:1rem;display:inline;white-space:normal;overflow-wrap:anywhere}
+.dv-ways{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+.dv-start{list-style:none;margin:.9rem 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.dv-start__item{display:flex;min-width:0}
+.dv-start__card{display:flex;flex-direction:column;gap:.45rem;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--panel);border:1px solid var(--rule-strong);border-radius:4px;padding:1rem 1.1rem 1.05rem}
+.dv-start__card:hover{border-color:var(--accent)}
+.dv-start__card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dv-start__title{font-weight:600;font-size:1.0625rem;color:var(--text);line-height:1.3}
+.dv-start__text{font-size:var(--fs-small);color:var(--text-2);line-height:1.5;flex:1}
+.dv-start__go{align-self:flex-start;margin-top:.2rem;font-size:var(--fs-small)}
+.dv-learn{margin-top:1.1rem;color:var(--text);font-size:1rem}
+.dv-learn .tlink{margin-left:.3rem}
+.dv-import{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule);scroll-margin-top:calc(var(--header-h,4.5rem) + 1rem)}
+.dv-import:focus{outline:none}
+.dv-privacy{margin-top:.6rem;max-width:var(--measure);font-size:var(--fs-small);color:var(--text)}
+.dv-classic{margin-top:2.25rem}
+.dv-synth,.dv-about{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
+.dv-synth .prose + .prose,.dv-about .prose + .tlinks{margin-top:.6rem}
+.classic-lib h3:focus,.classic .example__title:focus{outline:none}
+.dv-empty__drop{margin-top:1rem}
+@media (max-width:760px){.dv-start{grid-template-columns:1fr;gap:.75rem}}
+
+/* Project files dropped on Data; the survey combine-rule switch */
+.dv-proj__btns{margin-top:.75rem;justify-content:flex-end}
+.dv-rule{margin:.25rem 0 1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--rule)}
+.dv-rule__help{margin-top:.45rem;max-width:66ch}
+.dv-sources{margin-top:1rem;max-width:66ch}
+.dv-howto{max-width:66ch;margin-top:.9rem}
+.dv-howto__list{margin:.25rem 0 .5rem;display:grid;gap:.55rem}
+.dv-howto__list dt{font-weight:600;font-size:var(--fs-small);color:var(--text)}
+.dv-howto__list dd{margin:0;font-size:var(--fs-small);color:var(--text-2)}
+.dv-demo{margin-top:.9rem}
+
+/* Inputs waiting to be imported */
+.dv-inputs{margin-top:.5rem}
+.dv-input__name{display:flex;flex-wrap:wrap;gap:.25rem .75rem;align-items:baseline;min-width:0}
+.dv-input__name .src__title{overflow-wrap:anywhere}
+.dv-input__status{margin-top:.4rem}
+.dv-recog{display:flex;flex-wrap:wrap;gap:.25rem .6rem;align-items:baseline;font-size:var(--fs-small);color:var(--text-2)}
+.dv-why{display:inline-block}
+.dv-why > summary{cursor:pointer;color:var(--text-muted);font-size:var(--fs-small);text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+.dv-why[open]{display:block;flex-basis:100%}
+.dv-why .can-list{margin-top:.3rem}
+.dv-opts{margin-top:.75rem;align-items:end}
+.dv-opts__head{grid-column:1/-1;margin:.4rem 0 0}
+.dv-opts__note{margin-top:.6rem}
+.dv-check{align-self:end}
+.dv-hint{margin-top:.3rem;max-width:44ch}
+.dv-use{margin-top:.75rem;display:grid;gap:.4rem}
+.dv-files__list{list-style:none;margin:.25rem 0 0;padding:0;max-height:22rem;overflow:auto}
+.dv-files__list li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:.75rem;align-items:baseline;padding:.3rem 0;border-bottom:1px solid var(--rule);font-size:var(--fs-small)}
+.dv-files__list li span:first-child{overflow-wrap:anywhere}
+
+/* Column mapper */
+.dv-mapper{margin-top:1rem}
+.dv-mapper__row{margin-bottom:.6rem;align-items:end}
+.dv-mapper__tbl th{min-width:9rem;vertical-align:bottom}
+.dv-mapper__col{margin-bottom:.3rem;text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:var(--fs-foot);color:var(--text)}
+.dv-mapper__off{opacity:.5}
+
+/* Action bar: stays in reach at the bottom of long lists (56 chats). */
+.dv-actions{position:sticky;bottom:0;z-index:5;display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;align-items:center;justify-content:space-between;margin-top:1rem;padding:.75rem 0;border-top:1px solid var(--rule-strong);background:var(--bg)}
+.dv-actions__note{flex:1 1 16rem;margin:0;max-width:60ch}
+.dv-actions__btns{display:flex;gap:1.25rem;align-items:center;margin-left:auto}
+
+/* Review */
+.dv-name{max-width:32rem;margin-bottom:1rem}
+.dv-h3{font-size:var(--fs-h3,1.125rem);font-weight:600;margin:0 0 .4rem}
+.dv-p{margin-bottom:.6rem}
+.dv-strong{color:var(--text)}
+.dv-owners{padding-block:1rem 1.25rem;margin-bottom:.5rem;border-block:1px solid var(--rule)}
+.dv-owners__list{list-style:none;margin:.6rem 0;padding:0;display:grid;gap:.15rem}
+.dv-owners .check{font-size:var(--fs-small)}
+.dv-matches input[type='checkbox']{accent-color:var(--accent)}
+.dv-manual{margin-top:1.25rem}
+.dv-manual__row{align-items:end;gap:.75rem 1rem;margin-top:.5rem}
+.dv-manual__row .field{min-width:min(100%,14rem)}
+.dv-manual__add{min-height:var(--target,2.25rem)}
+.dv-manual__list{list-style:none;margin:.6rem 0 0;padding:0}
+.dv-manual__list li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem 1rem;padding:.35rem 0;border-bottom:1px solid var(--rule);font-size:var(--fs-small)}
+.dv-radio{display:flex}
+.dv-join{margin-top:.75rem}
+.dv-join__headline{display:flex;flex-wrap:wrap;gap:.4rem .75rem;align-items:baseline}
+.dv-fieldset{border:0;padding:0;margin:0}
+.dv-measure{max-width:66ch}
+
+/* Import report */
+.dv-totals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr));gap:1rem 2rem;margin:.5rem 0 1rem}
+.dv-totals > div{min-width:0}
+.dv-totals dt{margin:0}
+.dv-totals dd{margin:.1rem 0 0}
+.dv-totals__v{font-size:1.125rem;color:var(--text)}
+.dv-notes{list-style:none;margin:0 0 .5rem;padding:0;display:grid;gap:.35rem;font-size:var(--fs-small);color:var(--text-2);max-width:72ch}
+.dv-notes li{display:flex;gap:.5rem;align-items:baseline}
+.dv-report__totals{padding-top:1.1rem;border-top:1px solid var(--rule)}
+.dv-source .src__title{overflow-wrap:anywhere}
+.dv-sub{font-weight:400}
+.dv-files-line{margin-top:.25rem;overflow-wrap:anywhere}
+.dv-kv{max-width:36rem;margin-top:.6rem}
+.dv-kv dd{white-space:normal}
+/* A long value (1,020 (26 public, ...)) wraps instead of taking the name's
+   column on a phone, where the two ran over each other. */
+.dv-kv:not(.kv--wide){grid-template-columns:minmax(7.5rem,1fr) minmax(0,auto)}
+.dv-source .src__cols + .dv-kv{margin-top:1rem}
+.dv-gone{margin-top:.6rem;max-width:72ch}
+.dv-warn{margin-top:.9rem}
+.dv-chats .tbl{margin-top:.25rem}
+.dv-log{margin-bottom:.5rem}
+
+.dv-current__name{overflow-wrap:anywhere}
+
+@media (max-width:520px){
+  .dv-actions__btns{width:100%;justify-content:space-between}
+  .dv-drop--compact{flex-direction:column;align-items:flex-start}
+}
+
+/* The view head already draws a rule; the first section under it does not repeat it. */
+.dv > .view__head + .section,.dv > .view__head + p + .section{border-top:0;padding-top:0}
+.dv-inputs > .src:first-child{border-top:0}
+
+/* Methods & Export: the contact-details option above the file list (N19). */
+.mx-privacy{display:flex;align-items:flex-start;gap:.55rem;margin:.1rem 0 .9rem;max-width:72ch;color:var(--text)}
+.mx-privacy input{margin-top:.2rem;accent-color:var(--accent)}
+
+/* Ties these records can build (import review) */
+.dv-rules{margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--rule)}
+.dv-rules .label{margin-bottom:.35rem}

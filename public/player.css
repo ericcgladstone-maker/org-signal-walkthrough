@@ -1,0 +1,235 @@
+/* Player chrome only. Every rule is scoped under .sp so the player can sit inside
+   another site's page without styling it, and the deck inside the iframe keeps
+   its own styles untouched.
+
+   Colours and type read the host page's tokens where they exist (the Graystone
+   site and the deck share the same palette and Geist), with the deck's values
+   as fallbacks for the standalone page. */
+.sp {
+  --sp-bg: var(--bg, #071A2B);
+  --sp-deep: var(--bg-deep, #051521);
+  --sp-text: var(--text, #F6FAFD);
+  --sp-t2: var(--text-2, #C6D3DE);
+  --sp-muted: var(--text-muted, #9FB2C1);
+  --sp-accent: var(--accent, #6FD8BE);
+  --sp-rule: var(--rule, rgba(255, 255, 255, 0.14));
+  --sp-rule-strong: var(--rule-strong, rgba(255, 255, 255, 0.26));
+  --sp-sans: var(--sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  --sp-mono: var(--mono, ui-monospace, Menlo, monospace);
+  font-family: var(--sp-sans);
+  color: var(--sp-text);
+  /* the layout responds to the player's own width, not the window's, so it
+     behaves the same standalone and inside a host page's column */
+  container-type: inline-size;
+  /* no margin or padding here: a host page may position the root (Graystone's
+     .deckfig breakout sets margin-left on it) */
+}
+.sp *, .sp *::before, .sp *::after { box-sizing: border-box; }
+
+/* ---- composition ---------------------------------------------------------
+   Up to 1400px of player width: stage full width, controls, then the passage in a
+   centred reading column (the Talks page's ~1184px article shows it this way, with
+   the stage at about 0.62 scale instead of 0.42 side by side).
+   From 1400px: stage and current passage side by side, ~71/29. */
+.sp .sp-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "deck" "controls" "now" "full" "sources";
+}
+.sp .sp-stage { grid-area: deck; align-self: start; }
+.sp .sp-now { grid-area: now; margin-top: 26px; }
+.sp .sp-controls { grid-area: controls; }
+.sp .sp-full { grid-area: full; }
+.sp .sp-full.sp-sources { grid-area: sources; margin-top: 0; }
+@container (min-width: 1400px) {
+  .sp .sp-grid {
+    grid-template-columns: minmax(0, 71fr) minmax(0, 29fr);
+    column-gap: 32px;
+    /* controls stay with the deck, so a long passage beside them never pushes
+       the controls away from the deck */
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas: "deck now" "controls now" "full full" "sources sources";
+  }
+  .sp .sp-now { margin-top: 0; padding-top: 6px; }
+}
+
+/* The stage always gets a true 1920x1080 viewport; the player scales the whole
+   iframe to fit (--sp-s is set by player.js). */
+.sp .sp-stage {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+  background: var(--sp-deep); border: 1px solid var(--sp-rule);
+}
+.sp .sp-stage iframe {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; max-width: none;
+  border: 0; margin: 0; display: block;
+  transform: scale(var(--sp-s, 0.5)); transform-origin: 0 0;
+}
+
+/* ---- current passage ----------------------------------------------------- */
+.sp .sp-steps { display: inline-flex; align-items: center; gap: 2px; }
+.sp .sp-step {
+  font: inherit; font-family: var(--sp-sans); font-size: 14px; line-height: 1; letter-spacing: 0;
+  color: var(--sp-muted); background: transparent; border: 0; border-radius: 3px;
+  /* 24px: the minimum comfortable touch target; negative margin keeps the label row height */
+  width: 24px; height: 24px; margin: -6px 0; padding: 0; cursor: pointer;
+}
+.sp .sp-step:hover:not(:disabled) { color: var(--sp-text); }
+.sp .sp-step:disabled { opacity: 0.3; cursor: default; }
+.sp .sp-step[hidden] { display: none; }
+.sp .sp-step:focus-visible { outline: 2px solid var(--sp-accent); outline-offset: 1px; }
+.sp .sp-kicker {
+  /* just the passage counter, right-aligned; the row keeps its height on
+     single-passage pages so the text never shifts between pages */
+  display: flex; justify-content: flex-end; gap: 12px; min-height: 13px;
+  max-width: none; margin: 0 0 14px; padding: 0;
+  font-family: var(--sp-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sp-muted);
+}
+.sp .sp-now__text p {
+  max-width: none; margin: 0; padding: 0 0 0 16px;
+  border-left: 2px solid var(--sp-accent);
+  font-size: 16px; line-height: 1.6; color: var(--sp-text);
+  animation: sp-fade 0.45s ease both;
+}
+.sp .sp-now__text .sp-empty { border-left-color: transparent; color: var(--sp-muted); font-style: italic; padding-left: 0; }
+@keyframes sp-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- controls: one primary row, one quiet row ---------------------------- */
+.sp .sp-controls { margin-top: 12px; }
+.sp .sp-bar { display: flex; align-items: center; gap: 8px; margin: 0; }
+.sp .sp-btn, .sp .sp-select {
+  font: inherit; font-size: 15px; color: var(--sp-text); background: transparent;
+  border: 1px solid var(--sp-rule-strong); border-radius: 3px;
+  height: 36px; min-width: 36px; margin: 0; cursor: pointer;
+}
+.sp .sp-btn { font-size: 17px; line-height: 1; padding: 0 10px; }
+.sp .sp-btn.sp-play { min-width: 52px; border-color: var(--sp-accent); color: var(--sp-accent); }
+.sp .sp-btn:hover, .sp .sp-select:hover { border-color: var(--sp-t2); }
+.sp .sp-select { padding: 0 8px; background: var(--sp-deep); max-width: 100%; }
+.sp .sp-speed { font-size: 14px; }
+
+.sp .sp-track { flex: 1; display: flex; gap: 2px; height: 36px; align-items: center; min-width: 0; }
+.sp .sp-track i { position: relative; height: 5px; background: var(--sp-rule-strong); cursor: pointer; overflow: hidden; }
+.sp .sp-track i b { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--sp-accent); }
+.sp .sp-track i.sp-done b { width: 100%; opacity: 0.55; }
+
+.sp .sp-time { font-family: var(--sp-mono); font-variant-numeric: tabular-nums; color: var(--sp-muted); font-size: 13px; white-space: nowrap; }
+
+.sp .sp-where { display: flex; align-items: center; gap: 18px; margin: 6px 0 0; min-width: 0; }
+.sp .sp-where select.sp-quiet { flex: 0 1 auto; min-width: 0; }
+.sp .sp-where button.sp-quiet { flex: none; }
+.sp .sp-hint { font-size: 13px; color: var(--sp-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sp .sp-stage:fullscreen { border: 0; background: #051521; aspect-ratio: auto; width: 100vw; height: 100vh; }
+.sp .sp-quiet {
+  font: inherit; font-size: 13px; color: var(--sp-muted); background: transparent;
+  border: 1px solid transparent; border-radius: 3px; height: 30px; margin: 0; padding: 0 6px; cursor: pointer;
+  max-width: 100%;
+}
+.sp select.sp-quiet { margin-left: -6px; }
+.sp select.sp-quiet option { background: var(--sp-deep); color: var(--sp-text); }
+.sp .sp-quiet:hover { color: var(--sp-text); border-color: var(--sp-rule); }
+
+.sp .sp-btn:focus-visible, .sp .sp-select:focus-visible, .sp .sp-quiet:focus-visible, .sp .sp-full summary:focus-visible {
+  outline: 2px solid var(--sp-accent); outline-offset: 2px;
+}
+
+/* ---- full text, collapsed by default ------------------------------------- */
+.sp .sp-full { margin-top: 28px; border-top: 1px solid var(--sp-rule); }
+.sp .sp-full summary {
+  display: inline-flex; align-items: center; gap: 10px; padding: 14px 0 0; cursor: pointer; list-style: none;
+  font-family: var(--sp-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sp-muted);
+}
+.sp .sp-full summary::-webkit-details-marker { display: none; }
+.sp .sp-full summary::before { content: "▸"; font-family: var(--sp-sans); letter-spacing: 0; transition: transform 0.2s; }
+.sp .sp-full[open] summary::before { transform: rotate(90deg); }
+.sp .sp-full summary:hover { color: var(--sp-text); }
+
+/* the reading surface is centred under the player, on the same axis as the deck */
+.sp .sp-transcript {
+  position: relative; /* offsetTop of paragraphs is measured against the panel */
+  width: min(720px, 100%); margin: 24px auto 0; padding: 20px 6px 20px 0;
+  border-top: 1px solid var(--sp-rule); border-bottom: 1px solid var(--sp-rule);
+  overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: var(--sp-rule-strong) transparent;
+}
+.sp .sp-transcript p {
+  max-width: none; margin: 0 0 1.1em; padding: 0 0 0 14px;
+  font-size: 17px; line-height: 1.62; color: var(--sp-t2);
+  border-left: 2px solid transparent; cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.sp .sp-transcript p:last-child { margin-bottom: 0; }
+.sp .sp-transcript p.sp-on { color: var(--sp-text); border-left-color: var(--sp-accent); }
+.sp .sp-transcript .sp-empty { font-style: italic; cursor: default; border: 0; padding: 0; }
+
+.sp .sp-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: 0; padding: 0; }
+
+@container (max-width: 640px) {
+  .sp .sp-bar { flex-wrap: wrap; }
+  .sp .sp-track { order: 10; flex-basis: 100%; height: 20px; }
+  .sp .sp-time { margin-left: auto; }
+  .sp .sp-transcript p { font-size: 16px; padding-left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp .sp-transcript p, .sp .sp-full summary::before { transition: none; }
+  .sp .sp-now__text p { animation: none; }
+}
+
+/* ---- the heading block above the passage (M8) ---------------------------- */
+.sp .sp-head { margin: 0 0 14px; }
+.sp .sp-chapter { margin: 0 0 6px; font-family: var(--sp-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sp-accent); line-height: 1.5; }
+.sp .sp-heading { margin: 0 0 6px; font-size: 19px; line-height: 1.35; font-weight: 600; letter-spacing: -0.005em; color: var(--sp-text); }
+.sp .sp-try { display: inline-block; font-size: 13px; color: var(--sp-accent); text-decoration: none; border-bottom: 1px solid currentColor; line-height: 1.4; }
+.sp .sp-try:hover { color: var(--sp-text); }
+.sp .sp-try[hidden] { display: none; }
+.sp .sp-app { text-decoration: none; display: inline-flex; align-items: center; color: var(--sp-accent); }
+.sp .sp-tap { display: none; }
+
+/* stacked: the passage as a centred reading column, a little larger */
+@container (max-width: 1399.98px) {
+  .sp .sp-now { max-width: 46rem; width: 100%; justify-self: center; }
+  .sp .sp-now__text p { font-size: 18px; line-height: 1.62; }
+  .sp .sp-heading { font-size: 21px; }
+}
+
+/* ---- Expand: the whole player full screen (C1a) ---------------------------
+   The stage fills the screen (largest scale) and the current passage stays on
+   screen as a caption panel over the stage's lower part, like subtitles; "Hide
+   text" folds it away to see what is under it. Also the fallback where the
+   browser cannot put an element full screen (phones): the layer fills the window. */
+.sp.sp--max { position: fixed; inset: 0; z-index: 2147483000; background: var(--sp-deep); margin: 0 !important; padding: 0; overflow: hidden; }
+html.sp-maxed, html.sp-maxed body { overflow: hidden; }
+.sp.sp--max .sp-grid { height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "deck" "controls"; column-gap: 0; }
+.sp.sp--max .sp-stage { aspect-ratio: auto; height: 100%; min-height: 0; border: 0; background: var(--sp-deep); }
+.sp.sp--max .sp-controls { margin: 0; padding: 6px 16px 8px; background: var(--sp-deep); }
+.sp.sp--max .sp-full { display: none; }
+.sp.sp--max .sp-now { position: absolute; left: 50%; transform: translateX(-50%); bottom: 96px; width: min(1080px, calc(100vw - 32px));
+  max-height: 30vh; overflow-y: auto; margin: 0; padding: 14px 22px 16px; max-width: none; z-index: 2;
+  background: rgba(5, 21, 33, 0.92); border: 1px solid var(--sp-rule-strong); border-radius: 6px; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+.sp.sp--max.sp--captionless .sp-now { display: none; }
+.sp.sp--max .sp-now__text { min-height: 0 !important; }
+.sp.sp--max .sp-head { min-height: 0 !important; margin-bottom: 6px; }
+.sp.sp--max .sp-try { display: none; }
+.sp.sp--max .sp-now__text p { font-size: 19px; }
+.sp.sp--max .sp-tap { display: none !important; }
+.sp .sp-caption { display: none; }
+.sp.sp--max .sp-caption { display: inline-flex; }
+.sp:fullscreen { background: var(--sp-deep); }
+
+/* ---- phones (M11): text first --------------------------------------------
+   The stage is a smaller picture above the text; a tap enlarges it (with the text). */
+@container (max-width: 600px) {
+  .sp:not(.sp--max) .sp-grid { grid-template-areas: "deck" "now" "controls" "full" "sources"; }
+  .sp:not(.sp--max) .sp-now { margin-top: 14px; }
+  .sp:not(.sp--max) .sp-now__text p { font-size: 18px; line-height: 1.6; padding-left: 12px; }
+  .sp:not(.sp--max) .sp-heading { font-size: 20px; }
+  .sp:not(.sp--max) .sp-controls { margin-top: 18px; }
+  .sp:not(.sp--max) .sp-where { flex-wrap: wrap; gap: 8px 14px; }
+  .sp:not(.sp--max) .sp-hint { display: none; }
+  .sp:not(.sp--max) .sp-tap { display: block; position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0;
+    background: linear-gradient(to top, rgba(5, 21, 33, .7), rgba(5, 21, 33, 0) 45%); color: var(--sp-text);
+    font: 600 13px/1 var(--sp-sans); letter-spacing: .02em; text-align: right; cursor: pointer; }
+  .sp:not(.sp--max) .sp-tap { display: flex; align-items: flex-end; justify-content: flex-end; padding: 0 10px 9px 0; }
+}
+.sp .sp-app { white-space: nowrap; flex: none; }
+.sp.sp--max .sp-hint { display: none; }

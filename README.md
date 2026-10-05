@@ -26,7 +26,7 @@ The organizations and people in the generated data are fictional, as are the stu
 
 ## Use
 
-Press play, or step through the passages with ‹ › (or the `,` and `.` keys). The chapter menu jumps to any question. Expand fills the screen and keeps the current passage as a caption. Reduced-motion settings show each step settled. `?embed=1` hides the page header and the full text so the player can sit inside a frame. Each chapter links to the place in Org Signal where the same step can be repeated.
+Press play, or step through the talk one passage at a time with ‹ › (or the arrow keys, or `,` and `.`); the screen moves with the narration, and past a chapter part's last passage ‹ › continue into the next. The chapter menu jumps to any question. Expand fills the screen and keeps the current passage as a caption. Reduced-motion settings show each step settled. `?embed=1` hides the page header and the full text so the player can sit inside a frame. Each chapter links to the place in Org Signal where the same step can be repeated.
 
 Run locally with any static server that serves `public/`, for example `python3 -m http.server 8975 --directory public`. Serving it with the security headers in `public/_headers` matches the published version.
 

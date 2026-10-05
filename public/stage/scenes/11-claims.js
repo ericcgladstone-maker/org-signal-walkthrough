@@ -27,7 +27,7 @@
     {
       id: 'limits', label: 'About and limits',
       heading: 'Know what the numbers rest on, and what they cannot show.',
-      setup: [A.go('learn'), A.scroll('#learn-about', { top: 90 })],
+      setup: world.concat([A.go('learn'), A.scroll('#learn-about', { top: 90 })]),
       phases: [
         { note: 'Learn > About Org Signal and its limits',
           do: [A.highlight('#learn-about-h', null, { pad: 6 })], facts: { about: '#learn-about' } },
@@ -42,7 +42,7 @@
     {
       id: 'close', label: 'Using it in a course',
       heading: 'The questions, answered by doing.',
-      setup: [A.go('learn'), A.scroll('#learn-tasks', { top: 90 })],
+      setup: world.concat([A.go('learn'), A.scroll('#learn-tasks', { top: 90 })]),
       phases: [
         { note: 'Learn > Find it in the app: the questions of a first course, each with where to look and what to read',
           do: [A.highlight('#learn-tasks', null, { pad: 6, soft: true })], facts: { tasks: '#learn-tasks' } },

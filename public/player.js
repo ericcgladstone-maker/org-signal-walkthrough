@@ -363,6 +363,7 @@
         }
         renderTime();
       }
+      if (deck.__play) deck.__play(playing);
       if (deck.__t) deck.__t(t);
     }
     requestAnimationFrame(tick);

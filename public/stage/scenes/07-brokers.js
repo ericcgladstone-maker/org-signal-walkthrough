@@ -46,7 +46,7 @@
       setup: world.concat([A.go('people'), A.sort('Betweenness'), A.scrollTop()]),
       phases: [
         { note: 'Check how stable the betweenness ranking is: the data resampled many times, the ranking recomputed each time',
-          do: [A.click('button|~Check how stable'), A.idle(500), A.scroll('.stab', { top: 140 }), A.highlight('.stab', 'Rank stability', { pad: 6 })], facts: { stability: '.stab__list' } },
+          do: [A.click('button|~Check how stable', { ifPresent: true }), A.idle(500), A.scroll('.stab', { top: 140 }), A.highlight('.stab', 'Rank stability', { pad: 6 })], facts: { stability: '.stab__list' } },
         { note: 'Each person\'s rank range across the resamples, and how often they make the top',
           do: [A.zoom('.stab', { pad: 20, max: 1.8 }), A.tableCallout(5, 'In the top 10 of the resamples', { col: 'In top', at: [1240, 820] })],
           facts: { intop: '.vt' } },

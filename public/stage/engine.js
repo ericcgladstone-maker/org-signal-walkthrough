@@ -681,8 +681,9 @@
         var ci = running.i, ck = running.k, c0 = cueOf(ci, ck), ps0 = (TL[ci] && TL[ci].paragraphs) || [];
         var c1 = ps0[ck + 1] ? ps0[ck + 1].at : (TL[ci] ? TL[ci].duration : c0 + 10);
         var target = c0 + a.share * (c1 - c0);
+        // only while the talk plays: a visitor stepping with ‹ › has paused the clock, so the step finishes now
         waitingClock++;
-        try { while (clock < target && !stale() && !hurry) await sleep(50); } finally { waitingClock--; }
+        try { while (clock < target && !stale() && !hurry && playerPlaying) await sleep(50); } finally { waitingClock--; }
         return;
       case 'waitFor':
         if (typeof a.sel === 'function') { var until = Date.now() + (a.timeout || 30000); while (!a.sel(ctx) && Date.now() < until) await sleep(80); if (!a.sel(ctx)) fail('waitFor timed out'); }
@@ -848,7 +849,7 @@
   }
 
   /* ---- clock and player hooks ------------------------------------------ */
-  var clock = 0, navCount = 0, ready = false;
+  var clock = 0, navCount = 0, ready = false, playerPlaying = true;
   function phaseAt(i, t) {
     var ps = (TL[i] && TL[i].paragraphs) || [], k = 0;
     ps.forEach(function (p, j) { if (p.at <= t + 1e-6) k = j; });
@@ -890,6 +891,8 @@
     var k = phaseAt(goal.i, sec);
     if (k !== goal.k) request(goal.i, k, { anim: k === goal.k + 1 });
   };
+  // The player reports whether it is playing (every frame); a host that never calls this counts as playing.
+  window.__play = function (on) { playerPlaying = !!on; };
   window.__settled = function () { return ready && !pumping && !goal.reset && cur.i === goal.i && cur.k === goal.k && !appBusy(); };
   window.__errors = function () { return errors.slice(); };
   // The player holds its clock while this is true: a state is being prepared (behind the veil) or

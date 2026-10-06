@@ -48,6 +48,8 @@ export function computeNetworkMetrics(net, opts = {}) {
   const strength = new Float64Array(n);
   for (let e = 0; e < m; e++) { strength[net.edges.src[e]] += net.edges.w[e]; strength[net.edges.dst[e]] += net.edges.w[e]; }
   res.strengthGini = gini(strength);
+  // Ties per person: on a directed network m/n, the mean out-degree (as networkx's
+  // average degree of the out-graph); a node's own `degree` there counts in + out.
   res.meanDegree = n ? (directed ? m / n : (2 * m) / n) : 0;
   res.degreeAssortativity = degreeAssortativity(g);
   // Two-mode network: density over possible cross-mode ties, bipartite clustering.

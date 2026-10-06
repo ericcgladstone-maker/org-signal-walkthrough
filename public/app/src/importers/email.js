@@ -12,6 +12,7 @@
 // postal-mime as bytes, which decodes headers (RFC 2047) and parts properly.
 
 import { PostalMime } from '../../vendor/postal-mime.js';
+import { DEFAULT_BROADCAST_CUTOFF } from '../core/model.js';
 
 // ---- detection --------------------------------------------------------------
 
@@ -296,9 +297,9 @@ function headerBlock(bytes) {
   return bytes;
 }
 
-const PST_ADVICE = 'Outlook PST/OST/MSG files cannot be read in the browser yet (no parser is available here). Convert the file to mbox first, '
-  + 'for example with readpst ("readpst -r -o out mailbox.pst", from libpst), or by importing it into Thunderbird and exporting the folders '
-  + 'as mbox with the ImportExportTools NG add-on, then import the mbox files.';
+const PST_ADVICE = 'Outlook data files (.pst, .ost, .msg) cannot be read here: their format needs a parser that does not run in the browser. Convert them to mbox first, '
+  + 'with readpst from libpst ("readpst -r -o out mailbox.pst") or by importing the file into Thunderbird and saving each folder '
+  + 'as mbox with the ImportExportTools NG add-on, then load the mbox files.';
 
 // ---- import -----------------------------------------------------------------
 
@@ -307,7 +308,7 @@ const CONSUMER_DOMAINS = new Set(['gmail.com', 'googlemail.com', 'outlook.com', 
   'mail.com', 'fastmail.com', 'zoho.com', 'yandex.com', 'hey.com']);
 
 async function importEmail(fs, { builder, options = {}, progress = () => {}, signal } = {}) {
-  const opt = { keepText: true, headersOnly: false, excludeLists: false, excludeAutomated: false, includeSpamTrash: false, maxRecipients: 50, egoAddress: '', ...options };
+  const opt = { keepText: true, headersOnly: false, excludeLists: false, excludeAutomated: false, includeSpamTrash: false, maxRecipients: DEFAULT_BROADCAST_CUTOFF, egoAddress: '', ...options };
   // The UI offers one choice (`content`) instead of two booleans that could
   // contradict each other; keepText / headersOnly still work for callers.
   if (options.content === 'headers') { opt.headersOnly = true; opt.keepText = false; }
@@ -464,7 +465,7 @@ async function handleMessage(st, bytes, fromLine) {
   if (self) builder.stat('self-messages');
   if (nRecip > opt.maxRecipients) {
     builder.stat('broadcast-messages');
-    builder.warn('broadcast-messages', `Messages with more than ${opt.maxRecipients} recipients (kept; consider capping recipients when building the network)`);
+    builder.warn('broadcast-messages', `Messages with more than ${opt.maxRecipients} recipients. They are in the data; whether they create ties is set by "Broadcast cutoff" in Construction settings (${DEFAULT_BROADCAST_CUTOFF} by default): a message above the cutoff ties no one, since it would tie the sender to everyone addressed. Raise the cutoff to include them.`);
   }
 
   // Thread context and parent.
@@ -560,7 +561,7 @@ export default {
     { key: 'excludeLists', label: 'Leave out mailing-list mail', type: 'boolean', default: false },
     { key: 'excludeAutomated', label: 'Leave out bulk and automated mail', type: 'boolean', default: false },
     { key: 'includeSpamTrash', label: 'Include Gmail Spam and Trash', type: 'boolean', default: false },
-    { key: 'maxRecipients', label: 'Flag messages with more recipients than', type: 'number', default: 50 },
+    { key: 'maxRecipients', label: 'Flag messages with more recipients than', type: 'number', default: DEFAULT_BROADCAST_CUTOFF },
   ],
   import: importEmail,
 };

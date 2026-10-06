@@ -127,7 +127,11 @@ export function toDataset(parsed, { name = 'Pasted ties' } = {}) {
   const ctx = b.context('paste:ties', { name: 'Pasted ties', kind: 'canvas', visibility: 'unknown', medium: 'text' });
   for (const t of parsed.ties) {
     // Undirected ties are one event; with directed=false the analysis symmetrises.
-    b.event({ type: 'declared', actor: b.nodeIndex(keyOf.get(t.from)), targets: [[b.nodeIndex(keyOf.get(t.to)), 'declared']], context: ctx, weight: t.weight });
+    // In a paste that also has arrows the network is directed, so an undirected
+    // line is written in both directions (as Draw does).
+    const a = b.nodeIndex(keyOf.get(t.from)), z = b.nodeIndex(keyOf.get(t.to));
+    b.event({ type: 'declared', actor: a, targets: [[z, 'declared']], context: ctx, weight: t.weight });
+    if (parsed.directed && !t.directed) b.event({ type: 'declared', actor: z, targets: [[a, 'declared']], context: ctx, weight: t.weight });
     b.stat('ties');
   }
   b.stat('lines', parsed.lines.length);

@@ -112,6 +112,59 @@ export async function importOne(input, { onProgress, signal } = {}) {
   });
 }
 
+// Inputs that must be read in one import rather than one by one: the parts
+// of a split export (numbered names such as takeout-...-001 / -002, or two
+// inputs of an importer that recognises parts: LinkedIn, X, Meta) and the
+// same file dropped twice. The pipeline then merges the parts into one
+// source and reads a repeated file once (src/core/pipeline.js, upload.js);
+// imported separately they would become two sources or count twice.
+// Returns arrays of inputs, in input order.
+export function importGroups(inputs) {
+  const groups = [];
+  const byKey = new Map();
+  const copyless = n => n.replace(/ \(\d+\)(?=(\.[^./]+)*$)|(?<=\.[^./]+) \(\d+\)$/, '').toLowerCase();
+  for (const inp of inputs) {
+    const auto = !inp.importerId || inp.importerId === 'auto';
+    const eff = auto && !inp.detecting ? effectiveIds(inp) : [];
+    let key = null;
+    if (auto) {
+      const p = partStem(inp.name);
+      if (p) key = `stem:${p}`;
+      else if (eff.length === 1 && (inp.detections || []).some(d => d.id === eff[0] && d.parts)) key = `parts:${eff[0]}`;
+      else key = `copy:${copyless(inp.name)}:${inp.size}`;
+    }
+    if (key && byKey.has(key)) { byKey.get(key).push(inp); continue; }
+    const g = [inp];
+    if (key) byKey.set(key, g);
+    groups.push(g);
+  }
+  return groups;
+}
+
+function effectiveIds(inp) {
+  const det = inp.detections || [];
+  const ids = [...new Set(det.filter(d => d.score >= 0.5).map(d => d.id))];
+  return ids.length ? ids : det.length ? [det[0].id] : [];
+}
+
+// takeout-20261004T101500Z-001.zip -> 'takeout-20261004t101500z'; null when
+// the name carries no part number (same rule as core/upload.js partOf).
+function partStem(name) {
+  const base = String(name || '').replace(/\.zip$/i, '');
+  const m = /^(.*?)(?:[\s._-]*part[\s._-]*(\d{1,3})(?:[\s._-]*of[\s._-]*\d+)?|[\s._-]+(\d{3}))$/i.exec(base);
+  return m && m[1] ? m[1].toLowerCase().replace(/[\s._-]+$/, '') : null;
+}
+
+// One import for a group of inputs (importGroups): their files together,
+// detected afresh so the parts are seen side by side.
+export async function importGroup(group, opts) {
+  if (group.length === 1) return importOne(group[0], opts);
+  const first = group[0];
+  const options = {};
+  for (const inp of group) for (const [k, v] of Object.entries(inp.options || {})) options[k] = { ...(options[k] || {}), ...v };
+  return importOne({ ...first, files: group.flatMap(i => i.files), detections: null, options }, opts);
+}
+
 // A CSV that only the spreadsheet mapper claims, and whose rows look like one
 // person each (an HR export, a roster), is usually meant to add attributes
 // to the people in the other sources rather than to be a network itself.

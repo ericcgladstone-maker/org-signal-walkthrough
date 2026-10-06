@@ -76,7 +76,7 @@ export function ReportView({ report, pending = false, excludeBots = true, datase
     <dl class="dv-totals">
       ${rows.map(([k, v, sub]) => html`<div><dt class="label">${k}</dt><dd class="tnum dv-totals__v">${v}</dd>${sub && html`<dd class="small text2">${sub}</dd>`}</div>`)}
     </dl>
-    ${(report.notes || []).length > 0 && html`<ul class="dv-notes">${report.notes.map(n => html`<li><${Flag} level=${/deactivated|Nothing was read/.test(n) ? 'caution' : 'info'} /> <span>${n}</span></li>`)}</ul>`}
+    ${(report.notes || []).length > 0 && html`<ul class="dv-notes">${report.notes.map(n => html`<li><${Flag} level=${/^Could not read/.test(n) ? 'error' : /deactivated|Nothing was read/.test(n) ? 'caution' : 'info'} /> <span>${n}</span></li>`)}</ul>`}
     ${report.unclaimed?.length > 0 && html`<p class="small text2"><${Flag} level="caution">Not read</${Flag}> ${plural(report.unclaimed.length, 'file')} matched no importer: ${report.unclaimed.slice(0, 6).join(', ')}${report.unclaimed.length > 6 ? ', ...' : ''}</p>`}`;
   const cards = groupSources(report.sources).map(list => (list.length > 1 ? html`<${SourceGroup} key=${list[0].id} list=${list} group=${(report.groups || []).find(g => g.key === `${list[0].label}|${list[0].view}`)} />` : html`<${SourceReport} key=${list[0].id} s=${list[0]} />`));
   // Before loading, what each source can and cannot show is what the reader
@@ -175,7 +175,8 @@ function ownerLine(s) {
 }
 
 function SourceReport({ s }) {
-  const v = VIEW_TEXT[s.view] || { name: s.view || 'Unknown view' };
+  // A source that could not be read has no view of anything.
+  const v = s.counts?.events === 0 && s.worst === 'error' ? { name: 'not read' } : VIEW_TEXT[s.view] || { name: s.view || 'Unknown view' };
   const files = s.fileNames || [];
   return html`<article class="src dv-source" aria-label=${`Source: ${s.title || s.label}`}>
     <div class="src__head">

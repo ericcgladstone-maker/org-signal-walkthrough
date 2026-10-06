@@ -12,6 +12,7 @@
 //      who wrote to whom.
 
 import { peek } from '../core/fileset.js';
+import { UploadError } from '../core/upload.js';
 import { parseCSV, rowsToObjects, entryText, parseTimestamp } from './tabular.js';
 
 function aborted(signal) {
@@ -169,6 +170,7 @@ const looksFree = s => /"userId"\s*:/.test(s) && /"exportDate"\s*:/.test(s) || /
 
 async function detect(fs) {
   const files = [];
+  const summaries = [];
   const reasons = new Set();
   let score = 0;
   let checked = 0;
@@ -188,6 +190,12 @@ async function detect(fs) {
       if (purviewHeader(first)) { files.push(rel); score = Math.max(score, 0.8); reasons.add('Purview eDiscovery Items.csv (Teams)'); }
       continue;
     }
+    // The process report's Summary.csv without Items.csv (the items report
+    // was not downloaded, or was left out of the upload).
+    if (/(^|\/)summary(_[^/]*)?\.csv$/i.test(rel)) {
+      const first = (await peek(e, 1024)).replace(/^﻿/, '').split(/\r?\n/)[0].toLowerCase().replace(/["\s]/g, '');
+      if (/^location,itemcount/.test(first)) { summaries.push(rel); continue; }
+    }
     if (!/\.(json|ndjson|jsonl)$/i.test(rel)) continue;
     if (/\/\d{4}-\d{2}-\d{2}\.json$/.test(rel)) continue; // Slack day files: never Teams, and there can be thousands
     // Keep detection cheap on huge drops: only the first 400 JSON files are
@@ -200,7 +208,13 @@ async function detect(fs) {
     else if (looksGraph(head)) { files.push(rel); graphDirs.add(dirOf(rel)); score = Math.max(score, 0.9); reasons.add('Microsoft Graph Teams messages'); }
     else if (looksChats(head) || looksChannels(head) || (/(^|\/)members\//i.test(rel) && looksMembers(head))) files.push(rel);
   }
-  if (!score) return { score: 0, reason: '' };
+  if (!score) {
+    // Lists of chats or channels without any message file, or an eDiscovery
+    // Summary.csv without Items.csv: claimed so the import can say what is missing.
+    if (files.length) return { score: 0.6, reason: 'Teams chat or channel list without messages', files };
+    if (summaries.length) return { score: 0.6, reason: 'Purview eDiscovery summary without Items.csv', files: summaries };
+    return { score: 0, reason: '' };
+  }
   // Past the cap: one file is opened per folder not seen yet.
   const dirLooks = new Map();
   for (const e of unchecked) {
@@ -670,6 +684,18 @@ async function importTeams(fs, { builder, options = {}, progress = () => {}, sig
   for (const e of entries) {
     if (!/\.(json|ndjson|jsonl)$/i.test(e.rel)) continue;
     if (/(^|\/)messages\.json$/i.test(e.rel) && looksFree(await peek(e, 4096))) freeJson.push(e); else graph.push(e);
+  }
+
+  // Nothing but lists or a summary: say which files are missing.
+  if (!tars.length && !freeJson.length && !csvs.length && graph.length) {
+    let anyMessages = false;
+    for (const e of graph) if (looksGraph(await peek(e, 4096))) { anyMessages = true; break; }
+    if (!anyMessages) {
+      throw new UploadError('teams-no-messages', `${graph.map(e => e.rel.split('/').pop()).slice(0, 3).join(', ')} ${graph.length === 1 ? 'lists' : 'list'} chats, channels or members, but no message files came with ${graph.length === 1 ? 'it' : 'them'}, so there are no messages to read. A Graph dump keeps messages in separate files (for example messages/<chat id>.json from /chats/{id}/messages); load the whole folder.`);
+    }
+  }
+  if (!tars.length && !freeJson.length && !graph.length && csvs.some(e => /(^|\/)summary(_[^/]*)?\.csv$/i.test(e.rel))) {
+    throw new UploadError('purview-no-items', 'This is the summary of a Purview eDiscovery export (Summary.csv: item counts per location) without its items report, so there is nothing to read. Download the export\'s Items.csv (or Items_<n>_<date>.csv) from the same package and load it; it lists the participants of each Teams conversation.');
   }
 
   if (graph.length) {

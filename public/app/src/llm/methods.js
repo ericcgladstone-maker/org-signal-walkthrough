@@ -161,7 +161,8 @@ const FORMAT_NAME = {
   tabular: 'Spreadsheet', csv: 'Spreadsheet', profile: 'Attribute table', survey: 'Survey', graphml: 'GraphML', gexf: 'GEXF', gml: 'GML', pajek: 'Pajek', ucinet: 'UCINET',
   'network-canvas': 'Network Canvas', 'x-archive': 'X archive', 'x-research': 'X research export', bluesky: 'Bluesky', mastodon: 'Mastodon', threads: 'Threads',
   linkedin: 'LinkedIn', whatsapp: 'WhatsApp', imessage: 'iMessage', telegram: 'Telegram', meta: 'Facebook and Instagram', facebook: 'Facebook', instagram: 'Instagram',
-  discord: 'Discord', reddit: 'Reddit', draw: 'Hand-drawn network', drawn: 'Hand-drawn network', ego: 'Ego-network interview', roster: 'Roster', perceived: 'Perceived networks', generated: 'Generated',
+  discord: 'Discord', reddit: 'Reddit', draw: 'Hand-drawn network', drawn: 'Hand-drawn network', ego: 'Ego-network interview', 'ego-interview': 'Ego-network interview', roster: 'Roster', 'shared-survey': 'Shared survey', perceived: 'Perceived networks', css: 'Perceived networks', paste: 'Pasted ties', generated: 'Generated', synthetic: 'Generated',
+  'google-forms': 'Google Forms survey', qualtrics: 'Qualtrics survey', 'egor-long': 'egor survey', 'egor-wide': 'egor survey', 'gephi-csv': 'Gephi tables', fullmatrix: 'Adjacency matrix',
 };
 const formatName = f => FORMAT_NAME[String(f || '').toLowerCase()] || (f ? String(f).charAt(0).toUpperCase() + String(f).slice(1) : 'Unknown format');
 

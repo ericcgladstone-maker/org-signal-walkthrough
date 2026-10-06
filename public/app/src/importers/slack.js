@@ -13,6 +13,8 @@
 //   not UTC, so they are never used.
 // - User ids may start with U or W; the prefix means nothing.
 
+import { peek } from '../core/fileset.js';
+
 const DAY_FILE = /^(?:(teams\/[^/]+)\/)?([^/]+)\/(\d{4}-\d{2}-\d{2})\.json$/i;
 const META = ['channels', 'groups', 'dms', 'mpims'];
 // Root files a real export carries that hold no messages or people
@@ -56,14 +58,19 @@ async function detect(fs) {
   const hasUsers = top && (top.users || top.org_users);
   const hasConv = top && META.some(k => top[k]);
   const dayFiles = fs.entries.filter(e => DAY_FILE.test(e.rel) && !/^FC:/i.test(DAY_FILE.exec(e.rel)[2]));
-  if (!hasUsers || !hasConv || !dayFiles.length) {
-    // Partial matches still deserve a hint for the user.
-    if (dayFiles.length && (hasUsers || hasConv)) return { score: 0.3, reason: 'Looks like part of a Slack export (metadata files missing)', files: [] };
-    return { score: 0, reason: '' };
-  }
+  if (!dayFiles.length) return { score: 0, reason: '' };
   const files = [...dayFiles.map(e => e.rel)];
   for (const r of roots.values()) for (const e of Object.values(r)) files.push(e.rel);
   for (const e of fs.entries) if (AUX_FILE.test(e.rel)) files.push(e.rel);
+  if (!hasUsers || !hasConv) {
+    // Part of an export: channel folders without users.json or channels.json
+    // (an export split by hand, or files picked out of the zip). Read it if a
+    // day file holds Slack messages; the import says what is missing.
+    const head = await peek(dayFiles[0], 2048);
+    if (!/^\s*\[/.test(head) || !/"ts"\s*:\s*"\d+\.\d+"/.test(head)) return { score: 0, reason: '' };
+    const missing = [!hasUsers && 'users.json', !hasConv && 'channels.json'].filter(Boolean).join(' and ');
+    return { score: hasUsers || hasConv ? 0.9 : 0.8, reason: `Part of a Slack export (channel folders without ${missing})`, files };
+  }
   const grid = !!top.org_users || [...roots.keys()].some(k => k && roots.get(k).users);
   return { score: 0.95, reason: grid ? 'Slack Enterprise Grid export' : 'Slack workspace export', files };
 }
@@ -120,12 +127,16 @@ async function importSlack(fs, { builder, options = {}, progress = () => {}, sig
     meta.set(root, m);
   }
   const anyNonPublic = [...meta.values()].some(m => ['groups', 'dms', 'mpims'].some(k => m.conv[k]?.length));
-  const variant = grid ? 'grid' : anyNonPublic ? 'full' : 'public-only';
+  const anyUsers = [...meta.values()].some(m => m.users.length);
+  const anyConvList = [...meta.values()].some(m => META.some(k => m.conv[k]));
+  const variant = grid ? 'grid' : anyNonPublic ? 'full' : anyConvList ? 'public-only' : 'partial';
 
   const fileNames = fs.entries.filter(e => DAY_FILE.test(e.rel) || /(users|org_users|channels|groups|dms|mpims)\.json$/i.test(e.rel)).map(e => e.rel);
   builder.beginSource({ format: 'slack', family: 'workplace', medium: 'slack', view: 'full', context: 'workplace', tz: 'UTC',
     fileNames, egoKey: null, variant, directed: true });
-  if (variant === 'public-only') builder.warn('slack-public-only', 'This export holds public channels only. Private channels, DMs and group DMs are not in it, so ties formed there are invisible.');
+  if (variant === 'public-only') builder.warn('slack-public-only', 'This export holds public channels only (channels.json, without groups.json, dms.json or mpims.json), which is the standard export on every Slack plan. Private channels, direct messages and group DMs are missing, so the network shows only ties formed in public channels, and people who talk mostly in private appear peripheral or isolated. On Business+ the workspace owner can apply to export all channels and DMs; on Enterprise Grid org owners and export admins can export them (Workspace settings > Import/Export Data > Export).');
+  if (!anyUsers) builder.warn('slack-no-users', 'users.json is not in this upload, so people are named from the profile Slack copied into each message, or by their user id (U...) where there is none. Deactivated accounts, guests and bots cannot be marked, and members who never wrote are missing. Load the whole export zip: users.json sits at its top level.');
+  if (!anyConvList) builder.warn('slack-no-channel-list', 'channels.json (and groups.json, dms.json, mpims.json) are not in this upload, so whether each conversation is a public channel, a private channel or a direct message is unknown, and channel membership is missing. Load the whole export zip: these files sit at its top level.');
 
   // ---- users -> nodes ----------------------------------------------------
   const users = new Map();
@@ -139,7 +150,15 @@ async function importSlack(fs, { builder, options = {}, progress = () => {}, sig
   const userIdx = new Map();
   function userNode(id, snapshot) {
     let i = userIdx.get(id);
-    if (i !== undefined) return i;
+    if (i !== undefined) {
+      // Without users.json a person first met in a member list has only an
+      // id; the profile copied into a later message names them.
+      if (snapshot && !users.has(id) && builder.nodes.labels[i] === id) {
+        const label = snapshot.real_name || snapshot.display_name || snapshot.name;
+        if (label) { builder.setLabel(i, label); builder.node('slack:' + id, { attrs: { name: label } }); }
+      }
+      return i;
+    }
     const u = users.get(id);
     if (u) {
       const p = u.profile || {};
@@ -159,7 +178,7 @@ async function importSlack(fs, { builder, options = {}, progress = () => {}, sig
       // [UNVERIFIED]; the per-message user_profile snapshot is the fallback.
       const label = snapshot?.real_name || snapshot?.display_name || snapshot?.name || id;
       i = builder.node('slack:' + id, { label, attrs: { name: label, team_id: snapshot?.team, external: snapshot ? true : undefined }, isBot: id === 'USLACKBOT', platformIds: { slack: id } });
-      builder.warn('slack-user-missing', 'Some message authors are not listed in users.json (often Slack Connect partners or removed users); their names come from the messages themselves.');
+      if (anyUsers) builder.warn('slack-user-missing', 'Some message authors are not listed in users.json (often Slack Connect partners or removed users); their names come from the messages themselves.');
     }
     userIdx.set(id, i);
     return i;
@@ -358,7 +377,7 @@ async function importSlack(fs, { builder, options = {}, progress = () => {}, sig
       }
     }
   }
-  if (unknownFolders) builder.warn('slack-unknown-conversation', 'Some conversation folders are not listed in channels/groups/dms/mpims.json, so whether they are public or private is unknown.', unknownFolders);
+  if (unknownFolders && anyConvList) builder.warn('slack-unknown-conversation', 'Some conversation folders are not listed in channels/groups/dms/mpims.json, so whether they are public or private is unknown.', unknownFolders);
   progress(1, 'Slack: done');
 }
 

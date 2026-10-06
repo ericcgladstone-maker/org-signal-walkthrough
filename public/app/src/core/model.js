@@ -27,6 +27,13 @@
 // the schema labels and the option order an ordered choice needs. Read one
 // event's fields with eventAttrs(ds, i).
 
+// The default broadcast cutoff: a message to more recipients, or a meeting with
+// more participants, creates no ties unless the cutoff is raised in Construction
+// settings. analysis/construct.js defaultSettings uses the same value
+// (test/core/broadcast-cutoff.test.js keeps them equal); importers use it so the
+// notices they raise count exactly what the default network leaves out.
+export const DEFAULT_BROADCAST_CUTOFF = 25;
+
 export const EVENT_TYPES = ['message', 'copresence', 'declared', 'reaction', 'repost', 'like', 'follow', 'join', 'leave'];
 export const ROLES = ['to', 'cc', 'bcc', 'mention', 'reply', 'dm', 'attendee', 'member', 'declared', 'subject'];
 export const VISIBILITY = ['public', 'private', 'direct', 'group', 'unknown'];
@@ -197,6 +204,14 @@ export class DatasetBuilder {
     }
     for (const [sid, count] of unresolved) {
       this.sources[sid].warnings.push({ code: 'unresolved-parent', message: 'Replies or reactions whose parent message is not in the data', count });
+    }
+    // Records an export holds more than once are read once; say so (2026-10-05),
+    // unless the importer already explained it in its own words.
+    for (const s of this.sources) {
+      const dup = (s.counts['duplicates-skipped'] || 0) + (s.counts.duplicates || 0) + (s.counts['duplicates-removed'] || 0);
+      if (dup && !s.warnings.some(w => /duplicate/.test(w.code))) {
+        s.warnings.push({ code: 'duplicates-skipped', message: 'Messages that appear more than once in the export (the same message id, for example under two labels or in two files) were read once.', count: dup });
+      }
     }
     const nodes = {
       count: this.nodes.keys.length,

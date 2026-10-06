@@ -10,6 +10,7 @@
 import { parseJSON } from './lib/json.js';
 import { fixMojibakeDeep, nameKey } from './lib/text.js';
 import { peek } from '../core/fileset.js';
+import { UploadError } from '../core/upload.js';
 
 const SECTIONS = ['inbox', 'archived_threads', 'filtered_threads', 'message_requests', 'e2ee_cutover'];
 // <prefix>messages/<section>/<thread folder>/message_<N>.json  (spec section 2)
@@ -44,6 +45,31 @@ function classify(fs) {
   return { standard, html, candidates };
 }
 
+// Other files of a Meta "Download your information" export, for an export
+// requested without Messages (followers, profile, posts only).
+const META_EXPORT_RE = /(?:^|\/)(?:your_instagram_activity|your_facebook_activity|your_activity_across_facebook|connections\/followers_and_following|personal_information\/personal_information|logged_information|ads_information|security_and_login_information)\//i;
+
+function platformWord(fs) {
+  const p = fs.entries.map(e => e.path.toLowerCase()).join('\n') + '\n' + (fs.names || []).join('\n').toLowerCase();
+  if (/instagram/.test(p)) return 'Instagram';
+  if (/facebook/.test(p)) return 'Facebook';
+  return 'Meta';
+}
+
+const JSON_STEPS = 'Accounts Center > Your information and permissions > Export your information > Create export > Export to device > Customize information: Messages; Format: JSON';
+
+function htmlError(fs, nHtml) {
+  return new UploadError('meta-html-format', `This ${platformWord(fs)} export is in HTML format (${nHtml} message_N.html file${nHtml === 1 ? '' : 's'}), which cannot be read: Meta's HTML pages change layout often and carry no reliable structure. Request a new export in JSON format (${JSON_STEPS}).`);
+}
+
+// One export delivered as several zips shares the name stem
+// facebook-<user>-<date> / instagram-<user>-<date> (spec section 1a; the
+// random suffix differs per part).
+async function partKey(fs, { root } = {}) {
+  const m = /^(facebook|instagram)-(.+)-(\d{4}-\d{2}-\d{2})-[A-Za-z0-9]+\/?$/i.exec(String(root || ''));
+  return m ? `meta:${m[1].toLowerCase()}:${m[2].toLowerCase()}:${m[3]}` : null;
+}
+
 function looksE2EE(head) {
   return /"threadName"\s*:/.test(head) && /"participants"\s*:\s*\[\s*("|\])/.test(head);
 }
@@ -58,6 +84,10 @@ async function detect(fs) {
     if (looksE2EE(await peek(e, 4096))) return { score: 0.9, reason: 'Messenger end-to-end-encrypted chat backup' };
   }
   if (html.length) return { score: 0.6, reason: 'Meta message export in HTML format (needs a JSON re-export)' };
+  // A Meta export without its messages folder: claim it, so the import can
+  // say what is missing instead of no importer recognizing it.
+  const other = fs.entries.filter(e => META_EXPORT_RE.test(e.rel) || META_EXPORT_RE.test(e.path));
+  if (other.length) return { score: 0.6, reason: `${platformWord(fs)} data export without messages`, files: other.map(e => e.rel) };
   return { score: 0 };
 }
 
@@ -66,8 +96,9 @@ async function importMeta(fs, { builder, options = {}, progress, signal } = {}) 
   const e2ee = [];
   for (const e of candidates) if (looksE2EE(await peek(e, 4096))) e2ee.push(e);
   if (!standard.length && !e2ee.length) {
-    if (html.length) throw new Error('This Meta export is in HTML format. Request a new export with Format: JSON (Accounts Center > Your information and permissions > Export your information > Customize > Format: JSON).');
-    throw new Error('No Messenger or Instagram message files (message_N.json) were found.');
+    if (html.length) throw htmlError(fs, html.length);
+    const word = platformWord(fs);
+    throw new UploadError('meta-no-messages', `This ${word} export has no messages folder (${word === 'Instagram' ? 'your_instagram_activity/messages/inbox' : 'your_activity_across_facebook/messages/inbox'}), so it holds no conversations: Messages was not selected when the export was requested. Followers and other lists are not read. Request a new export with Messages selected (${JSON_STEPS}).`);
   }
   const includeRequests = options.includeRequests ?? false;
   const platformOpt = options.platform ?? 'auto';
@@ -106,6 +137,12 @@ async function importMeta(fs, { builder, options = {}, progress, signal } = {}) 
     builder.warn('identity-by-name', 'Meta exports give display names only (no account ids), so people are identified by name. Two people with the same name are merged; a person who renamed appears under the current name.');
     if (ambiguous && platformOpt === 'auto') builder.warn('platform-ambiguous', 'The export uses the old messages/inbox layout, which looks the same for Facebook and Instagram. It was read as Messenger; set the "Platform" option if it is Instagram.');
     if (skippedSections) builder.warn('requests-excluded', 'Message requests and filtered threads were skipped. Turn on "Include message requests" to import them.', skippedSections);
+    // Threads in HTML beside JSON ones: a second export made with Format: HTML.
+    if (html.length) builder.warn('meta-html-skipped', `${html.length} conversation file${html.length === 1 ? ' is' : 's are'} in HTML (message_N.html, from an export made with Format: HTML) and ${html.length === 1 ? 'was' : 'were'} not read; only the JSON conversations are in the network. To include them, request that export again in JSON format (${JSON_STEPS}).`, html.length);
+    // Long threads are split newest-first into message_1.json, message_2.json, ...;
+    // a gap means a zip of a multi-part export was not loaded.
+    const cut = [...threads.values()].filter(t => !t.e2ee && gapIn(t.files.map(f => f.part)));
+    if (cut.length) builder.warn('meta-thread-part-missing', `${cut.length} conversation${cut.length === 1 ? ' is' : 's are'} missing ${cut.length === 1 ? 'one of its' : 'some of their'} files (message_1.json holds the newest messages, message_2.json and on go back in time). Meta splits a large export into several zips, and a thread can be cut across them. Load all the zips of the export together.`, cut.length);
 
     // Parse every thread first: the ego is the participant common to all threads.
     const parsed = [];
@@ -260,6 +297,11 @@ async function importMeta(fs, { builder, options = {}, progress, signal } = {}) 
   progress?.(1, 'Meta import done');
 }
 
+function gapIn(parts) {
+  const ns = [...new Set(parts)].sort((a, b) => a - b);
+  return ns.length > 0 && ns.some((n, i) => n !== i + 1);
+}
+
 export default {
   id: 'meta',
   label: 'Facebook Messenger / Instagram messages (Meta export, JSON)',
@@ -270,6 +312,7 @@ export default {
     { key: 'platform', label: 'Platform', type: 'choice', default: 'auto', choices: ['auto', 'messenger', 'instagram'] },
     { key: 'includeRequests', label: 'Include message requests and filtered threads', type: 'boolean', default: false },
   ],
+  partKey,
   import: importMeta,
 };
 

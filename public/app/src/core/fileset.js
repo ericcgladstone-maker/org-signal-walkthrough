@@ -8,6 +8,7 @@
 // Zips are expanded lazily (only the directory is read up front).
 
 import { openZip, isZip, decodeText } from './zip.js';
+import { classifyItem, truncatedZipProblem, encryptedZipProblem, fingerprint, sameContent, duplicateProblem } from './upload.js';
 
 function blobEntry(blob, path) {
   return {
@@ -31,20 +32,94 @@ export class FileSet {
 
   // items: Array of { blob, path }. Zips are expanded; their entries keep the zip's
   // name as a prefix only when more than one item was given.
+  //
+  // What cannot be read is skipped and recorded in `fs.problems` (see
+  // src/core/upload.js): unfinished downloads, truncated or encrypted zips,
+  // files named .zip that are not zips, unsupported archives, empty files,
+  // and a second copy of an item already given. Zips are recognised by their
+  // first bytes, so a browser-renamed "export.zip (1)" still opens.
   static async from(items) {
-    const entries = [];
+    const problems = [];
     const unwrapped = [];
-    const multi = items.length > 1;
-    for (const { blob, path } of items) {
-      if (/\.zip$/i.test(path) && await isZip(blob)) {
-        const prefix = multi ? path.replace(/\.zip$/i, '') + '/' : '';
-        entries.push(...await zipEntries(blob, prefix, path, unwrapped));
+    // 1. What each item is, from its name and first bytes.
+    const readable = [];
+    for (const it of items) {
+      const size = it.blob.size || 0;
+      const head = size ? new Uint8Array(await it.blob.slice(0, 64).arrayBuffer()) : new Uint8Array(0);
+      const c = classifyItem(it.path, size, head);
+      if (c.problem) problems.push(c.problem);
+      if (c.problem && !c.zip) continue;
+      readable.push({ ...it, zip: !!c.zip });
+    }
+    // 2. Open the zips (directory only). A zip whose directory cannot be read
+    // was cut off; one with password-protected entries keeps the rest.
+    const units = []; // one per dropped item: a zip, a loose file, or a folder
+    const folders = new Map();
+    for (const it of readable) {
+      if (it.zip) {
+        let list;
+        try { list = await zipEntries(it.blob, '', it.path, unwrapped); }
+        catch (e) { problems.push(truncatedZipProblem(it.path, e)); continue; }
+        const files = list.filter(z => !z.isDir && !isJunk(z.path));
+        const locked = files.filter(z => z.encrypted);
+        if (locked.length) problems.push(encryptedZipProblem(it.path, locked.length, files.length));
+        units.push({ name: it.path, zip: true, files: files.filter(z => !z.encrypted), all: list.filter(z => !z.encrypted) });
+      } else if (it.path.includes('/')) {
+        const top = it.path.slice(0, it.path.indexOf('/'));
+        if (!folders.has(top)) { const u = { name: top, folder: true, files: [] }; folders.set(top, u); units.push(u); }
+        folders.get(top).files.push({ path: it.path, size: it.blob.size, blob: it.blob });
       } else {
-        entries.push(blobEntry(blob, path));
+        units.push({ name: it.path, files: [{ path: it.path, size: it.blob.size, blob: it.blob }] });
       }
     }
-    const fs = new FileSet(entries, { names: items.map(i => i.path) });
+    // 3. The same item given twice (a repeated download, a zip next to its
+    // unzipped folder) is read once. Names and sizes first; content (CRC-32
+    // or a hash) only when those agree.
+    const keep = [];
+    const seen = new Map();
+    // The copy the browser renamed ("export (1).zip") is the one dropped.
+    const copyMark = n => (/ \(\d+\)(\.[^./]+)*$|\.[^./]+ \(\d+\)$/.test(n) ? 1 : 0);
+    const ordered = units.map((u, i) => [u, i]).sort((a, b) => copyMark(a[0].name) - copyMark(b[0].name) || a[1] - b[1]).map(x => x[0]);
+    for (const u of ordered) {
+      if (!u.files.length) { keep.push(u); continue; }
+      const quick = fingerprint(u.files);
+      let dup = null;
+      for (const prev of seen.get(quick) || []) if (await sameContent(prev.files, u.files)) { dup = prev; break; }
+      if (dup) { problems.push(duplicateProblem(u.name, dup.name)); continue; }
+      if (!seen.has(quick)) seen.set(quick, []);
+      seen.get(quick).push(u);
+      keep.push(u);
+    }
+    keep.sort((a, b) => units.indexOf(a) - units.indexOf(b));
+    // 4. Entries. A zip's name becomes its folder only when other items sit
+    // beside it; when that folder name is taken (the zip dropped next to the
+    // folder macOS unzipped it into), the zip keeps its full name.
+    const entries = [];
+    const multi = keep.length > 1;
+    const taken = new Set(keep.filter(u => u.folder).map(u => u.name.toLowerCase()));
+    const roots = [];
+    for (const u of keep) {
+      if (u.zip) {
+        let prefix = '';
+        if (multi) {
+          let p = u.name.replace(/\.zip$/i, '');
+          if (taken.has(p.toLowerCase())) p = u.name;
+          taken.add(p.toLowerCase());
+          prefix = p + '/';
+          if (!u.name.includes('/')) roots.push(prefix);
+        }
+        for (const z of u.all) entries.push({ ...z, path: prefix + z.path, stream: z.stream, bytes: z.bytes, text: z.text });
+      } else {
+        if (u.folder) roots.push(u.name + '/');
+        for (const f of u.files) entries.push(blobEntry(f.blob, f.path));
+      }
+    }
+    const kept = new Set(keep.flatMap(u => (u.zip || !u.folder ? [u.name] : u.files.map(f => f.path))));
+    const fs = new FileSet(entries, { names: items.map(i => i.path).filter(p => kept.has(p)) });
     fs.unwrapped = unwrapped;
+    fs.problems = problems;
+    // The folder each dropped item occupies in `rel` (src/core/pipeline.js itemRoots).
+    fs.roots = multi ? roots : [];
     return fs;
   }
 

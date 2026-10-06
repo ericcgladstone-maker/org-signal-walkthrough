@@ -30,7 +30,7 @@ export function simLinkedIn(world, ctx) {
   // Ordinary messages between stronger connections.
   driveTies(world, ctx, world.params.activity / 52, (ti, a, b, t) => {
     if (ties.w[ti] < 0.9) return;
-    convo(r.chance(0.5) ? a : b, r.chance(0.5) ? b : a, t);
+    if (r.chance(0.5)) convo(a, b, t); else convo(b, a, t);
   }, { filter: ti => ties.w[ti] >= 0.9 });
   // Congratulations after job changes.
   for (const e of world.events) {

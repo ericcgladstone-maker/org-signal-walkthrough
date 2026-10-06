@@ -700,11 +700,11 @@ window.TIMELINE = {
         },
         {
           "at": 19,
-          "text": "The generated export is chosen: a zip of 18,954 files and 19.4 MB, named as Slack names its exports. Org Signal recognizes it from the files inside rather than from the name."
+          "text": "The generated export is chosen: a zip of 18,575 files and 18.9 MB, named as Slack names its exports. Org Signal recognizes it from the files inside rather than from the name."
         },
         {
           "at": 35,
-          "text": "The import visibly takes a few seconds because the importer checks the files before the review opens. The review then reports 121 people with 75,377 messages and 3,973 reactions across 1,171 conversations. These are counts of events. None is a tie yet. Turning events into ties is the next chapter's subject."
+          "text": "The import visibly takes a few seconds because the importer checks the files before the review opens. The review then reports 121 people with 73,058 messages and 3,894 reactions across 1,125 conversations. These are counts of events. None is a tie yet. Turning events into ties is the next chapter's subject."
         }
       ]
     },
@@ -734,11 +734,11 @@ window.TIMELINE = {
         },
         {
           "at": 66,
-          "text": "The review lists the pieces of evidence available for construction before duplicate accounts are merged: replies 13,709, mentions 10,790, direct messages 38,500 and reactions 3,973. A reply links a replier to the author answered, a mention an author to the person named, a direct message sender to recipient, and a reaction a person to a message's author. These are event records. None defines a relationship on its own."
+          "text": "The review lists the pieces of evidence available for construction before duplicate accounts are merged: replies 13,211, mentions 10,467, direct messages 37,397 and reactions 3,894. A reply links a replier to the author answered, a mention an author to the person named, a direct message sender to recipient, and a reaction a person to a message's author. These are event records. None defines a relationship on its own."
         },
         {
           "at": 95,
-          "text": "What was read: 121 people and 1,171 conversations by kind, messages, reactions and 4 channel-leave events, one bot named Deploy Bot, and one deactivated account belonging to Ludmila Nakamura. A bot generates traffic that is not social interaction. A deactivated account belongs to someone who has left while their records remain."
+          "text": "What was read: 121 people and 1,125 conversations by kind, messages, reactions and 4 channel-leave events, one bot named Deploy Bot, and one deactivated account belonging to Ludmila Nakamura. A bot generates traffic that is not social interaction. A deactivated account belongs to someone who has left while their records remain."
         },
         {
           "at": 118,
@@ -746,7 +746,7 @@ window.TIMELINE = {
         },
         {
           "at": 139,
-          "text": "Loaded, the export becomes 120 people and 1,398 ties. Ludmila Nakamura already stands out with the most contacts and the second-highest betweenness (0.141), though her account was deactivated partway through. Where does a network come from when nobody drew it? From records, filtered by an importer and turned into ties by rules, each a decision about what counts."
+          "text": "Loaded, the export becomes 120 people and 1,378 ties. Ludmila Nakamura already stands out with the most contacts and the second-highest betweenness (0.149), though her account was deactivated partway through. Where does a network come from when nobody drew it? From records, filtered by an importer and turned into ties by rules, each a decision about what counts."
         }
       ]
     },
@@ -764,11 +764,11 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "What is a tie, really? The header reads 120 people and 1,398 ties, directed, so a two-way tie counts as two. Those ties were built by default rules, which deserve the same scrutiny as any other measurement choice. Here a tie is the output of a rule applied to message records. Its substantive meaning depends on the relation that rule is intended to represent."
+          "text": "What is a tie, really? The header reads 120 people and 1,378 ties, directed, so a two-way tie counts as two. Those ties were built by default rules, which deserve the same scrutiny as any other measurement choice. Here a tie is the output of a rule applied to message records. Its substantive meaning depends on the relation that rule is intended to represent."
         },
         {
           "at": 28,
-          "text": "Construction settings lists the rules with evidence in these data. Replies contribute 13,709 pieces of evidence. Mentions, direct messages and reactions provide other event types, while another 9 rules have no evidence here. Each rule states which kind of event may count as evidence of a tie."
+          "text": "Construction settings lists the rules with evidence in these data. Replies contribute 13,211 pieces of evidence. Mentions, direct messages and reactions provide other event types, while another 9 rules have no evidence here. Each rule states which kind of event may count as evidence of a tie."
         },
         {
           "at": 50,
@@ -794,7 +794,7 @@ window.TIMELINE = {
         "label": "Generate the workplace, then Network › Construction settings"
       },
       "heading": "A stricter rule keeps fewer ties.",
-      "duration": 69,
+      "duration": 68,
       "paragraphs": [
         {
           "at": 0,
@@ -802,14 +802,14 @@ window.TIMELINE = {
         },
         {
           "at": 16,
-          "text": "Apply and rebuild reports 1,158 ties against 1,398 before. There are still 7 communities and 1 person changes community. The notice makes the construction change explicit. The departmental pattern survives the stricter rule almost intact."
+          "text": "Apply and rebuild reports 1,145 ties against 1,378 before. There are still 7 communities and 3 people change community. The notice makes the construction change explicit. The departmental pattern survives the stricter rule almost intact."
         },
         {
           "at": 34,
-          "text": "The ranking changes sharply. Tove Delacroix has the most contacts with 22. Kira Ishikawa now leads betweenness, followed closely by Fintan Gorski. Fintan is also closest to everyone."
+          "text": "The ranking changes sharply. Tove Delacroix has the most contacts with 23. Mara Nyberg now leads betweenness, followed by Tove. Tove is also closest to everyone."
         },
         {
-          "at": 48,
+          "at": 47,
           "text": "Only Tove remains from the default construction's top five on betweenness. Her later tie list shows several cross-department ties supported only by direct messages. A replies-only network describes who answers whom in shared conversation, and in this generated world it produces a different brokerage structure."
         }
       ]
@@ -832,7 +832,7 @@ window.TIMELINE = {
         },
         {
           "at": 13,
-          "text": "The rebuild has 1,160 ties, barely more than replies alone. Kira's Strength rises sharply because mentions add events to existing ties even when they add almost no new pairs."
+          "text": "The rebuild has 1,145 ties, the same number as replies alone. Tove's Strength rises sharply because mentions add events to existing ties even when they add almost no new pairs."
         },
         {
           "at": 28,
@@ -854,7 +854,7 @@ window.TIMELINE = {
         "label": "Generate the workplace, then Network › Construction settings"
       },
       "heading": "Here reactions change weight while the tie set stays fixed.",
-      "duration": 77,
+      "duration": 79,
       "paragraphs": [
         {
           "at": 0,
@@ -866,11 +866,11 @@ window.TIMELINE = {
         },
         {
           "at": 36,
-          "text": "With reactions removed the network still has 1,398 ties. Every reaction here falls on a pair that already exchanged messages, so only weights change. Two people change community because Louvain uses weights. In another setting, reactions could create new ties, so the same construction rule could behave differently."
+          "text": "With reactions removed the network still has 1,378 ties. Every reaction here falls on a pair that already exchanged messages, so only weights change. Nobody changes community here, although Louvain uses weights and could have moved some. In another setting, reactions could create new ties, so the same construction rule could behave differently."
         },
         {
-          "at": 58,
-          "text": "Betweenness is unchanged because it is unweighted here. Strength changes because it sums event-count weight. Tove's is now 2,940. The ranking difference from replies-only came from direct messages. Reactions matter for weight in this dataset without changing the tie set."
+          "at": 60,
+          "text": "Betweenness is unchanged because it is unweighted here. Strength changes because it sums event-count weight. Tove's is now 3,240. The ranking difference from replies-only came from direct messages. Reactions matter for weight in this dataset without changing the tie set."
         }
       ]
     },
@@ -888,11 +888,11 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "Tove Delacroix is selected, and her ties are drawn reaching into several departments. She has 35 contacts, betweenness 0.162 and constraint 0.076. Low constraint means her network investment is distributed across relatively non-redundant contacts, a structural condition associated with brokerage in Burt's formulation."
+          "text": "Tove Delacroix is selected, and her ties are drawn reaching into several departments. She has 35 contacts, betweenness 0.175 and constraint 0.074. Low constraint means her network investment is distributed across relatively non-redundant contacts, a structural condition associated with brokerage in Burt's formulation."
         },
         {
           "at": 20,
-          "text": "Her ties are listed strongest first with their weights and the rules behind them: Folake Petrov with 175 through every rule, then Lars Lindgren with 169. Further down is Kira Ishikawa with 116 through direct messages only, and several more like it. Those are ties a replies-only rule removes, which helps explain why the routes between departments change."
+          "text": "Her ties are listed strongest first with their weights and the rules behind them: Lars Lindgren with 180 through every rule, then Folake Petrov with 170. Further down is Gideon Underhill with 130 through direct messages only, and several more like it. Those are ties a replies-only rule removes, which helps explain why the routes between departments change."
         },
         {
           "at": 46,
@@ -918,7 +918,7 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "Who are the brokers, and how sure can we be? We return to the default bridge-dependent workplace, 120 people and 1,398 ties, with the banner reporting 9 of 9 planted features recovered. Under this complete generated export, that banner primarily checks the measures. The rest of the chapter asks about ranking sensitivity, structural baselines and what changes when observation becomes stricter."
+          "text": "Who are the brokers, and how sure can we be? We return to the default bridge-dependent workplace, 120 people and 1,378 ties, with the banner reporting 9 of 9 planted features recovered. Under this complete generated export, that banner primarily checks the measures. The rest of the chapter asks about ranking sensitivity, structural baselines and what changes when observation becomes stricter."
         },
         {
           "at": 27,
@@ -930,7 +930,7 @@ window.TIMELINE = {
         },
         {
           "at": 70,
-          "text": "Who stands out separates the first chapter's ideas at scale. Ludmila Nakamura has the most contacts with 36 and Tove Delacroix is next with 35. Tove is most often on the route between others at 0.162 and closest to everyone at 0.626. On this directed network betweenness is divided by ordered pairs of other people."
+          "text": "Who stands out separates the first chapter's ideas at scale. Ludmila Nakamura has the most contacts with 36 and Tove Delacroix is next with 35. Tove is most often on the route between others at 0.175 and closest to everyone at 0.626. On this directed network betweenness is divided by ordered pairs of other people."
         },
         {
           "at": 94,
@@ -952,7 +952,7 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "Sorted by betweenness, the list runs Tove Delacroix, Ludmila Nakamura, Gideon Underhill, Wes Corrigan, Priya Kamara, then Zainab Zapata and Farid Arslan. Values fall steeply, from 0.162 at the top to 0.054 in seventh place and 0.040 in eighth. That gap is what a bridge-dependent structure should produce."
+          "text": "Sorted by betweenness, the list runs Tove Delacroix, Ludmila Nakamura, Gideon Underhill, Wes Corrigan, Priya Kamara, then Zainab Zapata and Farid Arslan. Values fall steeply, from 0.175 at the top to 0.057 in seventh place and 0.034 in eighth. That gap is what a bridge-dependent structure should produce."
         },
         {
           "at": 22,
@@ -960,7 +960,7 @@ window.TIMELINE = {
         },
         {
           "at": 48,
-          "text": "Tove's profile ranks her first of 120 on strength, betweenness and closeness and second on contacts. Her 0.162 betweenness is the average fraction of shortest paths, across ordered pairs of other people, that pass through her, with credit split when several shortest paths are equally short."
+          "text": "Tove's profile ranks her first of 120 on strength, betweenness and closeness and second on contacts. Her 0.175 betweenness is the average fraction of shortest paths, across ordered pairs of other people, that pass through her, with credit split when several shortest paths are equally short."
         },
         {
           "at": 69,
@@ -1016,11 +1016,11 @@ window.TIMELINE = {
         },
         {
           "at": 43,
-          "text": "Transitivity, the share of two-step paths that close into triangles, is 0.393 against a random average of 0.227, with 95% of random networks between 0.219 and 0.236. None of the 200 random networks reached a deviation this large from their average. Two-step paths close far more often than the degree-preserving null produces. That is a structural pattern relevant to Coleman's closure argument. It does not establish trust, obligations or norms."
+          "text": "Transitivity, the share of two-step paths that close into triangles, is 0.398 against a random average of 0.225, with 95% of random networks between 0.218 and 0.233. None of the 200 random networks reached a deviation this large from their average. Two-step paths close far more often than the degree-preserving null produces. That is a structural pattern relevant to Coleman's closure argument. It does not establish trust, obligations or norms."
         },
         {
           "at": 73,
-          "text": "Modularity needs separate calibration because modularity optimization can return substantial values in random graphs. Community detection is therefore rerun on every rewired network. On the ties alone the observed partition scores 0.624, random networks average 0.158 and z is 89. The detected communities are the structure being tested here. The next state shows that they correspond closely to the planted departments."
+          "text": "Modularity needs separate calibration because modularity optimization can return substantial values in random graphs. Community detection is therefore rerun on every rewired network. On the ties alone the observed partition scores 0.632, random networks average 0.159 and z is 90. The detected communities are the structure being tested here. The next state shows that they correspond closely to the planted departments."
         }
       ]
     },
@@ -1038,7 +1038,7 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "The third doubt is whether betweenness identifies the brokers planted by the generator. The recovery panel uses 699 unordered pairs, the 1,398 directed ties counted once per reciprocal pair. All 699 true pairs are present because this export records every generated interaction. Observation is complete here, so this part of the check isolates the measure rather than reconstruction loss."
+          "text": "The third doubt is whether betweenness identifies the brokers planted by the generator. The recovery panel uses 689 unordered pairs, the 1,378 directed ties counted once per reciprocal pair. All 689 true pairs are present because this export records every generated interaction. Observation is complete here, so this part of the check isolates the measure rather than reconstruction loss."
         },
         {
           "at": 26,
@@ -1058,7 +1058,7 @@ window.TIMELINE = {
         },
         {
           "at": 100,
-          "text": "Now the same generated world is reconstructed from replies alone. Recovery falls to 6 of 9 planted features, and only 1 of the 7 planted brokers is among the 7 people with the highest betweenness, because the observation rule discards direct messages and other events that carried structural information. The planted social structure is unchanged. What changed is which records are allowed to become ties, so this comparison isolates what the stricter observation rule costs."
+          "text": "Now the same generated world is reconstructed from replies alone. Recovery falls to 6 of 9 planted features, and only 2 of the 7 planted brokers are among the 7 people with the highest betweenness, because the observation rule discards direct messages and other events that carried structural information. The planted social structure is unchanged. What changed is which records are allowed to become ties, so this comparison isolates what the stricter observation rule costs."
         }
       ]
     },
@@ -1076,15 +1076,15 @@ window.TIMELINE = {
       "paragraphs": [
         {
           "at": 0,
-          "text": "A further question is whether brokerage is concentrated in a few people. The top 5 by betweenness hold 43% of all betweenness, 10 times the 4% an even spread would give: concentrated, though under half."
+          "text": "A further question is whether brokerage is concentrated in a few people. The top 5 by betweenness hold 45% of all betweenness, 11 times the 4% an even spread would give: concentrated, though under half."
         },
         {
           "at": 17,
-          "text": "The top 10 account for 59% of summed betweenness, 7.1 times an even share. They therefore account for most of the brokerage measured here. The percentage is a share of betweenness rather than a share of unique routes, because one shortest path can contribute to several people's scores."
+          "text": "The top 10 account for 60% of summed betweenness, 7.1 times an even share. They therefore account for most of the brokerage measured here. The percentage is a share of betweenness rather than a share of unique routes, because one shortest path can contribute to several people's scores."
         },
         {
           "at": 39,
-          "text": "The what-if table removes these people and their ties. For this connectivity calculation, 699 unordered pairs correspond to the 1,398 reciprocal directed ties counted once each. The pairs fall to 468 and ties across departments to 15. The network stays in 1 piece while average steps rise from 2.47 to 4.63. Removing the central set therefore lengthens routes sharply without disconnecting the network."
+          "text": "The what-if table removes these people and their ties. For this connectivity calculation, 689 unordered pairs correspond to the 1,378 reciprocal directed ties counted once each. The pairs fall to 463 and ties across departments to 13. The network stays in 1 piece while average steps rise from 2.5 to 4.57. Removing the central set therefore lengthens routes sharply without disconnecting the network."
         },
         {
           "at": 67,
@@ -1118,7 +1118,7 @@ window.TIMELINE = {
         },
         {
           "at": 66,
-          "text": "The siloed network has 120 people and 1,351 ties, with modularity 0.748. The map looks divided. The bridge-dependent map did too, so appearance alone does not identify the temporal change. This view pools the whole period, and every tie formed before the change still counts. Pooling accumulates the past and dilutes a change that occurs partway through the period."
+          "text": "The siloed network has 120 people and 1,346 ties, with modularity 0.746. The map looks divided. The bridge-dependent map did too, so appearance alone does not identify the temporal change. This view pools the whole period, and every tie formed before the change still counts. Pooling accumulates the past and dilutes a change that occurs partway through the period."
         }
       ]
     },
@@ -1140,15 +1140,15 @@ window.TIMELINE = {
         },
         {
           "at": 23,
-          "text": "Assortativity by department is 0.732. Random networks with the same numbers of ties average −0.00894, placing the observed value far outside the degree-preserving baseline. Assortativity uses the category marginals at the ends of ties, so it is less mechanically driven by group prevalence than a raw within-group share. It remains a summary of this particular grouping and network."
+          "text": "Assortativity by department is 0.736. Random networks with the same numbers of ties average −0.00892, placing the observed value far outside the degree-preserving baseline. Assortativity uses the category marginals at the ends of ties, so it is less mechanically driven by group prevalence than a raw within-group share. It remains a summary of this particular grouping and network."
         },
         {
           "at": 49,
-          "text": "The overall E-I index is −0.551 against a random 0.69. With eight departments most possible partners are elsewhere, so random mixing pushes the index well above zero. Departmental homophily can arise from the organization of work itself. A silo claim needs an explicit baseline, such as degree-preserving rewiring or the organization's own earlier level."
+          "text": "The overall E-I index is −0.557 against a random 0.69. With eight departments most possible partners are elsewhere, so random mixing pushes the index well above zero. Departmental homophily can arise from the organization of work itself. A silo claim needs an explicit baseline, such as degree-preserving rewiring or the organization's own earlier level."
         },
         {
           "at": 73,
-          "text": "Each department's E-I is read against its own random value: Operations is −0.41 against 0.71 and Design −0.08 against 0.92. Executive, one person, is 1.00 by definition, since all of that person's ties cross. Group-level values depend on size, so departments should not be compared with one another directly."
+          "text": "Each department's E-I is read against its own random value: Operations is −0.43 against 0.70 and Design −0.10 against 0.93. Executive, one person, is 1.00 by definition, since all of that person's ties cross. Group-level values depend on size, so departments should not be compared with one another directly."
         },
         {
           "at": 96,
@@ -1174,11 +1174,11 @@ window.TIMELINE = {
         },
         {
           "at": 20,
-          "text": "Week by week, events range from 2,409 to 2,941 and ties from 794 to 1,013 with no dramatic break, and density drifts down slightly. Transitivity rises from a low of 0.347 to a high of 0.494 later on. In the planted scenario, reduced cross-department interaction is consistent with a larger share of remaining ties lying inside locally dense groups. The series alone would not identify that mechanism."
+          "text": "Week by week, events range from 2,381 to 2,941 and ties from 804 to 1,010 with no dramatic break, and density drifts down slightly. Transitivity rises from a low of 0.343 to a high of 0.487 later on. In the planted scenario, reduced cross-department interaction is consistent with a larger share of remaining ties lying inside locally dense groups. The series alone would not identify that mechanism."
         },
         {
           "at": 49,
-          "text": "Detected shifts compares each week with the median of the 8 weeks before it, scaled by their median absolute deviation. The cross-department share first breaks in the week of 17 Mar 2025, from a typical 0.183 to 0.113. That transition week straddles the planted change, and the following weeks settle at a much lower level, a median of 0.0483. Because 138 measures are scanned, this is an exploratory detection step. Any inferential test that follows must account for how the measure and date were selected."
+          "text": "Detected shifts compares each week with the median of the 8 weeks before it, scaled by their median absolute deviation. The cross-department share first breaks in the week of 17 Mar 2025, from a typical 0.177 to 0.116. That transition week straddles the planted change, and the following weeks settle at a much lower level, a median of 0.0502. Because 138 measures are scanned, this is an exploratory detection step. Any inferential test that follows must account for how the measure and date were selected."
         },
         {
           "at": 85,
@@ -1204,15 +1204,15 @@ window.TIMELINE = {
         },
         {
           "at": 33,
-          "text": "The periods are 6 Jan 2025 to 16 Mar 2025 and 17 Mar 2025 to 24 May 2025. Afterward, ties stayed inside department lines more: the E-I index moved from −0.551 to −0.671 and crossing ties from 22% to 16%. Those crossing percentages pool each whole period, so they need not match the one-week shares in Time. None of the 2,000 random reassignments produced a change this large under this conditional split. That result should be read with the date-selection caveat from the previous step."
+          "text": "The periods are 6 Jan 2025 to 16 Mar 2025 and 17 Mar 2025 to 24 May 2025. Afterward, ties stayed inside department lines more: the E-I index moved from −0.557 to −0.656 and crossing ties from 22% to 17%. Those crossing percentages pool each whole period, so they need not match the one-week shares in Time. None of the 2,000 random reassignments produced a change this large under this conditional split. That result should be read with the date-selection caveat from the previous step."
         },
         {
           "at": 69,
-          "text": "Density falls from 0.0945 to 0.0877. 1,252 ties persisted, 1 formed and 98 dissolved. The planted change operates mainly through loss of crossing ties, while the pooled network still contains ties formed earlier. That helps explain why the whole-period map changes less dramatically than the temporal series."
+          "text": "Density falls from 0.0942 to 0.0887. 1,265 ties persisted, 1 formed and 80 dissolved. The planted change operates mainly through loss of crossing ties, while the pooled network still contains ties formed earlier. That helps explain why the whole-period map changes less dramatically than the temporal series."
         },
         {
           "at": 91,
-          "text": "Per person, total ties fell on average from 22.5 to 20.9 with an effect size of −0.89 under the same random-split comparison. In this synthetic case, the series locates a sustained decline around the week of 17 Mar 2025 and quantifies its observed size. The generator tells us the cause. With empirical data, the same temporal alignment would remain compatible with any other change occurring around that date."
+          "text": "Per person, total ties fell on average from 22.4 to 21.1 with an effect size of −0.79 under the same random-split comparison. In this synthetic case, the series locates a sustained decline around the week of 17 Mar 2025 and quantifies its observed size. The generator tells us the cause. With empirical data, the same temporal alignment would remain compatible with any other change occurring around that date."
         }
       ]
     },
@@ -1404,11 +1404,11 @@ window.TIMELINE = {
         },
         {
           "at": 22,
-          "text": "The methods appendix is generated from what was actually used, here for the bridge-dependent workplace. It begins with the data, a synthetic Slack workplace in full view, and reports 79,359 events from 121 people or accounts after identity matching. Analyses appear in it only once they have been run."
+          "text": "The methods appendix is generated from what was actually used, here for the bridge-dependent workplace. It begins with the data, a synthetic Slack workplace in full view, and reports 76,960 events from 121 people or accounts after identity matching. Analyses appear in it only once they have been run."
         },
         {
           "at": 44,
-          "text": "The construction is stated in words: replies link replier to author, mentions author to the person mentioned, direct messages sender to recipients, and reactions reactor to author. The network was directed with event-count weights. Messages to more than 25 recipients and accounts flagged as bots were excluded. Isolates were kept. The result had 120 nodes and 1,398 directed ties. A reader who disagrees can see each choice and make another."
+          "text": "The construction is stated in words: replies link replier to author, mentions author to the person mentioned, direct messages sender to recipients, and reactions reactor to author. The network was directed with event-count weights. Messages to more than 25 recipients and accounts flagged as bots were excluded. Isolates were kept. The result had 120 nodes and 1,378 directed ties. A reader who disagrees can see each choice and make another."
         },
         {
           "at": 75,

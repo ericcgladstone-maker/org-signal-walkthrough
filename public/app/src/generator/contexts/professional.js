@@ -171,6 +171,7 @@ export function build(spec, rng, span) {
     domain: 'mail.example',
     people: { label: names.label, first: names.first, last: names.last, attrs, email: makeEmails(names.first, names.last, 'mail.example'), careers: people },
     isBot: new Uint8Array(n), group,
+    groupsNote: 'Ties here come from whole careers, cohorts and recruiters, not from the current employer, so the communities are not expected to match the employers: this check shows how far a label is from the structure.',
     groups: employers.map(e => ({ name: e.name, kind: 'current employer', industry: inds[e.industry] })),
     groupAttr: 'company',
     employers, schools, industries: inds,

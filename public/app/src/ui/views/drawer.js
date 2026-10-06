@@ -11,7 +11,7 @@ import { Histogram } from '../components/charts.js';
 import { RULES, RULE_TEXT, ruleEvidence, sequencedMessages, activityHistogram, visibilityPresent, mediaPresent, botCount, timeExtent } from '../lib/dsutil.js';
 import { fmtInt, isoDay, fmtDate } from '../lib/format.js';
 import { RULE_LABEL } from '../actions.js';
-import { inferEventAttributeSchema, twoModeOf } from '../../core/model.js';
+import { inferEventAttributeSchema, twoModeOf, DEFAULT_BROADCAST_CUTOFF } from '../../core/model.js';
 import { viewOptions, projectionOptions, projectionSentence } from '../lib/twomode.js';
 
 const ruleName = r => { const l = RULE_LABEL[r] || r; return l.charAt(0).toUpperCase() + l.slice(1); };
@@ -120,7 +120,7 @@ export function SettingsDrawer() {
           <${Select} label="Direction" disabled=${!!s.twoMode} value=${s.directed && !s.twoMode ? 'directed' : 'undirected'} onChange=${v => setS(x => ({ ...x, directed: v === 'directed' }))} options=${[{ value: 'directed', label: 'Directed (A to B)' }, { value: 'undirected', label: 'Undirected' }]} />
           <${Select} label="Tie weight" value=${s.weighting || 'count'} onChange=${v => setS(x => ({ ...x, weighting: v }))} options=${[{ value: 'count', label: 'Count of evidence' }, { value: 'log', label: 'Log of count' }, { value: 'binary', label: 'Present or absent' }]} />
           <label class="field"><span>Minimum tie weight</span><input class="input tnum" type="number" min="0" step="0.5" value=${s.minWeight ?? 0} onInput=${e => setS(x => ({ ...x, minWeight: Math.max(0, Number(e.currentTarget.value) || 0) }))} /></label>
-          <label class="field"><span>Broadcast cutoff (recipients)</span><input class="input tnum" type="number" min="0" value=${s.maxRecipients ?? 25} onInput=${e => setS(x => ({ ...x, maxRecipients: Math.max(0, Number(e.currentTarget.value) || 0) }))} /></label>
+          <label class="field"><span>Broadcast cutoff (recipients)</span><input class="input tnum" type="number" min="0" value=${s.maxRecipients ?? DEFAULT_BROADCAST_CUTOFF} onInput=${e => setS(x => ({ ...x, maxRecipients: Math.max(0, Number(e.currentTarget.value) || 0) }))} /></label>
         </div>
         <p class="basis">${s.twoMode ? 'Two-mode data is always undirected: belonging to a group or attending an event has no direction. ' : ''}Messages addressed to more people than the cutoff are treated as broadcasts and create no ties. 0 means no cutoff.</p>
         <label class="check" style="margin-top:.6rem"><input type="checkbox" checked=${s.includeIsolates !== false} onChange=${e => setS(x => ({ ...x, includeIsolates: e.currentTarget.checked }))} />Keep people with no ties (isolates)</label>

@@ -55,8 +55,38 @@ async function* ytdItems(entry) {
 
 // Build the type -> [entries] index: from manifest.js when present (the spec's
 // rule: read dataTypes.<type>.files[], don't glob), else by sniffing each .js.
+// What a missing data type costs the network, for the missing-part message.
+const MISSING_MEANS = {
+  tweets: 'tweets (replies, mentions, quotes and retweets)', tweet: 'tweets (replies, mentions, quotes and retweets)',
+  noteTweet: 'long-tweet text', like: 'likes', follower: 'followers', following: 'accounts followed',
+  directMessages: 'one-to-one direct messages', directMessagesGroup: 'group direct messages',
+  account: "the owner's account id", profile: "the owner's profile",
+};
+
+function missingMessage(missing, manifest) {
+  const kinds = [...new Set(missing.map(m => MISSING_MEANS[m.type] || m.fileName.split('/').pop()))];
+  const list = kinds.length < 2 ? kinds.join('') : `${kinds.slice(0, -1).join(', ')} and ${kinds[kinds.length - 1]}`;
+  const files = missing.slice(0, 6).map(m => m.fileName.split('/').pop()).join(', ') + (missing.length > 6 ? ', ...' : '');
+  if (manifest?.archiveInfo?.isPartialArchive === true || manifest?.archiveInfo?.isPartialArchive === 'true') {
+    return `This archive was delivered in several parts (manifest.js marks it partial), and the files holding ${list} are not in this upload (${files}). Load all the parts together; X lists every part on the archive download page (Settings > Your account > Download an archive of your data).`;
+  }
+  return `manifest.js lists data files that are not in this upload (${files}), so the network has no ${list} from them. Load the archive zip as downloaded, without removing files from it.`;
+}
+
+// Parts of one split delivery share the account and the generation date.
+async function partKey(fs) {
+  const m = manifestEntry(fs);
+  if (!m) return null;
+  let man;
+  try { man = parseYTD(await m.text()); } catch { return null; }
+  const partial = man?.archiveInfo?.isPartialArchive;
+  if (!(partial === true || partial === 'true')) return null;
+  return `x:${man?.userInfo?.accountId ?? ''}:${man?.archiveInfo?.generationDate ?? ''}`;
+}
+
 async function buildIndex(fs, builder) {
   const index = new Map();
+  const missing = [];
   const add = (type, part, entry) => {
     const k = norm(type);
     if (!index.has(k)) index.set(k, []);
@@ -76,9 +106,10 @@ async function buildIndex(fs, builder) {
         const part = Number(/\.part(\d+)$/.exec(f.globalName || '')?.[1] ?? i);
         const entry = fs.get(root + fileName) || fs.get(fileName) || fs.first(new RegExp('(^|/)' + fileName.split('/').pop().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i'));
         if (entry) add(type, part, entry);
-        else if (Number(f.count ?? 1) > 0) builder.warn('missing-part', `A data file listed in manifest.js is not in the upload (e.g. ${fileName}). Upload the whole archive zip.`);
+        else if (Number(f.count ?? 1) > 0) missing.push({ type, fileName });
       }
     }
+    if (missing.length) builder.warn('missing-part', missingMessage(missing, manifest), missing.length);
   } else {
     for (const e of fs.find(/\.js$/i)) {
       if (/(^|\/)assets\//i.test(e.rel) || /_media\//i.test(e.rel)) continue;
@@ -97,6 +128,7 @@ async function importArchive(fs, { builder, progress, signal }) {
   // Begin first so index-building warnings land on this source; egoKey is
   // filled in once account.js has been read.
   builder.beginSource({ format: 'x-archive', family: 'online', medium: 'x', view: VIEWS.EGO, context: 'online', tz: 'UTC', fileNames, egoKey: null });
+  const eventsBefore = builder.ev.type.length;
   const { index, manifest } = await buildIndex(fs, builder);
   const filesOf = (...types) => types.flatMap(t => index.get(norm(t)) || []).map(x => { fileNames.push(x.entry.rel); return x.entry; });
 
@@ -321,6 +353,11 @@ async function importArchive(fs, { builder, progress, signal }) {
       importConversation(builder, unwrap(it, 'dmConversation'), group, { ego, egoId, person });
     }
   }
+  // Only account files: nothing to build a network from (the parts with
+  // tweets and messages were left out, or the archive was trimmed).
+  if (builder.ev.type.length === eventsBefore) {
+    builder.warn('x-archive-no-data', 'No tweets, direct messages, likes or follow lists were read from this archive, so it holds no ties. Load the complete archive zip as downloaded (every part, if X split it).');
+  }
   progress?.(1, 'Done');
 }
 
@@ -402,5 +439,6 @@ export default {
   family: 'online',
   detect,
   options: [],
+  partKey,
   import: importArchive,
 };

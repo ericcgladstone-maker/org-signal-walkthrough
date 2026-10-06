@@ -5,11 +5,11 @@
 // Messages in:  { type: 'run' | 'detect', files: [{ blob, path }], opts: { choices, options, name } }
 // Messages out: { type: 'progress', fraction, message }
 //               { type: 'done', result }   result = { dataset, report, detections, plan, unclaimed }
-//                                          (detect: { detections, files } with the number of files seen)
-//               { type: 'error', message, name, stack }
+//                                          (detect: { detections, files, problems } with the number of files seen)
+//               { type: 'error', message, name, code, stack }
 // Cancel = the main thread terminates the worker; nothing here needs to clean up.
 
-import { runImport, detectImports, toFileSet } from '../core/pipeline.js';
+import { runImport, detectImports, toFileSet, uploadFailure } from '../core/pipeline.js';
 import { toTransfer } from '../core/model.js';
 
 // Exported so tests can drive the worker logic without a Worker.
@@ -25,7 +25,10 @@ export async function handle(msg, post) {
     };
     if (msg.type === 'detect') {
       const fs = await toFileSet(msg.files);
-      post({ type: 'done', result: { detections: await detectImports(fs, { progress }), files: fs.entries.length } });
+      // Nothing readable (a truncated zip, an unfinished download): the reason
+      // is the error the Data view shows for this input.
+      if (!fs.entries.length) throw uploadFailure(fs.problems || []);
+      post({ type: 'done', result: { detections: await detectImports(fs, { progress }), files: fs.entries.length, problems: fs.problems || [] } });
       return;
     }
     if (msg.type !== 'run') throw new Error(`Unknown message type "${msg.type}".`);
@@ -33,7 +36,7 @@ export async function handle(msg, post) {
     const { payload, transfer } = toTransfer(result.dataset);
     post({ type: 'done', result: { ...result, dataset: payload } }, transfer);
   } catch (e) {
-    post({ type: 'error', message: e?.message || String(e), name: e?.name, stack: e?.stack });
+    post({ type: 'error', message: e?.message || String(e), name: e?.name, code: e?.code, stack: e?.stack });
   }
 }
 

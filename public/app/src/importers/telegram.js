@@ -8,6 +8,7 @@
 
 import { streamJSON } from './lib/json.js';
 import { peek } from '../core/fileset.js';
+import { UploadError } from '../core/upload.js';
 import { nameKey } from './lib/text.js';
 
 const NS = 'telegram';
@@ -40,9 +41,28 @@ function resultEntry(fs) {
   return fs.first(/(^|\/)result\.json$/i);
 }
 
+// Telegram Desktop's HTML export (the exporter's default format): messages.html,
+// messages2.html, ... per chat, plus css/, js/, images/ and, for a full export,
+// export_results.html and lists/. Recognised so the person is told to export
+// again as JSON rather than that nothing matched.
+const HTML_PAGE_RE = /(?:^|\/)(messages\d*|export_results)\.html$/i;
+async function htmlExport(fs) {
+  const pages = fs.entries.filter(e => HTML_PAGE_RE.test(e.rel));
+  for (const p of pages.slice(0, 5)) {
+    const head = await peek(p, 4096);
+    if (/class="page_wrap"|class="history"|<title>Exported Data<\/title>/.test(head)) return pages;
+  }
+  return null;
+}
+
+const JSON_STEPS = 'In Telegram Desktop: for one chat, open it, then the menu (three dots) > Export chat history; for everything, Settings > Advanced > Export Telegram data. Set Format to "Machine-readable JSON" and load the result.json it writes (or the whole export folder)';
+
 async function detect(fs) {
   const e = resultEntry(fs);
-  if (!e) return { score: 0 };
+  if (!e) {
+    const html = await htmlExport(fs);
+    return html ? { score: 0.8, reason: 'Telegram Desktop export in HTML format (needs a JSON export)', files: fs.entries.map(x => x.rel) } : { score: 0 };
+  }
   const head = await peek(e, 8192);
   const unixtime = /"date_unixtime"\s*:\s*"\d+"/.test(head);
   if (/"chats"\s*:\s*\{/.test(head) || (/"personal_information"\s*:/.test(head) && /"about"\s*:/.test(head))) {
@@ -88,7 +108,12 @@ function timeOf(o) {
 
 async function importTelegram(fs, { builder, options = {}, progress, signal } = {}) {
   const e = resultEntry(fs);
-  if (!e) throw new Error('No result.json found. Export from Telegram Desktop with format "Machine-readable JSON".');
+  if (!e) {
+    const html = await htmlExport(fs);
+    if (html) throw new UploadError('telegram-html-format', `This Telegram export is in HTML format (${html.length} page${html.length === 1 ? '' : 's'} such as ${html[0].rel.split('/').pop()}), which cannot be read: the pages hold formatted text without user ids. Export again as JSON. ${JSON_STEPS}.`);
+    throw new UploadError('telegram-no-result', `No result.json was found. ${JSON_STEPS}.`);
+  }
+  if (!e.size) throw new UploadError('empty-upload', `${e.rel.split('/').pop()} is empty (0 bytes). Telegram writes result.json at the end of the export, so the export probably did not finish. Export again: ${JSON_STEPS}.`);
   const includeChannels = options.includeChannels ?? false;
   const includeBotChats = options.includeBotChats ?? false;
 

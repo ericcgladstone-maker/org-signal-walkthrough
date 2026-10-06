@@ -26,7 +26,7 @@ import { store, useStore } from '../store.js';
 import { ViewHead, Flag, ErrorLine, Seg } from '../components/common.js';
 import { importReport, suggestMatches, applyMerges, mergeDatasets, joinProfiles, pipelineMode, filesForRels } from '../services/pipeline.js';
 import { fmtInt, plural } from '../lib/format.js';
-import { inputsFromDrop, inputsFromPicker, detect, importOne, tableKindOf, shortName, browserZone, isCSV, blobOf, pathOf, groupSharedResponses } from './data/io.js';
+import { inputsFromDrop, inputsFromPicker, detect, importGroups, importGroup, tableKindOf, shortName, browserZone, isCSV, blobOf, pathOf, groupSharedResponses } from './data/io.js';
 import { InputList, effectiveImporters, isRecognized, inputUse } from './data/inputs.js';
 import { ReportView } from './data/report.js';
 import { ownersOf, ownerPairs, Owners, MatchList, ManualMerge, IdentityPanel } from './data/identity.js';
@@ -105,12 +105,23 @@ export function DataView() {
     }
     setBusy(true);
     try {
+      // Parts of one export and repeated files are read together (io.js importGroups).
+      const groups = importGroups(toImport);
+      const failed = [];
       const results = await store.actions.runJob(toImport.length > 1 ? `Importing ${toImport.length} inputs` : `Importing ${toImport[0].name}`, async (signal, progress) => {
         const out = [];
-        for (let k = 0; k < toImport.length; k++) {
-          const inp = toImport[k];
-          out.push(await importOne(inp, { signal, onProgress: (f, msg) => progress((k + (f || 0)) / toImport.length, msg) }));
+        for (let k = 0; k < groups.length; k++) {
+          const g = groups[k];
+          try {
+            out.push(await importGroup(g, { signal, onProgress: (f, msg) => progress((k + (f || 0)) / groups.length, msg) }));
+          } catch (e) {
+            // One unreadable input (an HTML export, a truncated zip) does not
+            // stop the others; it is named in the review instead.
+            if (e?.name === 'AbortError' || groups.length === 1) throw e;
+            failed.push({ name: g.map(i => i.name).join(', '), message: e?.message || String(e) });
+          }
         }
+        if (!out.length && failed.length) throw new Error(failed.map(f => `${f.name}: ${f.message}`).join(' '));
         return out;
       });
       const fresh = results.length > 1 ? await mergeDatasets(results.map(r => r.dataset)) : results[0].dataset;
@@ -122,6 +133,7 @@ export function DataView() {
       const rep = add ? await importReport(ds) : freshReport;
       const unclaimed = results.flatMap(r => r.unclaimed || r.report?.unclaimed || []);
       if (rep) rep.unclaimed = unclaimed.filter(r => !isCSV({ path: r }));
+      if (rep && failed.length) rep.notes = [...failed.map(f => `Could not read ${f.name}: ${f.message}`), ...(rep.notes || [])];
       const matches = await suggestMatches(ds).catch(() => null);
       // Tables no importer claimed (an HR export inside the Slack zip) and
       // tables marked "add details to people" are offered for joining.
@@ -161,7 +173,7 @@ export function DataView() {
   };
 
   const showInputs = inputs.length > 0 && !pending;
-  // The landing page opens with its own orientation ("Start with a network").
+  // The landing page opens with its own orientation ("About Org Signal").
   const landing = !hasData && !inputs.length && !pending && !projects.length;
   return html`<div class="view view--col dv">
     <${ViewHead} title="Data" intro=${landing ? null : DATA_INTRO}
@@ -238,6 +250,8 @@ const HOWTO = [
 // organization stays one click away from every analysis view's empty state
 // (store.actions.loadSample) and from Generate.
 const LAB = 'https://graystoneindustries.co/lab/';
+// The narrated walkthrough talk (full size; also on graystoneindustries.co/talks/).
+const WALKTHROUGH = 'https://orgsignalwalkthrough.eric-c-gladstone.workers.dev';
 const REPO = 'https://github.com/ericcgladstone-maker/org-signal';
 const START = [
   { id: 'build', title: 'Draw or construct a network', text: 'Draw people and ties directly, conduct an ego-network interview, collect a roster or perceived-network survey, or paste a tie list.', action: 'Open Build' },
@@ -266,7 +280,7 @@ function EmptyState({ onFiles }) {
   const ext = (href, text, cls = 'tlink') => html`<a class=${cls} href=${href} target="_blank" rel="noopener">${text} <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>`;
   return html`<div class="empty dv-empty">
     <section class="dv-orient" aria-labelledby="dv-orient-h">
-      <h2 id="dv-orient-h">Start with a network</h2>
+      <h2 id="dv-orient-h">About Org Signal</h2>
       <div class="prose dv-orient__text">
         <p>I built Org Signal as a browser-based environment for teaching and conducting social network analysis. You can construct a network directly, generate one whose underlying structure is known, work with a published network, or import empirical records and define how those records become ties.</p>
         <p>The same analysis environment then provides network visualization, person- and group-level measures, comparisons with random networks, uncertainty in rankings, change over time, content analysis, and export of networks, figures, tables, and methods documentation.</p>
@@ -274,6 +288,7 @@ function EmptyState({ onFiles }) {
         <p>Files are read locally in the browser.</p>
       </div>
       <p class="dv-orient__lab">${ext(LAB, 'Research context, validation, and current limits', 'tlink dv-lab')}</p>
+      <p class="dv-orient__lab dv-orient__walk">${ext(WALKTHROUGH, 'Interactive walkthrough: Analyzing Social Network Data', 'tlink dv-lab')}</p>
     </section>
     <section class="dv-ways" aria-labelledby="dv-ways-h">
       <h2 id="dv-ways-h" class="section__title">Choose a way in</h2>
@@ -306,7 +321,7 @@ function EmptyState({ onFiles }) {
       <p><button type="button" class="tlink tlink--arrow" onClick=${() => store.actions.setView('generate')}>Open Generate</button></p>
     </section>
     <section class="dv-about" aria-labelledby="dv-about-h">
-      <h3 id="dv-about-h" class="dv-h3">About Org Signal</h3>
+      <h3 id="dv-about-h" class="dv-h3">Research context and documentation</h3>
       <p class="prose">Org Signal is part of the Networks Lab at Graystone Industries. The Networks Lab page describes the research logic behind the system, validation procedures, current limitations, teaching materials, and source documentation.</p>
       <p class="tlinks">${ext(LAB, 'Read about Org Signal in the Networks Lab')}${ext(REPO, 'Source and documentation')}</p>
     </section>

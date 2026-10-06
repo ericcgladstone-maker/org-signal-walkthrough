@@ -332,8 +332,8 @@ function tieWeight(raw, noTie) {
 // Nominations stay as reported events (so every tie traces to who named whom);
 // the rule decides which are kept and whether the source is undirected.
 export const COMBINE_RULES = [
-  { value: 'union', label: 'Union: a tie if either person names the other (undirected)', text: 'a tie exists if either person named the other; ties are undirected, and a pair who named each other has two reports behind its tie' },
-  { value: 'intersection', label: 'Reciprocated only: both name each other (undirected)', text: 'a tie exists only if both people named each other; ties are undirected' },
+  { value: 'union', label: 'Union: a tie if either person names the other (undirected)', text: 'a tie exists if either person named the other; ties are undirected, a valued tie takes the larger of the two answers, and a pair who named each other has two reports behind its tie' },
+  { value: 'intersection', label: 'Reciprocated only: both name each other (undirected)', text: 'a tie exists only if both people named each other; ties are undirected and a valued tie takes the smaller of the two answers' },
   { value: 'respondent', label: 'As reported: directed from respondent to the person named', text: 'each tie runs from the respondent to the person they named, exactly as answered' },
 ];
 
@@ -368,7 +368,7 @@ function writeRoster(builder, { format, fileName, respondents, questions, respon
         noms.push({ t: r.t, actor: resp[ri], target, w });
       }
     });
-    const said = new Set(noms.map(n => n.actor + '|' + n.target));
+    const said = new Map(noms.map(n => [n.actor + '|' + n.target, n.w]));
     const pairs = new Set();
     for (const n of noms) {
       const back = said.has(n.target + '|' + n.actor);
@@ -378,7 +378,15 @@ function writeRoster(builder, { format, fileName, respondents, questions, respon
       pairs.add(pair);
       nominations++;
       if (rule.value === 'intersection' && !back) { dropped++; continue; }
-      builder.event({ type: 'declared', t: n.t, actor: n.actor, targets: [[n.target, 'declared']], context: ctx, weight: n.w });
+      // Undirected rules: the pair's value (the larger answer for union, the
+      // smaller for reciprocated) shared by the reports behind it, as the
+      // Roster builder writes it, so the tie's total weight is that value.
+      let w = n.w;
+      if (rule.value !== 'respondent' && back) {
+        const g = said.get(n.target + '|' + n.actor);
+        w = (rule.value === 'union' ? Math.max(n.w, g) : Math.min(n.w, g)) / 2;
+      }
+      builder.event({ type: 'declared', t: n.t, actor: n.actor, targets: [[n.target, 'declared']], context: ctx, weight: w });
       builder.stat('declaredTies');
     }
   }

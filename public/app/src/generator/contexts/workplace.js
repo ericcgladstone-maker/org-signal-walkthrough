@@ -159,7 +159,10 @@ export function build(spec, rng, span) {
   for (let i = 0; i < n; i++) { // teammates (same manager)
     const rep = reports[i];
     const pTeam = rep.length <= 8 ? 0.65 : 6 / rep.length;
-    for (let a = 0; a < rep.length; a++) for (let b = a + 1; b < rep.length; b++) if (r.chance(pTeam)) ties.add(rep[a], rep[b], { w: 2, kind: 'team' });
+    // The CEO's reports are the department heads, whose ties to each other
+    // the leadership loop above decides; the draw is still made so every
+    // other tie in the world is unchanged.
+    for (let a = 0; a < rep.length; a++) for (let b = a + 1; b < rep.length; b++) if (r.chance(pTeam) && i !== 0) ties.add(rep[a], rep[b], { w: 2, kind: 'team' });
   }
   const deptCum = members.map(m => cumulative(m.map(i => prop[i])));
   const allCum = cumulative(Array.from(prop));
@@ -307,11 +310,18 @@ function applyPreset(world, presetId, r) {
       if (r.chance(0.8)) ties.until[ti] = t; // most old ties end, a few persist as cross ties
     }
     const rr = r.fork('newties');
+    // The table holds one tie per pair: a new tie to someone whose old tie
+    // ended at the reorg keeps that tie going instead of being dropped.
+    const start = (a, b, opts) => {
+      const ex = ties.find(a, b);
+      if (ex >= 0 && ties.until[ex] === t) ties.until[ex] = Infinity;
+      return ties.add(a, b, opts);
+    };
     for (const m of moved) {
       const pool = world.members[m.to];
-      for (let k2 = 0; k2 < 4; k2++) ties.add(m.person, pool[rr.int(pool.length)], { w: round(rr.range(0.8, 1.6), 2), kind: 'reorg-new', from: t });
+      for (let k2 = 0; k2 < 4; k2++) start(m.person, pool[rr.int(pool.length)], { w: round(rr.range(0.8, 1.6), 2), kind: 'reorg-new', from: t });
     }
-    for (const m of moved) if (managerAfter[m.person] !== world.hierarchy.manager[m.person]) ties.add(m.person, managerAfter[m.person], { w: 3, kind: 'hierarchy-new', from: t });
+    for (const m of moved) if (managerAfter[m.person] !== world.hierarchy.manager[m.person]) start(m.person, managerAfter[m.person], { w: 3, kind: 'hierarchy-new', from: t });
     world.hierarchy.managerAfter = managerAfter;
     world.groupAfter = groupAfter;
     world.events.push({ type: 'reorg', t, moved: moved.map(m => ({ person: m.person, from: m.from, to: m.to })), description: `${moved.length} people in ${k} teams move department; most of their old department ties end` });

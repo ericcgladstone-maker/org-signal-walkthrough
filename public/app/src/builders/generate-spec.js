@@ -55,6 +55,8 @@ export const MEDIUM_INFO = {
 
 // The browser target from CONTRACTS.md: ~5,000 nodes and a few million events.
 export const COMFORT = { nodes: 5000, warnAbove: 5000, hardNote: 20000 };
+// Betweenness and closeness are estimated by sampling above this many people (src/analysis/metrics.js).
+const APPROX_ABOVE = 3000;
 
 // Dev-only fallback used when src/generator/index.js cannot be loaded, so the
 // form can be built and checked. Generation is disabled while it is in use.
@@ -217,7 +219,8 @@ export function toSpec(form, { output = form.output || 'dataset' } = {}) {
 
 export function sizeNote(n) {
   if (n > COMFORT.hardNote) return { level: 'warn', text: `${n.toLocaleString('en-US')} people is far past what a browser tab handles comfortably (about ${COMFORT.nodes.toLocaleString('en-US')}). Expect long waits and approximate measures; consider native files and a smaller slice.` };
-  if (n > COMFORT.warnAbove) return { level: 'warn', text: `Above about ${COMFORT.nodes.toLocaleString('en-US')} people some measures switch to labeled approximations and generation takes longer.` };
+  if (n > COMFORT.warnAbove) return { level: 'warn', text: `Above about ${COMFORT.nodes.toLocaleString('en-US')} people generation and analysis take longer, and betweenness and closeness are labeled approximations (as they are above ${APPROX_ABOVE.toLocaleString('en-US')}).` };
+  if (n > APPROX_ABOVE) return { level: 'info', text: `Above ${APPROX_ABOVE.toLocaleString('en-US')} people betweenness and closeness are labeled approximations; up to about ${COMFORT.nodes.toLocaleString('en-US')} people run comfortably in the browser.` };
   return { level: 'info', text: `Up to about ${COMFORT.nodes.toLocaleString('en-US')} people and a few million interactions run comfortably in the browser.` };
 }
 

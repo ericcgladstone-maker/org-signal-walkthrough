@@ -9,8 +9,8 @@
 import { useState, useEffect } from '../../vendor/preact.js';
 
 // The Interpretive notes switch (decision 1): Interpretation blocks and inline
-// glosses. On for a first visit; the reader's choice is the one preference
-// kept in localStorage. Storage can be missing or throw (private windows,
+// glosses. On for a first visit; the reader's choice is kept in localStorage
+// (as are Build drafts and the Generate form, in their own modules). Storage can be missing or throw (private windows,
 // blocked site data, Node tests), so every access is guarded.
 const EXPLAIN_KEY = 'orgsignal.explain';
 export function readExplainPref() {

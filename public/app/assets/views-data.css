@@ -24,6 +24,7 @@
 .dv-orient__text{max-width:var(--measure)}
 .dv-orient__text p + p{margin-top:.7rem}
 .dv-orient__lab{margin-top:1rem}
+.dv-orient__walk{margin-top:.5rem}
 .dv-lab{font-size:1rem;display:inline;white-space:normal;overflow-wrap:anywhere}
 .dv-ways{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
 .dv-start{list-style:none;margin:.9rem 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}

@@ -13,7 +13,7 @@
 //   focus(target, { fallback })    move focus after an action (selector or element), once the view has rendered
 //   runJob(label, fn)       fn(signal, progress) with a status-bar entry and cancel
 //   startOver()             clear everything loaded in this tab and return to Data (masthead: "Clear loaded data")
-//   setExplain(on)          the Interpretive notes switch (kept as the one localStorage preference)
+//   setExplain(on)          the Interpretive notes switch (kept in localStorage as orgsignal.explain)
 //   loadSample()            load the sample organization; stays on the view it was asked from
 //   openDrawer() / closeDrawer()   construction settings drawer
 
@@ -239,7 +239,7 @@ function setView(view, { focus = true } = {}) {
   if (focus && hasDOM) window.scrollTo({ top: 0 });
 }
 
-// The Interpretive notes switch: store field plus the one localStorage preference.
+// The Interpretive notes switch: store field plus its localStorage preference (orgsignal.explain).
 function setExplain(on) {
   store.set({ explain: !!on });
   writeExplainPref(!!on);

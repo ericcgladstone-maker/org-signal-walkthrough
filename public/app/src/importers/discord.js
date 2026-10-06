@@ -126,6 +126,20 @@ async function sniffDce(e) {
   return null;
 }
 
+// A data package without its Messages folder (requested without messages, or
+// the folder removed): Account/user.json next to Servers/index.json or the
+// package README. Account folder names may be localised, so match by place.
+function packageUserWithoutMessages(fs) {
+  const has = new Set(fs.entries.map(e => e.rel.toLowerCase()));
+  for (const e of fs.entries) {
+    const m = /^(.*?)[^/]+\/user\.json$/i.exec(e.rel);
+    if (!m || /(^|\/)activity\//i.test(e.rel)) continue;
+    const p = m[1].toLowerCase();
+    if (has.has(p + 'servers/index.json') || has.has(p + 'readme.txt')) return e;
+  }
+  return null;
+}
+
 async function detect(fs) {
   const roots = packageRoots(fs);
   if (roots.size) {
@@ -142,6 +156,8 @@ async function detect(fs) {
   for (const e of [...named.slice(0, 20), ...cands.filter(e => !named.includes(e)).slice(0, 20)]) {
     if (await sniffDce(e)) return { score: 0.95, reason: 'DiscordChatExporter export' };
   }
+  const user = packageUserWithoutMessages(fs);
+  if (user && /"relationships"|"username"/.test(await peek(user, 8192))) return { score: 0.7, reason: 'Discord data package without a Messages folder' };
   return { score: 0, reason: '' };
 }
 
@@ -159,8 +175,8 @@ function findUserJson(fs, roots) {
   return cands[0] ?? null;
 }
 
-async function importPackage(fs, roots, { builder, options, progress, signal }) {
-  const userEntry = findUserJson(fs, roots);
+async function importPackage(fs, roots, { builder, options, progress, signal }, knownUser = null) {
+  const userEntry = knownUser || findUserJson(fs, roots);
   let user = null;
   if (userEntry) {
     try {
@@ -194,7 +210,11 @@ async function importPackage(fs, roots, { builder, options, progress, signal }) 
   const fileNames = [...new Set([...roots.keys()].map(r => r || '(root)'))];
   builder.beginSource({ format: 'discord', family: 'community', medium: 'discord', view: 'authored', context: 'community', tz: 'UTC',
     fileNames: fs.names?.length ? fs.names : fileNames, egoKey: egoId ? `${NS}:${egoId}` : null, variant: 'package' });
-  builder.warn('outgoing-only', 'Discord data packages contain only messages you sent. Incoming messages, replies and other people\'s interactions are not included, so treat this as your outgoing activity, not a network.', 1);
+  if (chanList.length) builder.warn('outgoing-only', 'Discord data packages contain only messages you sent. Incoming messages, replies and other people\'s interactions are not included, so treat this as your outgoing activity, not a network.', 1);
+  else {
+    const friends = (user?.relationships ?? []).filter(r => Number(r?.type) === 1).length;
+    builder.warn('discord-no-messages', `This Discord data package has no Messages folder, so it holds none of your messages${friends && (options?.friends ?? true) ? `; only your friend list (${friends} ${friends === 1 ? 'friend' : 'friends'}, from Account/user.json) was read, as declared ties` : ''}. To include messages, request the package again with Messages included (User Settings > Data & Privacy > Request all of my data) and load the whole package.zip.`, 1);
+  }
   if (unreadable) builder.warn('bad-channel-json', 'Some channel.json files could not be parsed; those channels are imported with unknown type.', unreadable);
   if (!userEntry || !user) builder.warn('no-user-json', 'Account/user.json was not found or could not be read; the account owner was inferred from DM recipients.', 1);
   if (!egoId) {
@@ -445,6 +465,8 @@ async function importDceCsv(e, { builder }) {
 async function importFn(fs, ctx) {
   const roots = packageRoots(fs);
   if (roots.size) return importPackage(fs, roots, ctx);
+  const user = packageUserWithoutMessages(fs);
+  if (user) return importPackage(fs, roots, ctx, user);
   const files = [];
   for (const e of fs.entries) {
     if (!/\.(json|csv|html?)$/i.test(e.rel)) continue;

@@ -83,6 +83,7 @@ export function About() {
       <li>Problems and undocumented limitations can be reported through the project’s <a class="linkish" href=${REPO + '/issues'} target="_blank" rel="noopener">GitHub issue tracker</a>. A useful report identifies the type of data loaded, the expected behavior, the observed behavior, and the browser, without including the underlying data.</li>
       <li>Citation: Gladstone, E. (2026). <em>Org Signal: Browser-based network analysis for teaching and research</em> (Version 2.0) [Software].</li>
       <li>The source code, documentation, accuracy report, supported formats, classic datasets, and Networks 101 materials are available in the <a class="linkish" href=${REPO + '#readme'} target="_blank" rel="noopener">project repository</a>.</li>
+      <li>An interactive walkthrough of the analyses in this tool, from a drawn network to a claim that can be defended, is available as a talk: <a class="linkish" href="https://orgsignalwalkthrough.eric-c-gladstone.workers.dev" target="_blank" rel="noopener">Analyzing Social Network Data</a>.</li>
     </ul>
   </section>`;
 }

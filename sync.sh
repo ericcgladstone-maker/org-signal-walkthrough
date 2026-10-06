@@ -10,6 +10,8 @@ cp "$src/index.html" "$src/embed.js" "$src/player.css" "$src/player.js" "$src/ti
 cp -R "$src/stage" "$src/app" "$here/public/"
 # The app's own _headers apply to the app's folder here; the VERSION file keeps the commit only.
 rm -f "$here/public/app/_headers"
+# The app's 404.html is for its own domain (absolute asset paths); the talk never serves it.
+rm -f "$here/public/app/404.html"
 head -2 "$src/app/VERSION" > "$here/public/app/VERSION"
 {
   echo "/*"

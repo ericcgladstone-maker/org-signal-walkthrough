@@ -31,7 +31,7 @@ const DAY = 86400000;
 
 // One verdict rule for every check (J9). Scores run from 0 to 1 (1 = what
 // was planted, exactly); differences and dates have their own clear cut-off.
-export const RULE = 'Recovered: the analysis finds most of what was planted, a score of at least 0.6 where 1 is a perfect match (for a difference: in the planted direction and clear, p < 0.05; for a date: within the tolerance). Partly: some of it, a score of at least 0.25 and at least twice what chance alone gives (for a difference: the right direction but not clear; for a date: within twice the tolerance). Missed: anything less.';
+export const RULE = 'Recovered: the analysis finds most of what was planted, a score of at least 0.6 where 1 is a perfect match (for a difference: in the planted direction and clear, p < 0.05; for a date: within the tolerance). Partly: some of it, a score of at least 0.25 and at least twice what chance alone gives (for a difference: the right direction but not clear; for a date: within twice the tolerance). A date counts only when at most half the period lies as close to a detected shift as the planted date does, so that a date picked at random would not match as often. Missed: anything less.';
 export function scoreVerdict(score, chance = 0) {
   if (score == null || !Number.isFinite(score)) return 'not checked';
   if (score >= 0.6) return 'recovered';
@@ -190,7 +190,7 @@ function communities(ctx) {
     planted: `${kPlanted} planted ${what}${extra ? ` (${extra})` : ''}`, recovered: `${kFound} communities over ${xs.length} people`,
     metric: 'agreement (NMI)', value: r3(nmi), baseline: 0,
     verdict: xs.length < 5 ? 'not checked' : scoreVerdict(nmi),
-    says: `The communities found ${how} the planted ${what} (agreement ${r3(nmi)} out of 1; normalized mutual information (NMI) ${r3(nmi)}, adjusted Rand index (ARI) ${r3(ari)}; 0 = unrelated).`,
+    says: `The communities found ${how} the planted ${what} (agreement ${r3(nmi)} out of 1; normalized mutual information (NMI) ${r3(nmi)}, adjusted Rand index (ARI) ${r3(ari)}; 0 = unrelated).${truth.communities.note ? ` ${truth.communities.note}` : ''}`,
   });
 }
 
@@ -316,7 +316,10 @@ function betweennessFidelity(ctx) {
   const n = truth.people.count;
   if (n > 3000) return; // exact Brandes here would be slow; the engine approximates above this anyway
   const adj = Array.from({ length: n }, () => []);
-  for (let i = 0; i < T.count; i++) { adj[T.a[i]].push(T.b[i]); adj[T.b[i]].push(T.a[i]); }
+  // Directed truth (a follow graph) is compared as directed when the network
+  // was built directed; otherwise ties are mutual.
+  const dir = !!(T.directed && ctx.net?.directed);
+  for (let i = 0; i < T.count; i++) { adj[T.a[i]].push(T.b[i]); if (!dir) adj[T.b[i]].push(T.a[i]); }
   const truthBt = brandes(adj);
   const xs = [], ys = [];
   for (let k = 0; k < bt.length; k++) {
@@ -327,7 +330,7 @@ function betweennessFidelity(ctx) {
   const rho = spearman(xs.map((x, i) => [x, ys[i]]));
   add(ctx, {
     id: 'betweenness-fidelity', name: 'Measured betweenness matches the true network', area: 'structure',
-    planted: 'betweenness on the true ties', recovered: `Spearman rho ${r3(rho)} over ${xs.length} people`,
+    planted: `betweenness on the true ties (every tie active at some point in the period, ${dir ? 'directed, as the network was built' : 'direction ignored'})`, recovered: `Spearman rho ${r3(rho)} over ${xs.length} people`,
     metric: 'rank correlation (Spearman)', value: r3(rho), baseline: null,
     verdict: scoreVerdict(rho),
     says: rho >= 0.9 ? `Betweenness measured from the data ranks people almost exactly as the true network does (rank correlation, Spearman rho ${r3(rho)}).`
@@ -461,14 +464,32 @@ function shiftChecks(ctx) {
   // de-duplicate planted events at the same time (e.g. several departures)
   const uniq = [];
   for (const e of planted) if (!uniq.some(u => Math.abs(u.t - e.t) < DAY && u.type === e.type)) uniq.push(e);
+  // Chance: the share of the period within d of some detected shift, i.e. how
+  // often a date picked at random would lie as close to one. It is taken at the
+  // distance actually found (at least a day): a few shifts make a close match
+  // rare, while hundreds of people's series can put every date near one.
+  const S = truth.timespan.start, E = truth.timespan.end;
+  const cover = (d) => {
+    if (!det?.length) return 0;
+    const iv = det.map(t => [Math.max(S, t - d), Math.min(E, t + d)]).filter(([a, b]) => b > a).sort((x, y) => x[0] - y[0]);
+    let len = 0, a = -Infinity, b = -Infinity;
+    for (const [x, y] of iv) { if (x > b) { len += b - a > 0 ? b - a : 0; a = x; b = y; } else if (y > b) b = y; }
+    len += b - a > 0 ? b - a : 0;
+    return len / (E - S);
+  };
   for (const e of uniq) {
     if (!det) { add(ctx, { id: 'shift-' + e.type, name: `Planted ${e.type} on ${day(e.t)}`, area: 'time', planted: e.description, recovered: null, metric: 'days from nearest detected shift', value: null, verdict: 'not checked', says: 'No detected shifts were given.' }); continue; }
     const near = det.length ? Math.min(...det.map(t => Math.abs(t - e.t))) : Infinity;
     const nd = Math.round(near / DAY), td = Math.round(tol / DAY);
+    const chance = Number.isFinite(near) ? cover(Math.max(DAY, near)) : 1;
+    const dd = Math.max(1, nd);
     add(ctx, { id: 'shift-' + e.type, name: `Planted ${e.type} on ${day(e.t)}`, area: 'time', planted: e.description, recovered: Number.isFinite(near) ? `nearest detected shift ${days(nd)} away` : 'no shift detected',
-      metric: `days to the nearest detected shift (tolerance ${td})`, value: Number.isFinite(near) ? r3(near / DAY) : null, baseline: null,
-      verdict: near <= tol ? 'recovered' : near <= 2 * tol ? 'partly' : 'missed',
-      says: near <= tol ? `A shift was detected ${nd ? `within ${days(nd)}` : 'on the day'} of the planted ${e.type} (tolerance ${days(td)}).` : `No detected shift falls within ${days(td)} of the planted ${e.type}.` });
+      metric: `days to the nearest detected shift (tolerance ${td}); baseline: share of the period that close to some detected shift`, value: Number.isFinite(near) ? r3(near / DAY) : null, baseline: r3(chance),
+      // As for scores: the match counts only at least twice what chance gives
+      // (a random date lies as close at most half the time).
+      verdict: chance > 0.5 ? 'missed' : near <= tol ? 'recovered' : near <= 2 * tol ? 'partly' : 'missed',
+      says: (near <= tol ? `A shift was detected ${nd ? `within ${days(nd)}` : 'on the day'} of the planted ${e.type} (tolerance ${days(td)}).` : `No detected shift falls within ${days(td)} of the planted ${e.type}.`)
+        + (Number.isFinite(near) && near <= 2 * tol ? ` ${det.length} ${det.length === 1 ? 'shift was' : 'shifts were'} detected in all; ${pct(chance)} of the period lies within ${days(dd)} of one${chance > 0.5 ? ', so a date picked at random would lie as close as often, and the match does not count' : ''}.` : '') });
   }
 }
 
@@ -641,13 +662,26 @@ function surveyChecks(ctx) {
     if ((x === a && y < N) || (y === a && x < N)) { if (T.w[i] >= 2) trueS++; else trueW++; }
   }
   const recS = trueS ? tpS / trueS : null, recW = trueW ? tpW / trueW : null;
+  // Planted: weak ties forgotten more often than strong ones (or the reverse, if
+  // set so), at the rates the simulation uses (a roster matrix is recognition,
+  // which scales them; contexts/survey.js). A fixed-choice cap keeps the closest
+  // names, so it cuts weak ties and works against "strong forgotten more".
+  const recog = rec.variant === 'roster-matrix';
+  const gap = (rec.params.forgetWeak ?? 0) * (recog ? 0.4 : 1) - (rec.params.forgetStrong ?? 0) * (recog ? 0.5 : 1);
+  const capAgainst = gap < 0 && rec.params.maxNames > 0;
+  let pDiff = null;
+  if (recS != null && recW != null) {
+    const pool = (tpS + tpW) / (trueS + trueW), se = Math.sqrt(pool * (1 - pool) * (1 / trueS + 1 / trueW));
+    pDiff = se > 0 ? 2 * (1 - phi(Math.abs(recS - recW) / se)) : (recS === recW ? 1 : 0);
+  }
+  const right = recS != null && recW != null && Math.sign(recS - recW) === Math.sign(gap) && gap !== 0;
   const prec = total ? (tpS + tpW) / Math.max(1, total - outside) : null;
   ctx.details.survey = { variant: rec.variant, respondents: respondents.size, recallStrong: recS, recallWeak: recW, precision: prec, falsePositives: fp, outsideRoster: outside, planted: rec.stats };
   add(ctx, { id: 'survey-recall', name: 'Reported ties vs true ties', area: 'survey', planted: `forget weak ${rec.params.forgetWeak}, strong ${rec.params.forgetStrong}, max names ${rec.params.maxNames || 'none'}`,
     recovered: `recall strong ${r3(recS)}, weak ${r3(recW)}; precision ${r3(prec)}; ${outside} names outside the roster`,
     metric: 'recall strong minus weak', value: recS != null && recW != null ? r3(recS - recW) : null, baseline: 0,
-    verdict: recS != null && recW != null && recS > recW ? 'recovered' : 'partly',
-    says: `Respondents reported ${pct(recS)} of their strong ties and ${pct(recW)} of their weak ties; ${pct(prec)} of named roster people are true ties. Weak ties are under-reported, as planted.` });
+    verdict: recS == null || recW == null || gap === 0 || capAgainst ? 'not checked' : right && pDiff < 0.05 ? 'recovered' : right ? 'partly' : 'missed',
+    says: `Respondents reported ${pct(recS)} of their strong ties and ${pct(recW)} of their weak ties; ${pct(prec)} of named roster people are true ties. ${gap === 0 ? 'Strong and weak ties were planted as equally likely to be forgotten, so there is no difference to find.' : capAgainst ? `Strong ties were planted as forgotten more often, but the limit of ${rec.params.maxNames} names keeps the closest ones and cuts weak ties, so the two pull against each other and there is no single direction to check.` : right ? `${gap > 0 ? 'Weak' : 'Strong'} ties are under-reported, as planted${pDiff < 0.05 ? '' : ', though the difference is not clear (p ' + r3(pDiff) + ')'}.` : `The planted difference (${gap > 0 ? 'weak' : 'strong'} ties forgotten more often) does not show in the reports.`}` });
 }
 
 // ---- small stats ---------------------------------------------------------------

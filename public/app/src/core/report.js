@@ -15,12 +15,16 @@ import { EVENT_TYPES, ROLES, VISIBILITY, VIEWS, twoModeOf } from './model.js';
 //   info   context worth knowing; nothing was lost
 const CODES = {
   error: ['import-failed', 'survey-invalid', 'pst-unsupported', 'parse-error', 'xml-error', 'no-network-questions', 'slack-bad-json', 'teams-bad-json',
-    'teams-free-no-messages', 'spreadsheet-unsupported'],
+    'teams-free-no-messages', 'spreadsheet-unsupported',
+    // Incomplete and wrong uploads (src/core/upload.js and the importers' UploadErrors).
+    'download-unfinished', 'archive-unsupported', 'empty-upload', 'not-a-zip', 'zip-truncated', 'zip-encrypted', 'not-recognized',
+    'meta-html-format', 'meta-no-messages', 'telegram-html-format', 'teams-no-messages', 'purview-no-items', 'calendar-csv-unsupported',
+    'telegram-no-result', 'x-archive-no-data'],
   info: ['auto-mapping', 'multiple-egos', 'matrix-duplicate', 'pair-values-as-weights', 'self-nominations', 'self-loops',
     'direction-assumed', 'interval-end-dropped', 'edge-attrs-dropped', 'node-times-dropped', 'dynamic-attr-flattened',
     'slack-usergroup-mentions', 'teams-channel-visibility-unknown', 'mbox-preamble', 'empty-mbox', 'empty-file', 'duplicate-sessions-skipped',
     'combine-rule', 'survey-responded', 'survey-nonrespondents', 'survey-earlier-version', 'survey-perceived', 'spam-trash-excluded', 'automated-excluded', 'automated-included', 'owner-from-chat-title', 'nested-zip',
-    'roster-tie-weight', 'css-consensus-weight'],
+    'roster-tie-weight', 'css-consensus-weight', 'parts-combined', 'duplicate-upload', 'zip-renamed', 'export-part-one'],
 };
 const CODE_SEV = new Map(Object.entries(CODES).flatMap(([sev, list]) => list.map(c => [c, sev])));
 const SEVERITY = {
@@ -48,7 +52,7 @@ const FORMAT_LABELS = {
   meta: 'Messenger or Instagram', messenger: 'Messenger', instagram: 'Instagram', discord: 'Discord', reddit: 'Reddit',
   tabular: 'Spreadsheet', 'google-forms': 'Google Forms survey', qualtrics: 'Qualtrics survey', 'egor-long': 'egor survey',
   'egor-wide': 'egor survey', egoweb: 'EgoWeb survey', 'network-canvas': 'Network Canvas interview', 'ego-interview': 'Ego interview',
-  roster: 'Roster', 'shared-survey': 'Shared survey', drawn: 'Drawn network', perceived: 'Perceived networks', graphml: 'GraphML', gexf: 'GEXF', gml: 'GML',
+  roster: 'Roster', 'shared-survey': 'Shared survey', drawn: 'Drawn network', draw: 'Drawn network', perceived: 'Perceived networks', css: 'Perceived networks', paste: 'Pasted ties', graphml: 'GraphML', gexf: 'GEXF', gml: 'GML',
   pajek: 'Pajek', ucinet: 'UCINET', dl: 'UCINET', 'ucinet-dl': 'UCINET', edgelist: 'Edge list', 'csv-edgelist': 'Edge list', 'gephi-csv': 'Edge list', 'csv-matrix': 'Adjacency matrix',
   fullmatrix: 'Adjacency matrix', synthetic: 'Synthetic',
 };
@@ -275,7 +279,8 @@ export function importReport(ds) {
     if (list.every(isPersonal)) Object.assign(out, personalGroupLines(list));
     return out;
   });
-  if (new Set(sources.map(s => s.view)).size > 1) notes.push('Sources with different views were combined. Measures are checked against the narrowest view before they are shown.');
+  // Only sources that contributed events: a failed or empty source has no view to combine.
+  if (new Set(sources.filter(s => s.counts.events > 0).map(s => s.view)).size > 1) notes.push('Sources with different views were combined. Measures are checked against the narrowest view before they are shown.');
   if (ds.meta.merges?.length) {
     let groups = 0, folded = 0;
     for (const m of ds.meta.merges) for (const g of m.groups) { groups++; folded += g.from.length; }

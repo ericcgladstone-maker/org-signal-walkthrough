@@ -220,6 +220,13 @@ function emit(sessions, builder, { options, fileNames, format }) {
       builder.stat('alterAlterTies');
     }
   }
+  // Alters but no alter-alter ties anywhere: the export carried no edge list
+  // or adjacency matrix (not ticked in the export options, or no tie question
+  // was asked). The network is then a star around each ego.
+  const nAlters = egos.reduce((n, e) => n + e.alters.size, 0);
+  if (nAlters >= 2 && !egos.some(e => e.edges.length)) {
+    builder.warn('nc-no-alter-ties', `No ties between alters came with ${egos.length === 1 ? 'this interview' : `these ${egos.length} interviews`} (no edgeList or adjacencyMatrix file, or none with rows), so each personal network is a star around its ego: density, clustering, effective size and constraint cannot be computed from it. If the protocol asked who knows whom, export again from Network Canvas with the edge list (or adjacency matrix) option selected.`);
+  }
   if (encrypted) builder.warn('encrypted-values', 'Some variables were anonymised in Network Canvas and exported as the literal text ENCRYPTED; their values are not available.', encrypted);
 }
 

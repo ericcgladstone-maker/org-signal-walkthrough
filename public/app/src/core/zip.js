@@ -112,6 +112,9 @@ function makeEntry(blob, z) {
     path: z.path,
     size: z.size,
     compressedSize: z.compSize,
+    crc: z.crc,
+    // Password-protected entry (general-purpose bit 0): listed, never readable.
+    encrypted: z.encrypted,
     isDir,
     // A ReadableStream of decompressed Uint8Array chunks.
     stream() {

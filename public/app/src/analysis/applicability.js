@@ -104,7 +104,7 @@ export function applicability(ds, net) {
     flag(pathMetrics, 'caution', 'Ties come only from shared meetings, which create cliques; path measures mostly reflect meeting size.');
     flag(['clustering', 'transitivity', 'avgClustering', 'constraint', 'effectiveSize', 'egoDensity'], 'caution', 'Each meeting creates a clique, which inflates clustering and constraint.');
   }
-  if (on.includes('adjacency')) flag(['reciprocity', 'reciprocityNetwork'], 'caution', 'Turn-taking ties are inferred in both directions by construction, which inflates reciprocity.');
+  if (on.includes('adjacency')) flag(['reciprocity', 'reciprocityNetwork'], 'caution', 'Turn-taking ties run from each speaker to the one before, so two people taking turns tie each other both ways, which inflates reciprocity.');
   if (net.directed && sources.some(s => s.directed === false)) flag(['reciprocity', 'reciprocityNetwork', 'inDegree', 'outDegree'], 'caution', 'Some sources record undirected ties (connections, drawn or undirected network files); they enter the directed network in both directions, which inflates reciprocity.');
   if (on.includes('follow') && on.length === 1) flag(['strength', 'inStrength', 'outStrength'], 'caution', 'Follows have no strength; every tie weighs the same.');
 

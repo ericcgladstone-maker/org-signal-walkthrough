@@ -240,7 +240,11 @@ async function importLinkedIn(fs, { builder, options = {}, progress, signal } = 
   // request) holds profile files only; connections, messages and invitations
   // arrive in the second, about a day later (seen in a real export, 2026-10-04).
   const profileOnly = !files['Connections.csv'] && !files['messages.csv'] && !files['Invitations.csv'];
+  // The network files are there but hold no rows (an account without
+  // connections or messages, or files emptied on the way).
+  const noRows = !profileOnly && !(connections?.length) && !messages.length && !invitations.length && !endRecv.length && !endGiven.length;
   if (profileOnly) b.warn('linkedin-profile-only', 'This LinkedIn export has profile files only (no Connections.csv, messages.csv or Invitations.csv), so it holds no network. LinkedIn sends a requested export in two parts: this looks like the first. Load the second file, which LinkedIn emails when it is ready (usually within a day).');
+  else if (noRows) b.warn('linkedin-no-rows', `${['Connections.csv', 'messages.csv', 'Invitations.csv'].filter(n => files[n]).join(', ')} ${Object.keys(files).filter(n => /^(Connections|messages|Invitations)\.csv$/.test(n)).length === 1 ? 'has' : 'have'} column headers but no rows, so this export holds no connections, messages or invitations. If the account has them, request the export again (Me > Settings & Privacy > Data privacy > Get a copy of your data) and load the complete archive.`);
   else if (!egoUrlKey) b.warn('ego-url-unknown', 'Could not tell which profile URL is yours (Profile.csv has none and no invitations or messages identified it). Your node is keyed "linkedin:me" and will not merge with your URL if it appears elsewhere.');
   else if (egoHow === 'messages') b.warn('ego-url-inferred', 'Your profile URL was inferred from messages.csv (the URL that sends under your Profile.csv name, or the one present in nearly every conversation). Check the ego node in the identity review.');
 
@@ -427,6 +431,16 @@ async function importLinkedIn(fs, { builder, options = {}, progress, signal } = 
   progress?.(1, 'LinkedIn import done');
 }
 
+// The two zips of one LinkedIn export (profile files first, everything a day
+// later) both carry Profile.csv: the same owner's name marks them as parts.
+async function partKey(fs) {
+  const prof = findFile(fs, 'Profile.csv');
+  if (!prof) return null;
+  const row = rowsByName(await prof.text())[0];
+  const name = row ? nameKey([row['first name'], row['last name']].filter(Boolean).join(' ')) : '';
+  return name ? `linkedin:${name}` : null;
+}
+
 export default {
   id: 'linkedin',
   label: 'LinkedIn data export',
@@ -435,5 +449,6 @@ export default {
   options: [
     { key: 'includeSpam', label: 'Include messages in the SPAM folder', type: 'boolean', default: false },
   ],
+  partKey,
   import: importLinkedIn,
 };

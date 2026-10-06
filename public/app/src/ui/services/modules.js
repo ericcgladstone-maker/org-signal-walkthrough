@@ -9,9 +9,13 @@
 
 const cache = new Map();
 
-export const MOCK = (() => {
+const MOCK_WANTED = (() => {
   try { return new URLSearchParams(location.search).has('mock'); } catch { return false; }
 })();
+
+// mock.js is a development aid left out of the deployed build (tools/stage.sh),
+// so ?mock there uses the real modules instead of failing to start.
+export const MOCK = MOCK_WANTED && !!(await import('./mock.js').catch(() => null));
 
 export function mockSize() {
   try { return Number(new URLSearchParams(location.search).get('n')) || 96; } catch { return 96; }

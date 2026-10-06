@@ -63,7 +63,7 @@ export function buildGroundTruth({ world, spec, ident, obs, ctx, acc, rhythm, ke
       isBot: Uint8Array.from(world.isBot), leftAt: Float64Array.from(world.leftAt, x => (x === Infinity ? NaN : x)),
       platformIds: ident.platformIds,
     },
-    communities: { attr: world.groupAttr || 'group', membership: Int32Array.from(world.group), names, kinds: world.groups.map(g => g.kind) },
+    communities: { attr: world.groupAttr || 'group', membership: Int32Array.from(world.group), names, kinds: world.groups.map(g => g.kind), ...(world.groupsNote ? { note: world.groupsNote } : {}) },
     ties: { ...world.ties.freeze(), note: 'Endpoints are person indices; from/until NaN = whole timespan.' },
     hierarchy: world.hierarchy ? { root: world.hierarchy.root, manager: Int32Array.from(world.hierarchy.manager), managerAfter: world.hierarchy.managerAfter ? Int32Array.from(world.hierarchy.managerAfter) : null } : null,
     bridges: {

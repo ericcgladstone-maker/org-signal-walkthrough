@@ -260,7 +260,7 @@ export function readGraphML(text) {
   const ed = graph.attrs.edgedefault;
   if (!ed) warn(g, 'no-edgedefault', 'The file does not say whether edges are directed; treated as undirected (the GraphML and networkx default).');
   g.directed = ed === 'directed';
-  if (descend(graph, 'hyperedge').next().value) warn(g, 'hyperedges-ignored', 'Hyperedges are not supported and were skipped.', [...descend(graph, 'hyperedge')].length);
+  if (descend(graph, 'hyperedge').next().value) warn(g, 'hyperedges-ignored', 'Hyperedges (ties joining more than two nodes) cannot be represented and were skipped, so nodes that appear only in them are isolates. To keep them, write each hyperedge as a node of its own linked to its members (a two-mode network), or as pairwise edges, before exporting the file.', [...descend(graph, 'hyperedge')].length);
 
   const undeclared = new Set();
   function decode(el, scope) {
@@ -577,7 +577,35 @@ function shsplit(line) {
   return out;
 }
 
+// A Pajek project file (.paj, or a .net saved from one) can hold several
+// networks, each starting with *Network <name> and numbering its own vertices.
+// Each is read on its own; vertices are joined by label, and every tie keeps
+// its network's name as its relation, so the networks stay separable.
 export function readPajek(text) {
+  const src = text.replace(/^﻿/, '');
+  const starts = [...src.matchAll(/^[ \t]*\*network\b[^\r\n]*$/gim)];
+  if (starts.length < 2) return readPajekOne(src);
+  const nets = starts.map((m, i) => ({
+    name: m[0].trim().replace(/^\*network\s*/i, '').replace(/^"(.*)"$/, '$1') || `network ${i + 1}`,
+    body: src.slice(m.index, i + 1 < starts.length ? starts[i + 1].index : src.length),
+  }));
+  const g = newGraph();
+  let directed = false;
+  for (const n of nets) {
+    const one = readPajekOne(n.body);
+    directed = directed || one.directed;
+    for (const [id, node] of one.nodes) addNode(g, id, node.label, node.attrs);
+    for (const e of one.edges) g.edges.push({ ...e, relation: e.relation ?? n.name, attrs: { network: n.name } });
+    for (const w of one.warns) warn(g, w.code, w.message, w.count);
+    if (one.twoMode) g.twoMode = true;
+  }
+  g.directed = directed;
+  g.tieFields = [{ key: 'network', label: 'Network', type: 'choice', options: nets.map(n => n.name) }];
+  warn(g, 'pajek-multiple-networks', `This Pajek file holds ${nets.length} networks (${nets.map(n => n.name).join(', ')}). They were read into one network: vertices with the same label are the same node, and each tie records its network in the tie field "Network", so one network can be kept with a tie-field filter under Construction settings. Vertex numbers restart in each network, so vertices are joined by label.`);
+  return g;
+}
+
+function readPajekOne(text) {
   const g = newGraph();
   const lines = text.replace(/^﻿/, '').split(/\r?\n/);
   let section = null, relation = null;
@@ -982,6 +1010,7 @@ function emit(builder, g, { format, rel, fileNames, signal }) {
     if (g.directed) builder.warn('two-mode-undirected', 'A two-mode (affiliation) network has no direction; ties were read as undirected.');
   }
   for (const w of g.warns) builder.warn(w.code, w.message, w.count);
+  if (g.tieFields) builder.source.tieFields = g.tieFields;
   const base = builder.context(`net:${rel}`, { name: rel, kind: 'network', visibility: 'unknown', medium: 'declared' });
   const idx = new Map();
   for (const [id, n] of g.nodes) {
@@ -1010,20 +1039,20 @@ function emit(builder, g, { format, rel, fileNames, signal }) {
       if (ms !== mt) {
         // An affiliation: from the actor (mode 0) to the event (mode 1).
         const [a, b] = ms === 0 ? [e.s, e.t] : [e.t, e.s];
-        builder.event({ type: 'declared', t, actor: idx.get(a), targets: [[idx.get(b), 'member']], context: c, weight: e.w });
+        builder.event({ type: 'declared', t, actor: idx.get(a), targets: [[idx.get(b), 'member']], context: c, weight: e.w, attrs: e.attrs || null });
         builder.stat('affiliations');
         builder.stat('edges');
         continue;
       }
       sameMode++;
     }
-    builder.event({ type: 'declared', t, actor: idx.get(e.s), targets: [[idx.get(e.t), 'declared']], context: c, weight: e.w });
+    builder.event({ type: 'declared', t, actor: idx.get(e.s), targets: [[idx.get(e.t), 'declared']], context: c, weight: e.w, attrs: e.attrs || null });
     builder.stat('edges');
   }
   if (self) { builder.stat('self-loops', self); builder.warn('self-loops', 'Ties from a node to itself cannot be represented and were skipped.', self); }
   if (timed) builder.stat('timed-edges', timed);
   if (sameMode) builder.warn('same-mode-ties', 'Some ties join two nodes of the same kind in this two-mode file; they are kept, but the two-mode view and its projections leave them out (switch the two-mode view off in the construction settings to see them).', sameMode);
-  if (!g.edges.length) builder.warn('no-edges', 'This file has no ties.');
+  if (!g.edges.length) builder.warn('no-edges', g.nodes.size ? `${rel} lists ${g.nodes.size} ${g.nodes.size === 1 ? 'node' : 'nodes'} but no ties.` : `${rel} has no ties: it holds a header or declarations but no rows of data.`);
 }
 
 async function importFiles(fs, { builder, options = {}, progress = () => {}, signal } = {}) {

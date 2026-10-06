@@ -84,6 +84,7 @@ export function build(spec, rng, span) {
     context: 'community', preset: presetId, params, notes, span, n,
     domain: 'forum.example',
     people: { label: names.label, first: names.first, last: names.last, handle: handles, attrs, email: handles.map(h => `${h.replace(/\./g, '')}@mail.example`) },
+    groupsNote: 'Ties here form around the active core across every space, not inside each person\'s home space, so the communities are not expected to match the home spaces: this check shows how far a label is from the structure.',
     isBot: new Uint8Array(n), group: home, groups: topics.map(t => ({ name: t.name, kind: 'space', id: t.id })), groupAttr: 'home_space',
     ties, isCore, prop, spaces, memberOf, moderators: mods,
     brokers: [], bridgeTies: [],

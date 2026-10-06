@@ -2,8 +2,11 @@
 // importer for that medium would map them (targets and roles per the data
 // model contract): DM partners as `dm`, email recipients as `to/cc/bcc`, a
 // reply's parent author as `reply`, mentions as `mention`, meeting attendees
-// as `attendee`, group-chat audience as `member`, survey and connection ties
+// as `attendee`, survey and connection ties
 // as `declared`, follows as `follow` with the followed account as `subject`.
+// A group chat's audience is not written as targets: no chat export lists it
+// per message, and `member` targets on a message would mark it as addressed
+// and so switch off the turn-taking ties the importers infer.
 
 import { DatasetBuilder } from '../core/model.js';
 import { KEY_PREFIX } from './identity.js';
@@ -41,9 +44,9 @@ export function makeDatasetSink({ world, medium, ident, obs, name, seed, allNode
   b.beginSource({
     format: 'synthetic', family: FAMILY[medium] || 'custom', medium, view: obs.view, context: world.context, tz: 'UTC',
     fileNames: [], egoKey, generator: { context: world.context, medium, preset: world.preset, seed },
-    // A network file holds the true ties, which are mutual; the importer reads
-    // its GraphML the same way.
-    ...(medium === 'network' ? { directed: false } : {}),
+    // A network file holds the true ties: mutual except in a follow graph,
+    // which the GraphML writer marks directed; the importer reads it the same way.
+    ...(medium === 'network' && !world.ties.directed ? { directed: false } : {}),
   });
   const keep = makeFilter(obs);
   const nodeIdx = new Int32Array(world.n).fill(-1);
@@ -117,7 +120,6 @@ export function makeDatasetSink({ world, medium, ident, obs, name, seed, allNode
         const direct = s && (s.kind === 'dm' || s.kind === 'group_dm' || s.kind === 'chat');
         add(rec.to, direct ? 'dm' : 'to');
         add(rec.cc, 'cc'); add(rec.bcc, 'bcc');
-        add(rec.audience, 'member');
         add(rec.mentions, 'mention');
         if (rec.replyTo >= 0) targets.push([node(rec.replyTo), 'reply']);
         break;

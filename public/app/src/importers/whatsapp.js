@@ -131,6 +131,16 @@ async function importChat(entry, fs, { builder, options, progress, signal }) {
   const fileTitle = chatTitle(entry, fs);
   const a = analyzeChat(text, { title: fileTitle, dateOrder: options?.dateOrder ?? 'auto' });
   const { msgs } = a;
+  // An empty or unparseable chat file: one plain statement, not the notes
+  // about names, zones and date order that would follow from it.
+  if (!msgs.length) {
+    const name = entry.path.split('/').pop();
+    builder.warn('no-messages', !text.trim()
+      ? `${name} is empty, so this chat holds no messages. Export the chat again (chat > More > Export chat on Android; contact or group name > Export Chat on iPhone).`
+      : `No WhatsApp message lines were found in ${name}. Lines must start with a date and time ("12/03/2025, 09:15 - Name: text" or "[12/03/2025, 09:15:02] Name: text"); a file saved from another app or edited by hand may not.`);
+    if (a.chatTitle) builder.source.title = a.chatTitle;
+    return;
+  }
 
   builder.warn('identity-by-name', 'WhatsApp exports carry display names only (as saved on the exporting phone), so people are identified by name. The same person can appear under different names in different exports.');
   if (tz === 'unknown') builder.warn('timezone-unknown', "Times are the exporting phone's local clock with no offset. They were read as UTC; set the time zone option to the phone's zone for correct absolute times.");
@@ -279,7 +289,6 @@ async function importChat(entry, fs, { builder, options, progress, signal }) {
   }
   if (badDates) builder.warn('bad-date', 'Messages with an impossible date (check the date order option) have no time.', badDates);
   if (backwards) builder.warn('time-backwards', 'Timestamps go backwards in places; file order was kept as the message order.', backwards);
-  if (!msgs.length) builder.warn('no-messages', 'No WhatsApp message lines were found in this file.');
 }
 
 export default {

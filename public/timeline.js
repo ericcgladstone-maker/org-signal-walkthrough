@@ -15,36 +15,36 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/",
         "label": "the start page"
       },
-      "heading": "Learning social network analysis by doing it: a walkthrough of Org Signal.",
-      "duration": 195,
+      "heading": "Learning social network analysis with Org Signal",
+      "duration": 151,
       "paragraphs": [
         {
           "at": 0,
-          "text": "I am an organizational behavior and computational social scientist. I did my doctoral training at Cornell, later served as an assistant professor of Management and Organizations, worked at the LINKS Center for Social Network Analysis, published network research in Social Networks, and applied organizational network analysis at Meta and Roku. I built Org Signal as a browser-based environment for teaching and conducting social network analysis. This talk walks through doing network analysis with it, from a network drawn by hand to the records a workplace leaves behind."
+          "text": "I built Org Signal as an environment for learning and conducting social network analysis. My research has examined organizational networks, information, and collective behavior, first in academic settings and subsequently in applied research at Meta and Roku. This walkthrough shows how network analysis proceeds, beginning with relationships we can draw and inspect directly, then moving to surveys, communication records, and published research datasets."
         },
         {
-          "at": 37,
-          "text": "Network analysis treats relationships as part of the explanation. It studies patterns of connection among people. Those patterns create possible routes for information and coordination, and they can make some positions more consequential than others. The masthead lays out the work in order, from getting a network to examining it and reporting it, with Learn at the end."
+          "at": 28,
+          "text": "Network analysis examines how relationships affect access, coordination, and the positions people occupy within larger systems. The application follows the corresponding research process: obtain or construct a network, examine its structure, compare findings with relevant reference cases, and document the analysis."
         },
         {
-          "at": 62,
-          "text": "The engine is built for research as well as teaching. Its measures have been checked against NetworkX, exact calculations and closed-form cases across roughly 21 million comparisons. That establishes that the numbers are computed correctly by their stated definitions. Whether a correct number measures what a study needs is a separate question, and much of this talk is about it."
+          "at": 47,
+          "text": "The analytical engine has been tested against NetworkX, exact calculations, and mathematical reference cases across approximately 21 million comparisons. Those checks concern whether the software implements its stated calculations correctly. Whether the calculations represent the relationships or processes we want to study requires separate evidence."
         },
         {
-          "at": 89,
-          "text": "There are four ways in. A network can be drawn, or collected through an interview or a survey. It can be generated with its structure specified in advance. It can be built from empirical records, such as a workplace's message export. Or it can be a published network from a classic study. The earlier sources give us something to check against when we reach the less transparent ones."
+          "at": 68,
+          "text": "We can enter the analysis in four ways. We can draw a network or collect relationships through interviews and surveys. We can generate a network with known structure. We can construct one from empirical records, such as a Slack export. Or we can reproduce an analysis using a published dataset. The earlier examples make the analytical definitions visible before we encounter networks whose underlying structure is less transparent."
         },
         {
-          "at": 118,
-          "text": "Files are read and analyzed in the browser. Nothing in this walkthrough is uploaded. I should also say plainly what the data in this talk are. The organizations and people in the generated data are fictional, as are the students, the interview respondent and the worked examples. The classic datasets are published studies, with their anonymized subjects and their citations attached."
+          "at": 97,
+          "text": "The application reads and analyzes files locally in the browser. The generated organizations, interview respondents, and students in this presentation are fictional. The classic datasets come from published research. The distinction matters because simulated networks provide known answers, while published empirical networks provide documented observations and findings."
         },
         {
-          "at": 145,
-          "text": "The classic datasets are the field's shared reference cases: Zachary's karate club, Padgett's Florentine families, Krackhardt's high-tech managers, Sampson's monastery and others, 11 in all. Each comes with a documented substantive result and reference values, so an analysis can be reproduced before it is trusted elsewhere."
+          "at": 119,
+          "text": "The eleven classic datasets include Zachary's karate club, Padgett's Florentine families, Krackhardt's managers, and Sampson's monastery. Their documented contexts and reference results provide opportunities to reproduce analyses and investigate disagreements."
         },
         {
-          "at": 167,
-          "text": "Learn holds the definitions, worked examples and limitations behind every measure. I will define terms in passing and try to keep four distinctions in view: a tie versus what flows through it, an observed tie versus the relationship behind it, a measure versus the construct it is meant to capture, and description versus causal claim. The talk is organized as eleven questions, posed next."
+          "at": 134,
+          "text": "Learn provides definitions, formulas, worked examples, and interpretation notes. Throughout the presentation, I will distinguish observed events from relationships, relationships from what moves through them, calculated measures from substantive constructs, and descriptions from causal conclusions."
         }
       ]
     },
@@ -58,27 +58,27 @@ window.TIMELINE = {
         "label": "the start page"
       },
       "heading": "Known structure gives the analysis something to recover.",
-      "duration": 133,
+      "duration": 130,
       "paragraphs": [
         {
           "at": 0,
-          "text": "I built a generator into Org Signal for one reason. With empirical data, a student can learn to read a measure without knowing whether the analysis recovered the structure or process of interest. Generate creates synthetic organizations and online communities whose structure is specified in advance, observes them through a chosen medium, and writes the records that medium would produce. The generating structure becomes the reference."
+          "text": "With empirical network data, we often do not know whether an analysis has recovered the process or structure we intended to measure. Org Signal's generator addresses part of that problem. It creates synthetic organizations and communities whose relationships and histories are specified in advance. Those structures generate records resembling the output of communication systems. The analyst then reconstructs the network from those records. The generating structure supplies an answer against which the reconstruction can be compared."
         },
         {
-          "at": 29,
-          "text": "The scenarios are structural hypotheses written as generative rules. A distributed organization has no single point of failure. A bridge-dependent one joins departments through a few brokers, one of whom leaves at 55% of the period. In a siloed one, cross-department traffic collapses at 40%. Others consolidate, decline or reorganize. Each plants a feature that a particular measure ought to detect."
+          "at": 33,
+          "text": "The scenarios differ in their structural conditions. Some have distributed connections. Others depend on a few brokers, undergo reorganization, or experience a decline in cross-department communication. In the bridge-dependent scenario, one broker leaves 55 percent of the way through the observation period. In the siloed scenario, cross-department traffic changes at a specified time. Each scenario provides a test of whether the analysis detects the structure or change it was designed to measure."
         },
         {
-          "at": 56,
-          "text": "Here one generated workplace has been analyzed: a bridge-dependent organization of 120 people on Slack with seed 7. The recovery check reports 9 of 9 planted features recovered. In this default generated export every planted interaction is observed, so the reconstructed network is the true network. This check therefore isolates whether the measures recover the planted structure. Later I will make observation stricter by changing which records are allowed to become ties."
+          "at": 64,
+          "text": "This generated Slack workplace contains 120 people and uses random seed 7. The recovery check reports that all nine planted features were recovered. Under the default export, every generated interaction is observed, so the reconstructed network corresponds to the underlying generated network. This first test therefore concerns the measures themselves. Later, we will change which recorded events qualify as ties and examine what information that choice removes."
         },
         {
-          "at": 87,
-          "text": "The same verdict appears in one line on the Network view, beside the map. A student who sees both learns to ask how each reading compares with the structure that produced the data, and that empirical data never supply that line."
+          "at": 93,
+          "text": "The recovery result appears beside the network map. It gives the learner an independent reference for evaluating the analysis. Empirical datasets do not ordinarily provide that comparison, which is one reason the generated examples are useful for teaching."
         },
         {
-          "at": 106,
-          "text": "Construction settings, highlighted here, carries the second idea behind the tool. A network built from records is constructed: rules decide which events count as evidence of a tie, how they are weighted, and which are set aside. Those rules are choices, and they change results. Org Signal keeps them visible and editable, and links each tie to the records behind it."
+          "at": 111,
+          "text": "The construction settings expose another source of variation. Records become network ties through rules defining which events count, how direction and weight are assigned, and which observations are excluded. We will examine those rules directly when we reach the Slack example."
         }
       ]
     },
@@ -91,52 +91,52 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/",
         "label": "the start page"
       },
-      "heading": "The talk follows eleven questions about how networks are built and interpreted.",
-      "duration": 132,
+      "heading": "Eleven questions organize the analysis.",
+      "duration": 133,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Who matters in a network, and in what sense? A broker shows why degree and structural dependence can diverge."
+          "text": "First, what makes a position important? A small network with one broker distinguishes direct connectivity from dependence on an intermediary."
         },
         {
           "at": 12,
-          "text": "Why can software differ from a hand calculation? A six-person path makes normalization and formula choice visible."
+          "text": "Second, why can a correct software result differ from a hand calculation? A six-person path makes normalization and the choice of formula visible."
         },
         {
-          "at": 24,
-          "text": "What does one person's network look like? An ego interview turns reported contacts into measures of closure and brokerage."
+          "at": 25,
+          "text": "Third, what can one person report about their own network? An ego interview measures contacts and the relationships perceived among them."
         },
         {
-          "at": 36,
-          "text": "How do we survey a whole group? A roster makes disagreement, reciprocation and homophily explicit."
+          "at": 37,
+          "text": "Fourth, how can a bounded group be surveyed? A class roster introduces one-sided reports, reciprocal ties, and homophily."
         },
         {
-          "at": 48,
-          "text": "Where does a network come from when nobody drew it? A generated workplace becomes a Slack export and is imported again."
+          "at": 49,
+          "text": "Fifth, how can a network be reconstructed from communication records? We generate a workplace and import its Slack export."
         },
         {
-          "at": 60,
-          "text": "What is a tie in message data? It is a construction rule applied to records."
+          "at": 61,
+          "text": "Sixth, which recorded events should qualify as relationships? We change the construction rules and examine the resulting networks."
         },
         {
-          "at": 72,
-          "text": "Who are the brokers, and how sure are we? Stability, null comparisons and planted structure answer different questions."
+          "at": 73,
+          "text": "Seventh, how can we evaluate brokerage? We compare rankings with observed-data perturbations, structural null models, and planted ground truth."
         },
         {
-          "at": 84,
-          "text": "Is the organization siloed, and since when? Group separation becomes a temporal question."
+          "at": 85,
+          "text": "Eighth, how can we detect organizational siloing and identify when it changed?"
         },
         {
-          "at": 96,
-          "text": "Can structure anticipate a split? Zachary's karate club gives a documented outcome to compare against."
+          "at": 97,
+          "text": "Ninth, how closely can network structure correspond to an independently documented group split?"
         },
         {
-          "at": 108,
-          "text": "How differently do people perceive the same network? Krackhardt's managers provide one whole-network report per informant."
+          "at": 109,
+          "text": "Tenth, how do people differ in their perceptions of the same network, and what can agreement among informants establish?"
         },
         {
-          "at": 120,
-          "text": "How does an analysis become a defensible claim? The final chapter makes the choices and limits explicit."
+          "at": 121,
+          "text": "Finally, how do we document the construction, calculations, comparisons, and limitations of an analysis so that another researcher can evaluate it?"
         }
       ]
     },
@@ -149,32 +149,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=two-cliques-broker",
         "label": "Build › Draw › Two teams and a broker"
       },
-      "heading": "A network is people and the ties between them.",
-      "duration": 138,
+      "heading": "A small network makes brokerage visible.",
+      "duration": 113,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Who matters in a network, and in what sense? Build opens the worked example \"Two teams and a broker\": 9 people and 16 ties, drawn by hand. The people are nodes and the lines are ties, and a tie here means only that the drawing says two people are connected. Nothing about strength or frequency is recorded."
+          "text": "The first example contains nine people and sixteen ties. Four people belong to Engineering and four to Product. Hal Novak connects the two groups. A node represents a person. A tie represents a connection defined by the drawing. At this stage, the network records neither communication frequency nor relationship strength."
         },
         {
-          "at": 25,
-          "text": "The four Engineering people are highlighted. Each is tied to each of the others, which makes the group a clique, a set in which every possible tie exists. No intermediary is required for a path between any two members of the clique."
+          "at": 23,
+          "text": "The four Engineering employees form a clique: each is connected to every other member. No intermediary is needed for two people inside the clique to reach one another."
         },
         {
-          "at": 45,
-          "text": "The four Product people form a second clique. Without the person between them there would be no path from one team to the other. A path is a sequence of ties connecting two people, and the number of ties on the shortest one is their distance."
+          "at": 37,
+          "text": "Product forms another clique. The groups are internally connected, but without Hal there is no path from one group to the other. A path is a sequence of ties linking two people. Its length is the number of steps along that sequence."
         },
         {
-          "at": 66,
-          "text": "Hal Novak is the only person tied to both teams. The inspector lists his four ties, two into each. Hal has no more ties than several of the people he connects. What distinguishes him is where his ties lead. That is a structural fact, and it says nothing yet about what Hal does with the position."
+          "at": 57,
+          "text": "Hal has four direct ties, two into each team. Several other employees have the same number of contacts. Hal's distinctive property is that his relationships connect regions otherwise separated from one another. That is a statement about position, not evidence that Hal actually coordinates or controls communication."
         },
         {
-          "at": 91,
-          "text": "The worked example says what to look for once it is analyzed. Hal should have the highest betweenness, 0.571, because all 16 shortest routes between the teams pass through him, while having 4 contacts and no more than Ava, Cai, Eli or Gus. Stating the expectation first turns reading a result into checking one."
+          "at": 79,
+          "text": "Before running the analysis, the example states an expectation. Hal should have the highest betweenness, 0.571, because the sixteen shortest routes connecting Engineering to Product all pass through him. Predicting the result before calculating it makes the measure's meaning easier to test."
         },
         {
-          "at": 116,
-          "text": "Analyze this network hands the drawing to the engine that handles every other source, and Network opens with 9 people and 16 ties. From here on, a drawing and an exported workplace pass through identical measures, which is what lets the small cases teach us to read the large ones."
+          "at": 98,
+          "text": "Selecting Analyze passes the drawing to the same analytical engine used for the later surveys and imported networks. The Network view reports nine people and sixteen ties."
         }
       ]
     },
@@ -187,32 +187,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=two-cliques-broker",
         "label": "Build › Draw › Two teams and a broker"
       },
-      "heading": "Centrality names several positional properties.",
-      "duration": 139,
+      "heading": "Centrality describes different properties of a position.",
+      "duration": 109,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The Network view gives the size first, 9 people and 16 ties. Centrality is the general term for measures of how prominent a position is. Freeman (1979) treated centrality as a family of related positional ideas, and this network separates three of them."
+          "text": "Centrality refers to several measures of positional prominence. The small network separates three common definitions: degree, betweenness, and closeness."
         },
         {
-          "at": 20,
-          "text": "The first is degree, which the app calls contacts: how many different people someone is tied to. Ava, Cai, Eli and two more are tied at 4 each, and Hal is one of the two. Degree counts direct ties and ignores where those ties lead, so it does not distinguish Hal from several of his neighbors."
+          "at": 12,
+          "text": "Degree counts direct ties. Five employees, including Hal, have four contacts. Degree therefore cannot distinguish the person connecting the teams from several people whose contacts remain within one team."
         },
         {
-          "at": 45,
-          "text": "The second is betweenness: how often a person lies on the shortest route between two others. Hal scores 0.571 and the next person 0.179. Freeman (1977) introduced it to capture potential control over communication. Whether anything travels those paths is a question about flows, and this network records none."
+          "at": 27,
+          "text": "Betweenness measures how frequently a node lies along shortest routes connecting others. Hal scores 0.571. The next highest score is 0.179. The measure captures a form of potential intermediary importance. Whether Hal actually transmits or controls information would require observations of communication."
+        },
+        {
+          "at": 47,
+          "text": "Closeness concerns the distances between one person and the rest of the network. Hal scores 0.750, followed by 0.708 for the nearest group of employees. Here the broker also occupies a position near everyone. That correspondence need not hold in larger or more complicated networks."
         },
         {
           "at": 68,
-          "text": "The third is closeness: how few steps it takes to reach everyone else. Hal scores 0.750 and Ava 0.708. Closeness rewards being near the middle on average, a different property from standing between groups. In this small, symmetric drawing the two coincide. In larger networks they often part."
+          "text": "Hal's local clustering coefficient is 0.333. It describes the proportion of possible relationships among his contacts that are present. Constraint measures a different aspect of redundancy in his contacts. We will examine its interpretation in the ego-network example."
         },
         {
-          "at": 90,
-          "text": "Selecting Hal lists his measures. His clustering, 0.333, is the share of pairs of his contacts who are tied to each other. It describes closure in his immediate neighborhood. Constraint is listed on the same panel, and I will return to it when the ego-network example gives that measure room to be interpreted."
-        },
-        {
-          "at": 113,
-          "text": "For the whole network, density, the share of possible ties that exist, is 0.444. There is 1 component and the average shortest path is 2 steps. Density describes how many possible ties exist. Components and path length describe reachability. The degree-centralization value on screen will be easier to read after we compare this network with a star."
+          "at": 86,
+          "text": "For the network as a whole, density is 0.444, meaning that proportion of possible ties exists. All nine employees belong to one connected component, and the average shortest path contains two steps. These describe different properties: the amount of connection, whether people can reach one another, and how far apart they are."
         }
       ]
     },
@@ -225,28 +225,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=two-cliques-broker",
         "label": "Build › Draw › Two teams and a broker"
       },
-      "heading": "Degree and betweenness answer different positional questions.",
-      "duration": 109,
+      "heading": "A ranking depends on the property being measured.",
+      "duration": 90,
       "paragraphs": [
         {
           "at": 0,
-          "text": "People lists every person and their measures, sorted here by contacts. Five people share the top value of 4 and the table cannot order them. Ranks are only as fine-grained as the measure behind them."
+          "text": "The People view lists the same nine employees under different measures. Sorted by degree, five employees tie for first with four contacts each. The numerical measure cannot distinguish them."
         },
         {
-          "at": 17,
-          "text": "Sorted by betweenness, Hal is first at 0.571. The four people tied to him follow at 0.179 each, because they lie between their teammates and Hal. The other four score 0.000. The same nine positions produce a different ranking when the positional property changes."
+          "at": 15,
+          "text": "Sorted by betweenness, Hal ranks first at 0.571. Four others score 0.179, and the remaining four score zero. The ranking changes because shortest-route dependence is different from direct connectivity."
         },
         {
-          "at": 38,
-          "text": "Sorted by closeness, Hal is first again, but narrowly: 0.750 against 0.708 for his neighbors and 0.583 for the rest. Harmonic closeness aggregates reciprocal distance to everyone else. Betweenness aggregates dependence of shortest paths on a position. A question about reach calls for the first. A question about brokerage or dependence calls for the second."
+          "at": 30,
+          "text": "Closeness places Hal first more narrowly: 0.750 compared with 0.708 for his neighbors and 0.583 for the remaining employees. The application uses harmonic closeness, which sums reciprocal distances. Betweenness instead measures dependence of shortest paths on a position. The choice should follow from the substantive question."
         },
         {
-          "at": 62,
-          "text": "Hal's profile gives each measure with its rank: 1 to 5 of 9 on contacts, shared by five people, and 1 of 9 on betweenness. It also says how betweenness is scaled: pairs of other people whose shortest routes pass through him, divided by 28, the number of such pairs here."
+          "at": 51,
+          "text": "Hal's profile reports both the score and its rank among the nine employees. His betweenness is normalized by dividing the shortest-route contribution by 28, the number of unordered pairs among the other eight people. That normalization will become explicit in the next worked calculation."
         },
         {
-          "at": 85,
-          "text": "The (i) notes that betweenness ignores tie weights, and that in a network this small one tie has substantial leverage on every value. A centrality score inherits the boundary and the ties of the network it was computed on. It describes a position here, not a property a person carries elsewhere."
+          "at": 72,
+          "text": "The interpretation note records that betweenness is unweighted here. With only nine people, one additional or missing tie can materially change the measure. The score describes Hal's position in this network, under its particular boundaries and tie definitions."
         }
       ]
     },
@@ -259,28 +259,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=two-cliques-broker",
         "label": "Build › Draw › Two teams and a broker"
       },
-      "heading": "Removing the broker separates the network into two components.",
-      "duration": 100,
+      "heading": "Removing the broker disconnects the two teams.",
+      "duration": 92,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Betweenness describes dependence, and the most direct way to see dependence is to remove the person. Back in Build, Hal is selected again, for a structural experiment on the drawing rather than a prediction about people."
+          "text": "We can test the dependence on Hal directly by removing him from the drawing and recalculating the network. This is a structural counterfactual, not a prediction of what employees would do after a colleague left."
         },
         {
-          "at": 18,
-          "text": "Deleting Hal removes him and his four ties. The canvas now counts 8 people and 12 ties: two complete cliques with nothing between them."
+          "at": 17,
+          "text": "Deleting Hal removes his four ties. Eight people and twelve ties remain, organized into two disconnected cliques."
         },
         {
-          "at": 31,
-          "text": "Analyzed again, the header reads 8 people and 12 ties. The engine has no memory of Hal. It measures the network it is given, which is also why every result depends on what it was given."
+          "at": 29,
+          "text": "The revised network is analyzed independently. The software calculates the structure supplied to it. It does not incorporate possible replacement ties or adaptation unless those changes are represented."
         },
         {
-          "at": 48,
-          "text": "Everyone now has the same value on all three measures: 3 contacts, betweenness 0.000 and closeness 0.429. Inside a clique nobody lies between anyone. Closeness has fallen because half the network can no longer be reached, and harmonic closeness counts an unreachable person as zero, which keeps it defined."
+          "at": 44,
+          "text": "Every employee now has three contacts and zero betweenness. Within each clique, everyone can reach everyone else directly. Harmonic closeness falls to 0.429 because the four people in the other clique are unreachable and contribute zero reciprocal distance."
         },
         {
-          "at": 70,
-          "text": "There are now 2 components, pieces with no path between them, and the largest holds 50% of the people. The average path length is 1 because it is calculated only among pairs that remain reachable. Who mattered, then, and in what sense? Hal was the only connection between the teams. Degree did not distinguish him from several others, while betweenness did. The question has to come before the measure."
+          "at": 62,
+          "text": "The network now has two components, each containing half the employees. The reported average path length is one step because it is calculated only among reachable pairs. It should not be interpreted as evidence that the whole network has become more accessible. The example establishes Hal's structural importance precisely. His degree was ordinary among the most connected employees, while the network depended on his position to connect its two groups."
         }
       ]
     },
@@ -293,32 +293,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=path",
         "label": "Build › Draw › A path of six people"
       },
-      "heading": "Normalized betweenness turns route counts into a comparable score.",
-      "duration": 146,
+      "heading": "Normalization explains differences between hand calculations and software.",
+      "duration": 110,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Why does the software's number differ from my hand calculation? Students who compute betweenness by hand often get a different value from the software, and usually neither is wrong. The worked example \"A path of six people\" is the simplest case: A through F in a line, 6 people and 5 ties."
+          "text": "The next example contains six people arranged in one path, A through F. It shows why a hand calculation and the application's reported centrality can differ while both are correct."
         },
         {
-          "at": 24,
-          "text": "C sits with A and B on one side and D, E and F on the other. Pairing each of A and B with each of D, E and F gives the pairs whose shortest path runs through C: 6 of the 10 pairs of other people. That count is where Freeman's definition starts."
+          "at": 15,
+          "text": "Consider C. A and B lie on one side, while D, E, and F lie on the other. Each person on the first side can be paired with each person on the second. That gives six pairs whose shortest path passes through C."
         },
         {
-          "at": 48,
-          "text": "The software gives C and D 0.600 and B and E 0.400. A and F score 0.000. The endpoints of a path are never between anyone, and the middle positions score highest. None of these values is a count, which is where hand and software part ways."
+          "at": 35,
+          "text": "The application reports normalized betweenness. C and D score 0.600. B and E score 0.400. The endpoints score zero because they cannot lie between two other people on this path."
         },
         {
-          "at": 69,
-          "text": "The (i) gives the convention. The count is divided by the number of pairs of other people, (n − 1)(n − 2) / 2. With n = 6 that gives 10, the number of such pairs here. Normalization puts networks of different sizes on the same theoretical scale. It also means the value no longer matches the raw hand count. The convention belongs in the report."
+          "at": 51,
+          "text": "For an undirected network, betweenness is divided by the number of unordered pairs among the other nodes. The denominator is (n − 1)(n − 2)/2. With six nodes, the denominator is ten. C lies on six qualifying routes, producing 6/10, or 0.600. The normalized value is a proportion, not the raw route count."
         },
         {
-          "at": 98,
-          "text": "Closeness has the same issue. The app uses harmonic closeness: one over the distance to each other person, summed and divided by the number of others. C and D score highest at 0.667. B and E have 0.617 and the ends 0.457."
+          "at": 75,
+          "text": "The application also uses harmonic closeness. C and D score 0.667, B and E score 0.617, and the two endpoints score 0.457."
         },
         {
-          "at": 118,
-          "text": "The card sets the two formulas side by side. By the harmonic formula A scores (1 + 1/2 + 1/3 + 1/4 + 1/5) / 5 = 0.457. The textbook formula, the number of others divided by the sum of distances, gives 0.333: 5 others over a total distance of 15. Harmonic closeness handles unreachable pairs directly because their reciprocal distance contributes zero."
+          "at": 87,
+          "text": "For endpoint A, harmonic closeness sums reciprocal distances: (1 + 1/2 + 1/3 + 1/4 + 1/5)/5 = 0.457. The conventional alternative divides the number of other nodes by the sum of their distances, giving 5/15 = 0.333. Both follow their definitions. Reports need to identify which formula produced the number."
         }
       ]
     },
@@ -331,28 +331,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=path",
         "label": "Build › Draw › A path of six people"
       },
-      "heading": "A star shows what maximum centralization looks like.",
-      "duration": 104,
+      "heading": "A star distinguishes centrality from network centralization.",
+      "duration": 83,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The star is the other limiting case: one hub tied to five people who are not tied to each other, again 6 people and 5 ties. The size is unchanged. Rearranging the ties changes the centrality values sharply."
+          "text": "The star contains six people and five ties, the same numbers as the path. But all five ties connect to one hub."
         },
         {
-          "at": 18,
-          "text": "Every route between two leaves passes through the hub, so its normalized betweenness is 1.000, the maximum, and each leaf scores 0.000. On this scale, 1 means every shortest path between every pair of other people passes through that person."
+          "at": 12,
+          "text": "Every route between two leaves passes through the hub. The hub therefore has normalized betweenness of 1.000, while every leaf scores zero."
         },
         {
-          "at": 37,
-          "text": "The hub's closeness is 1, since everyone is one step away. A leaf reaches the hub in one step and the other leaves in two, so its harmonic closeness is 0.600. In a star distances are short for everyone, which is why closeness varies so much less than betweenness."
+          "at": 25,
+          "text": "The hub also has harmonic closeness of 1 because everyone is one step away. A leaf reaches the hub directly and the other four leaves in two steps, producing harmonic closeness of 0.600."
         },
         {
-          "at": 60,
-          "text": "Degree centralization is 1, the most centralized network possible: Freeman's index compares each degree with the largest, and a star maximizes that total difference. Density is 0.333 and the average path 1.67. The broker network scored near zero even though removing Hal disconnects it. Degree centralization measures concentration of degree around the most connected position, scaled to the star."
+          "at": 41,
+          "text": "Degree centralization is a property of the whole graph. Freeman's measure compares each node's degree with the maximum degree and scales the total difference against the star. Here centralization is 1, its theoretical maximum. The earlier broker network had low degree centralization despite its dependence on Hal. Concentration of degree and vulnerability to removing a broker are different properties."
         },
         {
-          "at": 86,
-          "text": "For a leaf the textbook closeness would be 5 / 9 = 0.556 against a harmonic 0.600. The two values come from different formulas. A report should name the formula used whenever the value could otherwise be ambiguous."
+          "at": 67,
+          "text": "For a leaf, conventional closeness would be 5/9 = 0.556, compared with harmonic closeness of 0.600. The calculation matters because two legitimate definitions can produce different numerical summaries of the same position."
         }
       ]
     },
@@ -365,24 +365,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=path",
         "label": "Build › Draw › A path of six people"
       },
-      "heading": "Software choices belong in the report.",
-      "duration": 86,
+      "heading": "Statistical definitions belong with the reported results.",
+      "duration": 74,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Learn collects the definitions behind every number, drawn from the same glossary the views use, so explanation and computation cannot drift apart."
+          "text": "The Learn section records the definitions used in the application, together with their formulas and limitations. This allows students to connect an interpretation directly to the calculation that produced the result."
         },
         {
-          "at": 12,
-          "text": "The betweenness entry gives the scale, from 0 for someone no shortest route needs to 1 for the center of a star, and how to recover a raw count on an undirected network: multiply by (n − 1)(n − 2) / 2. On a directed network the denominator counts ordered pairs."
+          "at": 16,
+          "text": "The betweenness entry explains the normalization used for undirected and directed networks. For an undirected network, multiplying the normalized score by (n − 1)(n − 2)/2 recovers the corresponding raw shortest-route contribution. Directed networks use ordered pairs."
         },
         {
-          "at": 35,
-          "text": "The closeness entry names its choice: harmonic rather than textbook closeness. The two give different values, and their orderings can differ. Harmonic closeness also handles unreachable pairs directly by assigning them zero reciprocal distance. Its example gives the middle of a short path 0.75."
+          "at": 34,
+          "text": "The closeness entry specifies harmonic closeness. Unlike the conventional sum-of-distances formula, harmonic closeness remains defined when some nodes are unreachable by assigning those pairs zero reciprocal distance. The two formulas can also rank positions differently."
         },
         {
-          "at": 56,
-          "text": "The methods appendix records these choices for whatever network is loaded. Betweenness follows Freeman (1977) and is computed with Brandes's (2001) algorithm. Closeness uses normalized reciprocal distances, related to the network-efficiency formulation of Marchiori and Latora (2000) and the harmonic centrality treatment of Boldi and Vigna (2014). A difference between hand and software calculations often comes from a definitional choice, which is why the formula belongs beside the value."
+          "at": 51,
+          "text": "The methods appendix records the formulas used for the loaded network. Betweenness follows Freeman's definition and is computed using Brandes's algorithm. Closeness uses normalized reciprocal distances. A discrepancy between software and a hand calculation is often a disagreement about definitions rather than an arithmetic error. The methods record makes that distinction inspectable."
         }
       ]
     },
@@ -395,28 +395,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=ego-10",
         "label": "Build › Ego network › the worked example"
       },
-      "heading": "An ego network is one person's reported view of the people around them.",
-      "duration": 134,
+      "heading": "An ego network records one person's reported relationships.",
+      "duration": 118,
       "paragraphs": [
         {
           "at": 0,
-          "text": "So far the networks have been transparent enough to inspect directly. Now the source is one person's report of the people around them. The interview has already set the respondent and relationship questions in steps 1 and 2, and the screen opens at step 3 to collect names. An ego network contains one focal person, ego, the people they name, alters, and the reported ties among those alters."
+          "text": "An ego network begins with one focal respondent, called ego. The respondent names other people, called alters, and reports relationships among them. This produces a network of the respondent's perceived social surroundings. The interview shown here has already established the relationship questions and is ready to collect names."
         },
         {
-          "at": 30,
-          "text": "Names come from name generators, questions that ask for people. The first is the \"important matters\" question Burt (1984) designed for the General Social Survey. The second asks about socializing. This respondent named 6 people for one and 7 for the other, 10 in all, because three appear under both. Wording and caps on names shape what comes back (Marsden 1990)."
+          "at": 22,
+          "text": "The first name generator asks whom the respondent discusses important matters with, following Burt's General Social Survey question. The second asks about socializing. The respondent names six people under the first question and seven under the second. Three names appear in both, producing ten distinct alters. Question wording and limits on the number of names can affect which contacts are reported."
         },
         {
-          "at": 56,
-          "text": "Name interpreters ask the same questions about each person: the kind of relationship, and closeness from 1 to 5. With 20 of 20 answers filled, every alter carries attributes, all of them the respondent's descriptions. Ego reports how close they are to Kai. Kai has not been asked."
+          "at": 49,
+          "text": "Name interpreters collect additional information about each alter, including relationship type and perceived closeness. All twenty required answers are complete. These remain the respondent's descriptions. The people named have not independently reported their own relationships."
         },
         {
-          "at": 78,
-          "text": "Who knows whom gives the network its structure. The interview uses settings such as family, college and work as a starting point rather than asking about 45 pairs one by one. Feld (1981) gives a theoretical reason shared foci can organize ties, although sharing a setting does not imply that every pair knows each other. The respondent fixes the exceptions: 12 of 45 pairs know each other, and 2 pairs differ from what the settings imply."
+          "at": 66,
+          "text": "The respondent also reports which alters know one another. The interface begins with shared settings such as family, college, and work, then allows exceptions. Of the 45 possible alter pairs, twelve are reported as connected. Two pairs differ from what the shared-setting assumption would imply. Shared settings can create opportunities for relationships, but they do not establish that every person associated with the same setting knows every other person."
         },
         {
-          "at": 111,
-          "text": "The review reports four numbers: size 10, density 0.267, effective size 7.6 and constraint 0.292. Every tie here, including every tie among the alters, is the respondent's report. An ego network records one person's view of their surroundings, and that view can be wrong in ways the measures cannot detect."
+          "at": 96,
+          "text": "The review reports ten alters, density of 0.267, effective size of 7.6, and constraint of 0.292. All relationships among alters are reported from the respondent's perspective. The measures describe that reported network. They cannot independently establish whether the respondent knows about all the relationships among the people named."
         }
       ]
     },
@@ -429,36 +429,36 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=ego-10",
         "label": "Build › Ego network › the worked example"
       },
-      "heading": "Effective size and constraint summarize redundancy in different ways.",
-      "duration": 177,
+      "heading": "Effective size and constraint emphasize different forms of redundancy.",
+      "duration": 172,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The reading is \"Brokering\": most of the people named do not know each other. Coleman (1988) argued that network closure can support obligations and effective norms under particular social conditions. Burt (1992) argued that brokerage across structural holes can provide access to non-redundant information. Those are mechanism claims. The ego network measures structural conditions relevant to them."
+          "text": "The ego network contains several groups that are internally connected but have relatively few relationships between them. The reading describes a brokerage pattern. Coleman's work on closure concerns the conditions under which connected groups can sustain obligations and norms. Burt's structural-holes argument concerns opportunities created by connections across otherwise separated contacts. The network measures structures relevant to those mechanisms, not the mechanisms themselves."
         },
         {
-          "at": 25,
-          "text": "Size is 10 people named. Density is 0.267: 12 of the 45 possible pairs know each other. The app's descriptive reading uses stated thresholds, below one third for brokering and above two thirds for closed. Density is easy to explain, but it treats all alter pairs alike and does not show where the gaps are."
+          "at": 28,
+          "text": "The respondent names ten alters. Twelve of the 45 possible alter pairs are connected, producing density of 0.267. Density measures the overall proportion of possible relationships present. It does not distinguish between ties concentrated within separate clusters and ties distributed across those clusters."
         },
         {
-          "at": 50,
-          "text": "Effective size, Burt's count of non-redundant contacts, is 7.600. Unweighted, it reduces to a hand calculation (Borgatti 1997): size minus twice the ties among alters divided by size, 10 − 2 × 12 / 10. Effective size subtracts the average number of other alters each alter knows."
+          "at": 48,
+          "text": "Effective size estimates the number of nonredundant contacts. In this unweighted example, it can be calculated as the number of alters minus twice the number of ties among alters divided by the number of alters. That gives 10 − 2 × 12/10 = 7.6. The calculation reduces the nominal network size according to how connected the alters are to one another."
         },
         {
-          "at": 72,
-          "text": "Constraint is 0.292. Lower means more brokerage, but the scale is not fixed: with 10 contacts it runs only from 0.100 when nobody knows anybody to 0.361 when everybody knows everybody. Against that range 0.292 sits fairly high, because each setting is close-knit inside, and constraint rises with dense clusters even when the clusters do not know each other."
+          "at": 75,
+          "text": "Constraint is 0.292. Under this example's assumptions, its range for ten contacts runs from 0.100 with no ties among alters to 0.361 when all alters are connected. Higher constraint indicates greater concentration of relational investment in mutually connected contacts. Here the respondent's contacts form several internally cohesive settings. That produces substantial constraint even though the settings are relatively separated from one another."
         },
         {
-          "at": 98,
-          "text": "The interpretation note adds a caution. Constraint depends strongly on the number of contacts, so it should be compared between people who named similar numbers. The two measures also stress different features. Effective size registers that the three settings barely overlap. Constraint registers that each of them is closed."
+          "at": 102,
+          "text": "Effective size and constraint consequently emphasize different properties. Effective size captures the nonredundancy created by limited overlap among contacts. Constraint remains sensitive to how tightly connected those contacts are within each setting. Constraint also depends on network size and distribution of relational investment, so comparisons require attention to those characteristics."
         },
         {
-          "at": 120,
-          "text": "The interview summary says what this network is: ties from the respondent to each person named, and ties among those people as the respondent perceives them, not as observed. It cannot show the alters' other contacts, ties the respondent does not know about, or the wider structure around them."
+          "at": 125,
+          "text": "The interview cannot describe contacts the respondent omitted or relationships among alters that the respondent does not know about. It also does not observe the wider networks surrounding those alters."
         },
         {
-          "at": 143,
-          "text": "Analyzed, the interview becomes 11 people and 22 ties with the respondent at the center of three clusters, holding 10 contacts. Kai is next with 5. The full network's density is 0.4 because it counts ego's ties as well as ties among alters. Ego's betweenness is partly built into this design because ego lies on most shortest routes between alters in different settings. The network contains brokerage between three settings and closure within them, which effective size and constraint weight differently."
+          "at": 140,
+          "text": "The analyzed graph contains eleven people, including ego, and 22 ties. Ego has ten contacts, and Kai follows with five. The whole-network density is 0.4 because it includes ego's ties, whereas the earlier density of 0.267 referred only to ties among alters. Ego occupies a central position partly because the interview design connects ego to every named alter. That feature should not be confused with an independently discovered brokerage role in the wider social system."
         }
       ]
     },
@@ -471,28 +471,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=class-friendships",
         "label": "Build › Draw › Class friendships with majors"
       },
-      "heading": "A bounded network starts by defining who belongs in it.",
-      "duration": 107,
+      "heading": "A roster survey defines the population before collecting ties.",
+      "duration": 84,
       "paragraphs": [
         {
           "at": 0,
-          "text": "How do you survey a whole group, and what is a tie when two people disagree? A whole network starts from a boundary. A roster defines the population, here the 8 students of a fictional seminar, and ties are recorded only among them. Who belongs inside is itself a choice, the boundary specification problem of Laumann, Marsden and Prensky (1983)."
+          "text": "The next example concerns the entire population of a bounded group: eight students in a fictional seminar. A roster establishes who belongs to that population. The decision determines which possible relationships can be recorded."
         },
         {
-          "at": 27,
-          "text": "Each relation is a question asked about everyone on the roster, here \"Whom in this seminar do you consider a personal friend?\" Recognizing names on a list reduces forgetting compared with free recall but limits answers to the list."
+          "at": 17,
+          "text": "The survey asks, “Whom in this seminar do you consider a personal friend?” The roster helps respondents recognize names they might otherwise omit, but it also prevents them from naming people outside the defined group."
         },
         {
-          "at": 45,
-          "text": "Collect ties asks who answers. One informant could fill in the whole grid. Here each member answers for themselves, so every reported tie is a self-report from one side of the pair."
+          "at": 34,
+          "text": "The collection procedure asks each student about their own friendships. Each answer initially creates a directed report from one respondent to another student."
         },
         {
-          "at": 61,
-          "text": "Make a share link encodes the survey in the link itself. There is no form service and no server: the survey travels in the part of the link after the # sign, which browsers do not send, and each respondent returns a small response file."
+          "at": 47,
+          "text": "The share link contains the survey specification in the fragment of its URL, after the hash symbol. The browser does not transmit that fragment as part of the ordinary request to the page. Respondents complete the survey locally and return a response file."
         },
         {
-          "at": 82,
-          "text": "The note under the link states what travels: the questions and the roster's names, not the organizer's attributes. Answers stay on the respondent's device until they send them, so there is no central organizer-side store while they answer. The response files themselves still reveal who named whom and need the same care as any identifiable network data."
+          "at": 67,
+          "text": "The link exposes the roster names needed for the questions, without including the organizer's additional attributes. The returned files contain identifiable relational reports. Local collection does not eliminate the confidentiality obligations associated with those data."
         }
       ]
     },
@@ -505,28 +505,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=class-friendships",
         "label": "Build › Draw › Class friendships with majors"
       },
-      "heading": "Roster surveys collect each person's reports about the same bounded group.",
-      "duration": 78,
+      "heading": "Friendship nominations are directed reports, even when the relationship is understood as mutual.",
+      "duration": 69,
       "paragraphs": [
         {
           "at": 0,
-          "text": "A second window shows the link as a respondent sees it: the survey alone, with a statement that the page has no server behind it and nothing entered is uploaded."
+          "text": "This window shows the survey as a respondent encounters it. The page does not submit the answers to a central server."
         },
         {
-          "at": 15,
-          "text": "Chloe Tran, one of the fictional students, finds her own name. Her answers are matched to it, so her nominations become ties that start from her."
+          "at": 12,
+          "text": "Chloe Tran selects her name from the fictional class roster. The response can then be associated with the person making the nominations."
         },
         {
-          "at": 29,
-          "text": "She ticks Amara Okoye, Elena Petrova and Farah Haddad. Each tick is a directed report: Chloe says Amara is a friend. Whether Amara says the same is a separate observation, made in Amara's own survey. Friendship is usually thought mutual, but survey data arrive one direction at a time."
+          "at": 24,
+          "text": "Chloe selects Amara Okoye, Elena Petrova, and Farah Haddad. Each selection records Chloe's report of friendship. Whether the other student independently reports the same relationship remains unknown until that student's response is available."
         },
         {
-          "at": 51,
-          "text": "The last step restates her answers in words and offers a response file to send back, so she sees exactly what she is reporting about other people."
+          "at": 41,
+          "text": "Before completing the survey, Chloe can inspect her responses in ordinary language. The survey produces a file or text representation that she can send to the organizer."
         },
         {
-          "at": 66,
-          "text": "The window closes. The organizer can load response files or paste the text from emails. No answer has passed through a server."
+          "at": 55,
+          "text": "The organizer receives and combines the reports. The next decision is how disagreements between the two sides of a friendship nomination should affect the constructed network."
         }
       ]
     },
@@ -539,36 +539,36 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=class-friendships",
         "label": "Build › Draw › Class friendships with majors"
       },
-      "heading": "Combining reports requires an explicit rule for disagreement.",
-      "duration": 143,
+      "heading": "Combining reports requires a rule for disagreement.",
+      "duration": 127,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Eight responses have been pasted in, one block per student, in the app's own format, as an organizer would receive them by email."
+          "text": "All eight fictional students have supplied responses. The organizer has pasted the records into the application."
         },
         {
-          "at": 13,
-          "text": "Reading them reports that 8 of 8 people responded. Nonresponse is especially consequential in network data because one missing respondent removes their nominations and can alter path-based and network-level measures (Kossinets, 2006). Here there is no gap."
+          "at": 12,
+          "text": "The import reports eight of eight respondents. That completeness matters. A missing response would remove outgoing nominations from one student, potentially changing both local and whole-network measures."
         },
         {
-          "at": 31,
-          "text": "The combination rule defines the tie. Union counts a friendship if either person reports it. Reciprocated only counts it if both do. As reported keeps each nomination as a directed tie. These are three different relations. Union treats a one-sided report as enough, reciprocated only requires agreement, and as reported keeps the asymmetry as data."
+          "at": 26,
+          "text": "There are three construction options. Under the union rule, a tie exists when either student reports the friendship. Under reciprocated-only, both students must report it. Under as-reported, each nomination remains directed, preserving disagreement rather than resolving it. These rules represent different interpretations of the available evidence."
         },
         {
-          "at": 55,
-          "text": "With union the review shows 10 friendship ties: 8 pairs in which both named each other and 2 in which only one did. The one-sided pairs are the disagreements. They may reflect different thresholds for the word friend, a difference in status, or forgetting, and the data cannot say which."
+          "at": 47,
+          "text": "Under union, the network contains ten friendship pairs. Eight pairs are reported by both students, and two are reported by only one. The disagreements could reflect different understandings of friendship, reporting thresholds, or recall. The responses do not establish which explanation applies."
         },
         {
-          "at": 78,
-          "text": "Back in Collect ties, the rule is switched to reciprocated only. The responses do not change. Only the definition of a tie does."
+          "at": 67,
+          "text": "I now change the construction rule without changing any response. Only mutually reported friendships qualify."
         },
         {
-          "at": 91,
-          "text": "Now there are 8 ties, and the 2 one-sided pairs have dropped out. Union is more sensitive to liberal nomination thresholds or false positives. Reciprocated-only is more sensitive to omission or forgetting. The choice should follow from the relation the analyst intends to represent, and it should be reported with the results."
+          "at": 79,
+          "text": "The network contains eight ties. Union retains relationships supported by only one report. Reciprocated-only requires stronger agreement but can exclude relationships because one participant forgot or used a stricter definition. Neither is universally preferable. The choice depends on the substantive relation and the consequences of each error."
         },
         {
-          "at": 114,
-          "text": "The reciprocated network has 8 people and 8 ties. Chloe Tran and Farah Haddad share the top on contacts with 3 each, on betweenness with 0.452 and on closeness with 0.690. What is a tie when two people disagree? Analytically, the tie is the relation defined by the combination rule. Its substantive adequacy depends on whether that rule matches the relationship the study intends to measure."
+          "at": 101,
+          "text": "The reciprocated network contains eight people and eight ties. Chloe Tran and Farah Haddad share the highest degree, with three contacts each. They also share the highest betweenness, 0.452, and closeness, 0.690. The observed pattern is conditional on the chosen rule. The analytical report should identify that rule rather than describe the resulting ties as unqualified friendship facts."
         }
       ]
     },
@@ -581,32 +581,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=class-friendships",
         "label": "Build › Draw › Class friendships with majors"
       },
-      "heading": "Homophily describes concentration of ties among similar people.",
-      "duration": 144,
+      "heading": "Homophily concerns the concentration of ties among similar people.",
+      "duration": 125,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The chapter's second half asks whether friendship follows major. \"Class friendships with majors\" has 13 students and 18 ties across 3 majors. One student, Nora Quinn, has no friendships in the class yet. The pattern in question is homophily, the tendency for ties to occur more often among similar people, documented across many relations by McPherson, Smith-Lovin and Cook (2001)."
+          "text": "The next example asks whether students are more likely to form friendships within their own academic major. The drawn network contains thirteen students, eighteen ties, and three majors. Nora Quinn, who recently transferred, has no recorded friendships. Homophily describes the tendency for relationships to occur more often among people who share characteristics."
         },
         {
-          "at": 27,
-          "text": "Analyzed, the network has 13 people and 18 ties. Most ties visibly stay inside a major, but an impression is not a finding. Groups of different sizes, and students with different numbers of friends, produce different amounts of within-group tying by chance alone."
+          "at": 24,
+          "text": "Colored by major, the network shows substantial within-major connection. But the visual concentration is not sufficient evidence that friendship is unusually organized by major. Group sizes and individual degrees affect how many within-group ties we should expect."
         },
         {
-          "at": 47,
-          "text": "Coloring by community shows groups found from the ties alone by the Louvain method of Blondel and colleagues (2008), a heuristic search for a high-modularity partition. Newman and Girvan (2004) define modularity relative to a degree-based null expectation. It finds 3 communities with modularity 0.5, exactly the three majors. Here the recorded attribute aligns exactly with the tie-defined partition."
+          "at": 41,
+          "text": "Community detection uses the ties rather than the recorded majors. The Louvain algorithm identifies three communities, with modularity of 0.5. They correspond exactly to the three majors. This establishes agreement between an attribute-based classification and a partition detected from relationships in the example. The procedure did not use the majors to construct the communities."
         },
         {
-          "at": 73,
-          "text": "Nora Quinn is found by name. Her contacts, betweenness and closeness are all 0 and her community is none: she is an isolate, in the network but with no ties in it. An isolate is often a fact about the data rather than the person. The worked example says she transferred in this term."
+          "at": 66,
+          "text": "Nora has degree, betweenness, and closeness of zero. She is an isolate: a member of the defined population without observed ties under the friendship rule. An isolate is not necessarily socially isolated outside the measured network. Nora's recent transfer provides one possible reason she has no recorded class friendships."
         },
         {
-          "at": 97,
-          "text": "Because of Nora there are 2 components, and the largest holds 92% of the students. She belongs to no community but counts in the network's size and density. Dropping isolates to tidy the picture would redefine the population and can change whole-network measures."
+          "at": 88,
+          "text": "The network has two components, one containing Nora alone. The largest contains approximately 92 percent of the students. Excluding Nora would make the diagram simpler while changing the defined population and several network statistics."
         },
         {
-          "at": 117,
-          "text": "The card says what to check next: 15 of the 18 friendships stay within a major, the E-I index is −0.667 and assortativity is 0.750. The E-I index directly contrasts external with internal ties. Assortativity measures categorical mixing relative to the category marginals at the ends of ties. The next question is how unusual these values are under a degree-preserving baseline."
+          "at": 105,
+          "text": "Fifteen of the eighteen friendships occur within a major. The E-I index is −0.667, and categorical assortativity is 0.750. The two statistics summarize within-group concentration differently. To interpret whether the observed pattern is unusual, we need a comparison that accounts for the network's structure."
         }
       ]
     },
@@ -619,28 +619,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?example=class-friendships",
         "label": "Build › Draw › Class friendships with majors"
       },
-      "heading": "A baseline is needed to judge whether observed mixing is unusual.",
-      "duration": 125,
+      "heading": "A structural baseline changes how homophily is interpreted.",
+      "duration": 121,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Groups compares structure within and between groups defined by an attribute or by detected communities. Its reading: people tie mostly within their major, far more than random networks with the same numbers of ties give. The second half of that sentence carries the inference."
+          "text": "The Groups view compares observed mixing with a reference distribution. The question is how much within-major friendship we would expect if the students retained their numbers of friends but the connections between them were rearranged."
         },
         {
-          "at": 21,
-          "text": "Assortativity by major is 0.75. Newman's (2003) attribute assortativity is 1 when all edge ends connect within the same category, 0 when observed mixing matches the category marginals at edge ends, and negative when cross-category mixing is greater. The baseline is built from 200 random networks. In each one, degree-preserving edge swaps following Maslov and Sneppen (2002) keep every student's number of friends fixed while rewiring who those friends are. Those networks average −0.0738. The observed value lies far beyond that baseline."
+          "at": 17,
+          "text": "Observed assortativity is 0.75. The application constructs 200 random networks through degree-preserving edge swaps. Every student retains the same degree, but the identities of their friends change. The resulting networks have mean assortativity of −0.0738. The class network therefore contains substantially more within-major mixing than the degree-preserving reference networks."
         },
         {
-          "at": 55,
-          "text": "The E-I index of Krackhardt and Stern (1988) is external ties minus internal ties over all ties, from −1 to +1. Here it is −0.667. Random networks give 0.432, because with three groups most possible partners are in other majors. Relative to zero, −0.667 is inward. Relative to the degree-preserving baseline it is much further inward."
+          "at": 40,
+          "text": "The E-I index compares external with internal ties: (E − I)/(E + I). It ranges from −1, when all ties remain within groups, to +1, when all ties cross groups. The observed value is −0.667. The random networks average 0.432. Zero is not necessarily the appropriate reference. With several groups, many possible partners belong to different majors, so random mixing can produce a positive E-I index."
         },
         {
-          "at": 80,
-          "text": "The group table gives each major's own E-I index of −0.429 beside its random value: 0.652 for Sociology, 0.646 for CS and 0.662 for Economics. Sociology has 5 people including Nora, and an internal density of 0.500 against 0.833 for CS and Economics."
+          "at": 68,
+          "text": "Each major has an E-I index of −0.429. Its random comparison differs slightly across majors: 0.652 for Sociology, 0.646 for Computer Science, and 0.662 for Economics. Sociology contains five students, including Nora, and has internal density of 0.500. Computer Science and Economics each have density of 0.833. These differences matter because the opportunity for within-group ties depends partly on group size and membership."
         },
         {
-          "at": 100,
-          "text": "The mixing matrix shows densities between majors, high on the diagonal and 0.050 or 0.063 off it. Major and friendship are strongly aligned here relative to degree-preserving rewiring. Several mechanisms could produce that pattern: choosing similar friends, shared courses that create same-major opportunities, or friends becoming more similar over time. These data do not separate them."
+          "at": 96,
+          "text": "The mixing matrix shows densities within and between majors. Within-major densities dominate, while cross-major densities are approximately 0.050 or 0.063. The structure is strongly aligned with major. It does not identify why. Students may select similar friends, encounter more students in their own courses, or become more similar through existing friendships. Distinguishing those explanations requires additional evidence."
         }
       ]
     },
@@ -653,32 +653,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Workplace, Slack, bridge-dependent, seed 7"
       },
-      "heading": "Generated records let us separate social structure from observation.",
-      "duration": 135,
+      "heading": "Generated records separate the underlying network from its observation.",
+      "duration": 111,
       "paragraphs": [
         {
           "at": 0,
-          "text": "So far the examples have used ties that were drawn or reported by people. The next source is behavioral records, which makes the observation process part of network construction. Where does a network come from when nobody drew it? Before using records whose underlying structure is unknown, I want records generated from a structure I specified. Generate asks for a setting, a medium, a scenario and what an export shows."
+          "text": "We now move from drawn and reported relationships to records of activity. The problem changes. Rather than asking respondents who is connected, we infer relationships from the events recorded by a communication system. A generated workplace allows us to examine that observation process because the underlying organization is known."
         },
         {
-          "at": 30,
-          "text": "The medium is Slack. The medium is the observation process. The same organization seen through email or calendars would produce different records, and some planted features are harder to recover through some media."
+          "at": 22,
+          "text": "I select Slack as the communication medium. Slack records channels, threads, direct messages, and other events. An email or calendar system would observe different activities and generate different evidence about the same underlying organization. The medium is part of the measurement process."
         },
         {
-          "at": 47,
-          "text": "The scenario is bridge-dependent: departments joined by a few brokers, one of whom leaves at 55% of the period. That plants brokers and a departure, and it tests how whole-period measures treat someone present for only part of the period."
+          "at": 42,
+          "text": "The scenario contains departments connected through a limited number of brokers. One broker leaves 55 percent of the way through the period. That departure creates a useful distinction between someone's historical centrality and their position at the end of the observation window."
         },
         {
-          "at": 66,
-          "text": "The size is 120 people over 180 days, with random seed 7. The seed fixes every random choice, so the same settings and seed give exactly the same world, which makes a generated dataset usable as a shared reference in a course."
+          "at": 62,
+          "text": "The generator uses 120 people, 180 days, and seed 7. Fixing the seed makes the generated records reproducible under the same settings."
         },
         {
-          "at": 85,
-          "text": "The summary states what will be generated: a workplace of 120 people over 180 days from 6 Jan 2025, on Slack, with light message text. The true network, planted groups, brokers and events are kept as ground truth for the recovery check. The analysis never sees them. Only the check does."
+          "at": 74,
+          "text": "The workplace begins on January 6, 2025. The generator retains the underlying network, departments, planted brokers, and events as a reference. Those answers are not supplied to the analytical procedure. Only the recovery check uses them."
         },
         {
-          "at": 109,
-          "text": "Download as native export files writes the world as a Slack workspace export: users, channels and a file of messages per day for each conversation, in Slack's own format. The same zip then goes back through the importer used for real exports, so the analysis passes through the whole chain from social structure to records to a reconstructed network."
+          "at": 92,
+          "text": "The generated organization is written into a native-format Slack workspace export. It contains users, channels, and dated message records. Importing the same files allows us to follow the complete process from specified social structure to recorded events to an analytically reconstructed network."
         }
       ]
     },
@@ -691,20 +691,20 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Workplace, Slack, bridge-dependent, seed 7"
       },
-      "heading": "Trace data record events under a platform's rules.",
-      "duration": 59,
+      "heading": "Communication exports record events before they define relationships.",
+      "duration": 44,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Data is where empirical records come in. A message export is different evidence from a survey. A survey records what someone reports about a relationship. A trace records that an event occurred, under the definitions of the system that logged it."
+          "text": "The Data view accepts the generated Slack export through the same importer used for empirical records. The file is processed locally in the browser."
         },
         {
-          "at": 19,
-          "text": "The generated export is chosen: a zip of 18,575 files and 18.9 MB, named as Slack names its exports. Org Signal recognizes it from the files inside rather than from the name."
+          "at": 13,
+          "text": "The export contains 18,575 files and occupies 18.9 megabytes. The importer identifies its format from the files rather than relying on the filename."
         },
         {
-          "at": 35,
-          "text": "The import visibly takes a few seconds because the importer checks the files before the review opens. The review then reports 121 people with 73,058 messages and 3,894 reactions across 1,125 conversations. These are counts of events. None is a tie yet. Turning events into ties is the next chapter's subject."
+          "at": 26,
+          "text": "The review reports 121 accounts, 73,058 messages, 3,894 reactions, and 1,125 conversations. These are counts of records and events. They are not yet counts of network ties. That requires decisions about which events represent the relationships of interest."
         }
       ]
     },
@@ -717,36 +717,36 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Workplace, Slack, bridge-dependent, seed 7"
       },
-      "heading": "Observation precedes network construction.",
-      "duration": 165,
+      "heading": "Reviewing the evidence precedes constructing the network.",
+      "duration": 146,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The review comes before any analysis, deliberately: it is where an analyst decides what these records can stand for. Its two columns divide that decision into what the records support and their limits."
+          "text": "The import review separates what the records contain from what they might support as evidence. A complete generated Slack workspace can describe recorded communication within that workspace. It does not automatically describe every relationship among the employees."
         },
         {
-          "at": 16,
-          "text": "They support the structure of communication among everyone in this export: clusters, brokers and each person's position within the export boundary. This generated whole-workspace export contains every generated interaction represented by the medium. A personal export covering one account would support far less."
+          "at": 18,
+          "text": "The export covers all interactions generated through this medium. That makes it suitable for examining the reconstructed communication network within its defined boundary. An export from one person's account would provide a much narrower observation of the organization."
         },
         {
-          "at": 37,
-          "text": "The limits column names interaction outside this export: other tools, meetings and hallways, or conversations the export left out. This is the distinction between a recorded event and the relationship it may indicate. Bernard and colleagues (1984) reviewed substantial discrepancies between reported and observed interaction. Logged records avoid retrospective recall for the events they contain, while inheriting the boundaries and classifications of the system that recorded them."
+          "at": 36,
+          "text": "The records omit interaction occurring through other systems, meetings, or informal contact. Digital traces avoid some recall problems because they record specified events directly. But the events are defined and selected by the recording system. A logged interaction does not, by itself, establish advice, trust, influence, or another substantive relationship."
         },
         {
-          "at": 66,
-          "text": "The review lists the pieces of evidence available for construction before duplicate accounts are merged: replies 13,211, mentions 10,467, direct messages 37,397 and reactions 3,894. A reply links a replier to the author answered, a mention an author to the person named, a direct message sender to recipient, and a reaction a person to a message's author. These are event records. None defines a relationship on its own."
+          "at": 59,
+          "text": "The importer identifies 13,211 replies, 10,467 mentions, 37,397 direct messages, and 3,894 reactions as available forms of evidence. Replies link the person answering to the author answered. Mentions link the author to someone named. Direct messages link senders and recipients. Reactions connect the person reacting to a message's author. Each is an event that might contribute evidence for a tie."
         },
         {
-          "at": 95,
-          "text": "What was read: 121 people and 1,125 conversations by kind, messages, reactions and 4 channel-leave events, one bot named Deploy Bot, and one deactivated account belonging to Ludmila Nakamura. A bot generates traffic that is not social interaction. A deactivated account belongs to someone who has left while their records remain."
+          "at": 85,
+          "text": "The export includes one bot, Deploy Bot, and one deactivated employee account belonging to Ludmila Nakamura. Automated accounts and former employees raise different measurement questions. A bot's messages may not represent interpersonal activity. A departed employee's messages remain evidence about historical communication, but not necessarily current availability."
         },
         {
-          "at": 118,
-          "text": "The totals make the cautions explicit. The bot is left out, so 121 accounts become 120 people. The departed account's history still counts, so someone who has left can rank high. A network aggregated over a period describes the period, not its last day."
+          "at": 107,
+          "text": "Excluding the bot leaves 120 people. Ludmila remains because her historical communication belongs to the observation period. The resulting network represents activity across that period. It should not be interpreted without qualification as a map of the organization on its final day."
         },
         {
-          "at": 139,
-          "text": "Loaded, the export becomes 120 people and 1,378 ties. Ludmila Nakamura already stands out with the most contacts and the second-highest betweenness (0.149), though her account was deactivated partway through. Where does a network come from when nobody drew it? From records, filtered by an importer and turned into ties by rules, each a decision about what counts."
+          "at": 127,
+          "text": "The default construction produces 120 people and 1,378 directed ties. Ludmila has the most contacts and the second-highest betweenness, 0.149, despite having departed during the period. The example shows why both identity status and the observation window matter for interpretation."
         }
       ]
     },
@@ -759,28 +759,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then Network › Construction settings"
       },
-      "heading": "A tie is a rule applied to records.",
-      "duration": 116,
+      "heading": "A communication tie is produced by a rule applied to events.",
+      "duration": 85,
       "paragraphs": [
         {
           "at": 0,
-          "text": "What is a tie, really? The header reads 120 people and 1,378 ties, directed, so a two-way tie counts as two. Those ties were built by default rules, which deserve the same scrutiny as any other measurement choice. Here a tie is the output of a rule applied to message records. Its substantive meaning depends on the relation that rule is intended to represent."
+          "text": "The default network contains 120 people and 1,378 directed ties. A relationship recorded in both directions contributes two directed ties. These numbers depend on the construction rules, not merely on the contents of the export."
         },
         {
-          "at": 28,
-          "text": "Construction settings lists the rules with evidence in these data. Replies contribute 13,211 pieces of evidence. Mentions, direct messages and reactions provide other event types, while another 9 rules have no evidence here. Each rule states which kind of event may count as evidence of a tie."
+          "at": 17,
+          "text": "Construction settings lists the available sources of evidence. Replies, mentions, direct messages, and reactions can each contribute to a tie. Other supported rules have no qualifying events in this export."
         },
         {
-          "at": 50,
-          "text": "All four are on by default, and the default is permissive: any reply, mention, direct message or reaction counts toward a tie. Whether that suits a study depends on the relation it needs to represent. Advice, collaboration and acquaintance require different evidence, and some relations may require data beyond message traces."
+          "at": 32,
+          "text": "The default permits any event in those four categories to contribute. That is a relatively inclusive communication definition. It may be suitable for studying recorded interaction. It would require additional justification if the research question concerned advice, collaboration, or interpersonal reliance."
         },
         {
-          "at": 73,
-          "text": "Below are the properties of ties. Direction is kept. Weight is the count of evidence, so many messages produce one tie with a larger event-count weight. The minimum weight is 0 and one event suffices. The broadcast cutoff is 25 recipients: larger messages are treated as announcements and create no ties."
+          "at": 52,
+          "text": "Direction is preserved. Tie weight counts qualifying events. One event is sufficient to establish a tie under the default threshold. Messages addressed to more than 25 recipients are treated as broadcasts and excluded from tie construction."
         },
         {
-          "at": 96,
-          "text": "Accounts marked as bots are left out. Excluding them prevents automated activity from being treated as person-to-person evidence, but the rule depends on the export marking bots correctly. An unmarked integration would pass as a person. Each exclusion therefore belongs in the reported construction."
+          "at": 69,
+          "text": "Accounts marked as bots are excluded. That rule reduces automated traffic in the resulting network but depends on the source system's account classification. An unmarked automated account could still enter the graph."
         }
       ]
     },
@@ -793,24 +793,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then Network › Construction settings"
       },
-      "heading": "A stricter rule keeps fewer ties.",
-      "duration": 68,
+      "heading": "A narrower construction rule changes the brokerage ranking.",
+      "duration": 60,
       "paragraphs": [
         {
           "at": 0,
-          "text": "To see how much the definition matters, only replies are left on. A reply records one person answering another. It is a relatively narrow rule because replies occur in shared channels and threads."
+          "text": "I now retain replies alone. The resulting tie represents a recorded response by one person to another, primarily through shared conversations and threads."
         },
         {
-          "at": 16,
-          "text": "Apply and rebuild reports 1,145 ties against 1,378 before. There are still 7 communities and 3 people change community. The notice makes the construction change explicit. The departmental pattern survives the stricter rule almost intact."
+          "at": 13,
+          "text": "The network falls from 1,378 to 1,145 ties. It still contains seven communities, and only three people change community assignment. At that level, the departmental organization is relatively stable."
         },
         {
-          "at": 34,
-          "text": "The ranking changes sharply. Tove Delacroix has the most contacts with 23. Mara Nyberg now leads betweenness, followed by Tove. Tove is also closest to everyone."
+          "at": 28,
+          "text": "The brokerage ranking changes considerably. Tove Delacroix has the most contacts, at 23. Mara Nyberg now has the highest betweenness, followed by Tove."
         },
         {
-          "at": 47,
-          "text": "Only Tove remains from the default construction's top five on betweenness. Her later tie list shows several cross-department ties supported only by direct messages. A replies-only network describes who answers whom in shared conversation, and in this generated world it produces a different brokerage structure."
+          "at": 40,
+          "text": "Only Tove remains from the default network's top five by betweenness. The later evidence inspection shows why: some of Tove's cross-department relationships are recorded only through direct messages. A replies-only network omits those paths and consequently represents a different brokerage structure."
         }
       ]
     },
@@ -823,24 +823,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then Network › Construction settings"
       },
-      "heading": "Mentions add weight here with almost no new ties.",
-      "duration": 53,
+      "heading": "Additional events can change tie weight without changing the tie set.",
+      "duration": 54,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Adding mentions changes little here. A mention directs someone's attention to a message and usually falls on a pair already connected by a reply."
+          "text": "I add mentions to the replies-only construction. A mention directs attention to a person but often occurs between people who are already connected through replies."
         },
         {
           "at": 13,
-          "text": "The rebuild has 1,145 ties, the same number as replies alone. Tove's Strength rises sharply because mentions add events to existing ties even when they add almost no new pairs."
+          "text": "The network still contains 1,145 ties. Mentions increase the weights of existing relationships without creating additional qualifying pairs in this example. Tove's strength, which sums event-count weights, increases considerably."
         },
         {
           "at": 28,
-          "text": "The centrality ranking barely moves. Betweenness is unweighted here, so extra weight on existing ties does not change the shortest paths it counts."
+          "text": "Betweenness changes little because it is calculated without weights. Additional events on existing ties therefore do not change the shortest paths used by that measure."
         },
         {
-          "at": 41,
-          "text": "The top five are unchanged from replies only. In this dataset, mentions mostly reinforce existing reply ties rather than create new ones."
+          "at": 42,
+          "text": "The five highest betweenness positions remain unchanged from the replies-only network. The result distinguishes communication intensity from the existence of relationships."
         }
       ]
     },
@@ -853,24 +853,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then Network › Construction settings"
       },
-      "heading": "Here reactions change weight while the tie set stays fixed.",
-      "duration": 79,
+      "heading": "Reactions affect weight, while direct messages change the observed routes.",
+      "duration": 74,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Restoring direct messages and reactions returns the default ranking, with Tove Delacroix leading betweenness, followed by Ludmila Nakamura and Gideon Underhill. The difference from replies and mentions must therefore come from direct messages, reactions, or both."
+          "text": "Restoring all four event types returns the default brokerage ranking. Tove leads betweenness, followed by Ludmila Nakamura and Gideon Underhill. The difference from the replies-and-mentions construction must come from direct messages, reactions, or both."
         },
         {
-          "at": 18,
-          "text": "To separate the two, reactions alone are switched off. A reaction records a lower-effort act than a written reply or direct message. Whether it belongs in the network depends on the relation the construction is intended to represent."
+          "at": 17,
+          "text": "I remove reactions alone. A reaction is a recorded response to a message, but it need not represent the same kind of interaction as a reply or direct message."
         },
         {
-          "at": 36,
-          "text": "With reactions removed the network still has 1,378 ties. Every reaction here falls on a pair that already exchanged messages, so only weights change. Nobody changes community here, although Louvain uses weights and could have moved some. In another setting, reactions could create new ties, so the same construction rule could behave differently."
+          "at": 32,
+          "text": "The network still has 1,378 ties. Every reaction in this generated dataset occurs between people already connected through other qualifying events. Removing reactions therefore changes weights without changing the tie set. Community assignments also remain the same here, although the community algorithm uses weights and could produce different results under other conditions."
         },
         {
-          "at": 60,
-          "text": "Betweenness is unchanged because it is unweighted here. Strength changes because it sums event-count weight. Tove's is now 3,240. The ranking difference from replies-only came from direct messages. Reactions matter for weight in this dataset without changing the tie set."
+          "at": 55,
+          "text": "Betweenness remains unchanged. Tove's strength is now 3,240 because the reaction contributions have been removed. The earlier change in brokerage came from including direct-message relationships. In this dataset, reactions alter the amount of recorded interaction without changing who is connected."
         }
       ]
     },
@@ -883,24 +883,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then Network › Construction settings"
       },
-      "heading": "Tie evidence makes the construction inspectable.",
-      "duration": 94,
+      "heading": "Each constructed tie can be traced to its supporting records.",
+      "duration": 76,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Tove Delacroix is selected, and her ties are drawn reaching into several departments. She has 35 contacts, betweenness 0.175 and constraint 0.074. Low constraint means her network investment is distributed across relatively non-redundant contacts, a structural condition associated with brokerage in Burt's formulation."
+          "text": "Tove is connected to employees across several departments. She has 35 contacts, betweenness of 0.175, and constraint of 0.074. Her low constraint reflects relatively nonredundant connections, consistent with a brokerage position under the specified working network."
         },
         {
-          "at": 20,
-          "text": "Her ties are listed strongest first with their weights and the rules behind them: Lars Lindgren with 180 through every rule, then Folake Petrov with 170. Further down is Gideon Underhill with 130 through direct messages only, and several more like it. Those are ties a replies-only rule removes, which helps explain why the routes between departments change."
+          "at": 18,
+          "text": "The tie list reports event counts and which rules contributed. Tove's connection with Lars Lindgren has weight 180 and includes evidence from all four sources. Another relationship with Gideon Underhill has weight 130 and is supported only by direct messages. A replies-only construction would remove the latter relationship entirely."
         },
         {
-          "at": 46,
-          "text": "Opening the tie between Tove and Wes Corrigan lists its evidence message by message: replies in a public project channel and direct messages between the two, each with date, place and rule. The generator's text is deliberately plain. The evidentiary point is concrete: each tie can be traced to the records that created it."
+          "at": 40,
+          "text": "Opening the relationship between Tove and Wes Corrigan displays the individual events that contributed to the tie. The records include replies and direct messages, with their dates, locations, and construction rules."
         },
         {
-          "at": 70,
-          "text": "Each message shows the rule that counted it and a weight of 1. What is a tie, really? In message data it is an aggregation of events under a rule. A defensible construction comes from reading what the rule counts and asking whether those events provide the kind of evidence the study needs."
+          "at": 56,
+          "text": "Each qualifying message contributes an event count of one. The network tie is an aggregation of those events under the construction procedure. Making that evidence inspectable allows a researcher to examine whether the resulting edge represents the relation required by the research question."
         }
       ]
     },
@@ -913,28 +913,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "Brokers sit where departments meet.",
-      "duration": 116,
+      "heading": "Brokerage depends on connections between otherwise separated groups.",
+      "duration": 95,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Who are the brokers, and how sure can we be? We return to the default bridge-dependent workplace, 120 people and 1,378 ties, with the banner reporting 9 of 9 planted features recovered. Under this complete generated export, that banner primarily checks the measures. The rest of the chapter asks about ranking sensitivity, structural baselines and what changes when observation becomes stricter."
+          "text": "We return to the default bridge-dependent organization, with 120 people and 1,378 ties. The recovery banner reports all nine planted features recovered under the complete generated export. The next analyses examine the brokers through several different comparisons rather than relying on the ranking alone."
         },
         {
-          "at": 27,
-          "text": "Colored by department, each department forms a cluster with a few people between them. A broker holds ties across parts of the network that are otherwise weakly connected. Granovetter (1973) showed why weak ties that bridge separated regions can matter for diffusion and access to information. Burt (1992) located brokerage advantage in positions spanning structural holes."
+          "at": 21,
+          "text": "Colored by department, the network contains dense local regions connected by relatively few employees. Granovetter's work on weak ties and Burt's work on structural holes provide different accounts of why cross-boundary positions can matter for information access. The observed graph establishes the existence of those positions, not the social process they support."
         },
         {
-          "at": 52,
-          "text": "The legend gives department sizes: Operations is largest with 29 people and Executive has 1. Size changes the number of possible partners inside and outside a group, so it affects the opportunity structure behind many group-level measures."
+          "at": 44,
+          "text": "The departments differ substantially in size. Operations contains 29 employees, while Executive contains one. Those sizes change how many within-group and cross-group relationships are possible. Group comparisons need to account for that opportunity structure."
         },
         {
-          "at": 70,
-          "text": "Who stands out separates the first chapter's ideas at scale. Ludmila Nakamura has the most contacts with 36 and Tove Delacroix is next with 35. Tove is most often on the route between others at 0.175 and closest to everyone at 0.626. On this directed network betweenness is divided by ordered pairs of other people."
+          "at": 61,
+          "text": "Ludmila Nakamura has the most contacts, 36, followed by Tove at 35. Tove leads betweenness at 0.175 and closeness at 0.626. These measures identify different properties of the same network. Betweenness in this directed graph is normalized using ordered pairs."
         },
         {
-          "at": 94,
-          "text": "Selecting Tove draws ties into several departments. Her profile gives her title, Director, People Partner, a role that might plausibly connect departments. That is a hypothesis about roles, not evidence from the network. In empirical data a title is a reason to look, not to conclude."
+          "at": 80,
+          "text": "Tove's profile identifies her as Director, People Partner. That title could make cross-department work plausible, but a plausible job description is not independent evidence of what her relationships accomplish."
         }
       ]
     },
@@ -947,24 +947,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "A ranking describes position under the construction that produced the network.",
-      "duration": 98,
+      "heading": "Brokerage rankings describe a defined observation period.",
+      "duration": 85,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Sorted by betweenness, the list runs Tove Delacroix, Ludmila Nakamura, Gideon Underhill, Wes Corrigan, Priya Kamara, then Zainab Zapata and Farid Arslan. Values fall steeply, from 0.175 at the top to 0.057 in seventh place and 0.034 in eighth. That gap is what a bridge-dependent structure should produce."
+          "text": "Sorted by betweenness, the leaders are Tove Delacroix, Ludmila Nakamura, Gideon Underhill, Wes Corrigan, Priya Kamara, Zainab Zapata, and Farid Arslan. The seventh score is 0.057, followed by 0.034 for the eighth position. The steep decline is consistent with the limited number of brokerage positions planted in this organization."
         },
         {
           "at": 22,
-          "text": "Ludmila Nakamura's \"Left?\" flag marks a deactivated account. She ranks second for the whole period because her ties before she left still count. Afterward she was on no routes at all. Her whole-period rank answers a question about connection during the observation window. It is a poor summary of who connects departments at the end of the period."
+          "text": "Ludmila ranks second over the full observation period despite leaving before it ended. Her earlier relationships continue to contribute to the pooled graph. That rank answers a historical question about the period. It is not a measure of whom employees could contact on its final day."
         },
         {
-          "at": 48,
-          "text": "Tove's profile ranks her first of 120 on strength, betweenness and closeness and second on contacts. Her 0.175 betweenness is the average fraction of shortest paths, across ordered pairs of other people, that pass through her, with credit split when several shortest paths are equally short."
+          "at": 44,
+          "text": "Tove ranks first on strength, betweenness, and closeness, and second on contacts. Her betweenness of 0.175 represents the normalized contribution of shortest paths through her position, accounting for paths that have more than one equally short route."
         },
         {
-          "at": 69,
-          "text": "The interpretation note gives the normalization: (n − 1)(n − 2) ordered pairs of other people. It also sets limits: compare within one network and measure, treat close values as weak evidence of order, and read a rank as one form of position. Org Signal describes structure and reported ties. It does not evaluate individuals, and a betweenness rank is never a judgment of a person's value."
+          "at": 62,
+          "text": "The normalization uses (n − 1)(n − 2) ordered pairs among the other people. The interpretation note specifies the network and measure to which the ranking applies. Close numerical values provide limited grounds for a precise ordering, and an individual's positional prominence should not be confused with personal value or performance."
         }
       ]
     },
@@ -977,20 +977,20 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "Event resampling tests ranking sensitivity to observed-data perturbations.",
-      "duration": 83,
+      "heading": "Event resampling tests sensitivity to the recorded interactions.",
+      "duration": 69,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The first doubt is stability to the observed event set. Rank stability resamples events with replacement, rebuilds the network with the same settings and recomputes betweenness. That follows the bootstrap resampling idea of Efron (1979), but messages are not independent draws from a simple sampling design. I read the resulting rank ranges as a perturbation or sensitivity check rather than calibrated confidence intervals."
+          "text": "One way to investigate a ranking is to perturb the records used to construct it. The application resamples observed communication events with replacement, rebuilds the network under the same rules, and recalculates betweenness. This is inspired by bootstrap resampling, but messages are not independent observations drawn through a simple sampling design. The results are better interpreted as sensitivity to a specified perturbation than as calibrated confidence intervals."
         },
         {
-          "at": 28,
-          "text": "Each line spans the ranks in 95% of 50 resamples, and the leaders make the top 10 in 100% of them. With only 50 resamples, the displayed range is coarse. The procedure repeats or omits observed events while keeping the resample size fixed, so it tests sensitivity to this perturbation. It cannot recover ties absent from the observed data."
+          "at": 29,
+          "text": "The graph shows rank ranges across fifty resamples. The leading employees remain in the top ten in every resample. With only fifty repetitions, the displayed ranges are coarse. Repeating recorded events cannot reconstruct relationships absent from the original export."
         },
         {
-          "at": 54,
-          "text": "Under this resampling scheme, the top 5 stay in the same places. The caution about Ludmila Nakamura follows, since a whole-period rank mixes before and after in a way event resampling cannot reveal. Betweenness is unweighted here, and many ties are supported by multiple events, so limited movement under event resampling is unsurprising. Stability under this perturbation does not establish that the ranking answers the right substantive question."
+          "at": 48,
+          "text": "The top five retain their order under this perturbation. That stability is unsurprising because betweenness is unweighted here and many ties have support from multiple events. It does not correct the temporal problem with Ludmila's rank, nor establish that the constructed network captures every relevant relationship."
         }
       ]
     },
@@ -1003,24 +1003,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "Degree-preserving random networks provide a structural baseline.",
-      "duration": 100,
+      "heading": "A random-network comparison tests structure beyond the degree sequence.",
+      "duration": 99,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The second doubt concerns the baseline. This panel reports several whole-network statistics. Reciprocity is 1 because every exchange in this generated world runs both ways by construction. That value is fixed by the generator, so a random-network comparison adds no information. Transitivity and modularity can still be compared with a degree-preserving baseline."
+          "text": "The next comparison asks whether the network contains more closure or community structure than we would expect from its degree sequence. Reciprocity is one in this generated world because interactions were constructed to run in both directions. Comparing that value with random networks would not add information about the generator. Transitivity and modularity offer more useful tests."
         },
         {
-          "at": 24,
-          "text": "Compare with random networks builds 200 networks in which everyone keeps their numbers of incoming and outgoing ties while tie ends are rewired. The null therefore asks how much triangle closure and community structure would arise from the degree sequence alone."
+          "at": 25,
+          "text": "The application generates 200 reference networks. Each preserves the number of incoming and outgoing ties for every employee while rewiring the endpoints. The comparison therefore retains the degree structure while changing which people are connected."
         },
         {
           "at": 43,
-          "text": "Transitivity, the share of two-step paths that close into triangles, is 0.398 against a random average of 0.225, with 95% of random networks between 0.218 and 0.233. None of the 200 random networks reached a deviation this large from their average. Two-step paths close far more often than the degree-preserving null produces. That is a structural pattern relevant to Coleman's closure argument. It does not establish trust, obligations or norms."
+          "text": "Observed transitivity is 0.398. The random networks average 0.225, with 95 percent falling between 0.218 and 0.233. None of the 200 generated reference networks has a deviation of comparable size. The network contains substantially more triangle closure than this degree-preserving reference procedure produces. That finding describes the relational structure. It does not independently establish trust, obligations, or shared norms."
         },
         {
-          "at": 73,
-          "text": "Modularity needs separate calibration because modularity optimization can return substantial values in random graphs. Community detection is therefore rerun on every rewired network. On the ties alone the observed partition scores 0.632, random networks average 0.159 and z is 90. The detected communities are the structure being tested here. The next state shows that they correspond closely to the planted departments."
+          "at": 69,
+          "text": "Observed modularity is 0.632, compared with a random-network mean of 0.159 and a reported standardized difference of 90. Community detection is rerun separately on every reference network. That is necessary because modularity optimization can find substantial community structure even in random graphs. The observed partition is far more separated than the partitions produced by the specified null procedure. Whether that separation corresponds to substantively meaningful departments is another comparison."
         }
       ]
     },
@@ -1033,32 +1033,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "Known structure separates measure recovery from observation loss.",
-      "duration": 132,
+      "heading": "Known answers distinguish measure recovery from information lost during construction.",
+      "duration": 113,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The third doubt is whether betweenness identifies the brokers planted by the generator. The recovery panel uses 689 unordered pairs, the 1,378 directed ties counted once per reciprocal pair. All 689 true pairs are present because this export records every generated interaction. Observation is complete here, so this part of the check isolates the measure rather than reconstruction loss."
+          "text": "The recovery check compares the reconstructed network with the generator's known structure. The 1,378 directed ties correspond to 689 unordered pairs, each observed in both directions. Under the complete export, all true pairs are present. The comparison therefore primarily tests whether the analytical measures recover the planted structure."
         },
         {
-          "at": 26,
-          "text": "Verdicts follow stated rules. Recovered means a score of at least 0.6 where 1 is a perfect match. Partly means at least 0.25 and twice what chance gives. Anything less is missed. Each check reports its chance baseline beside the result."
+          "at": 22,
+          "text": "Each recovery check uses stated scoring rules. A score of at least 0.6 counts as recovered. A score of at least 0.25, and at least twice the chance baseline, counts as partly recovered. Lower scores are classified as missed. The thresholds make the classification reproducible."
         },
         {
-          "at": 46,
-          "text": "All 7 planted brokers occupy the top 7 positions on betweenness. Under complete observation and the default construction, the measure responds exactly to the structural role that was planted."
+          "at": 43,
+          "text": "All seven planted brokers occupy the first seven betweenness positions. Under these generating and observation conditions, the measure identifies the intended structural roles."
         },
         {
-          "at": 60,
-          "text": "Their measured ranks occupy the first seven positions. This is a clean measure check under known conditions. It does not estimate how completely an empirical data source would expose brokerage."
+          "at": 56,
+          "text": "The individual rankings make the agreement visible. The result does not estimate how well betweenness would recover brokerage from an incomplete empirical record."
         },
         {
-          "at": 76,
-          "text": "Communities also align closely with the planted departments, and betweenness ranks from the records match those on the true network. Under the default export those checks mainly validate the measures because observation is complete. The next pass makes construction stricter by using replies only, so any loss of recovery shows what the observation rule discards."
+          "at": 68,
+          "text": "The detected communities align closely with the planted departments, and the measured betweenness rankings match those calculated from the underlying network. These are successful known-answer checks under complete observation."
         },
         {
-          "at": 100,
-          "text": "Now the same generated world is reconstructed from replies alone. Recovery falls to 6 of 9 planted features, and only 2 of the 7 planted brokers are among the 7 people with the highest betweenness, because the observation rule discards direct messages and other events that carried structural information. The planted social structure is unchanged. What changed is which records are allowed to become ties, so this comparison isolates what the stricter observation rule costs."
+          "at": 83,
+          "text": "I now reconstruct the same world using replies alone. Recovery falls from nine of nine to six of nine features. Only two of the seven planted brokers remain among the seven highest betweenness scores. The underlying network has not changed. The stricter observation rule excludes records that carry information about cross-department relationships. This comparison demonstrates how network construction can affect recovery even when the analytical calculation itself is correct."
         }
       ]
     },
@@ -1071,24 +1071,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate the workplace, then People › Betweenness"
       },
-      "heading": "Brokerage concentration can lengthen routes before the network disconnects.",
-      "duration": 96,
+      "heading": "A network can remain connected while important routes become longer.",
+      "duration": 87,
       "paragraphs": [
         {
           "at": 0,
-          "text": "A further question is whether brokerage is concentrated in a few people. The top 5 by betweenness hold 45% of all betweenness, 11 times the 4% an even spread would give: concentrated, though under half."
+          "text": "The five employees with the highest betweenness account for 45 percent of the network's total betweenness. That is approximately eleven times their share under an even distribution across employees."
         },
         {
-          "at": 17,
-          "text": "The top 10 account for 60% of summed betweenness, 7.1 times an even share. They therefore account for most of the brokerage measured here. The percentage is a share of betweenness rather than a share of unique routes, because one shortest path can contribute to several people's scores."
+          "at": 15,
+          "text": "The top ten account for sixty percent of total betweenness. These percentages sum individual betweenness contributions. They are not proportions of distinct routes, because a shortest path may contribute to the scores of several intermediaries."
         },
         {
-          "at": 39,
-          "text": "The what-if table removes these people and their ties. For this connectivity calculation, 689 unordered pairs correspond to the 1,378 reciprocal directed ties counted once each. The pairs fall to 463 and ties across departments to 13. The network stays in 1 piece while average steps rise from 2.5 to 4.57. Removing the central set therefore lengthens routes sharply without disconnecting the network."
+          "at": 32,
+          "text": "The structural stress test removes the selected brokers and their ties. The network falls from 689 unordered pairs to 463. Only thirteen cross-department ties remain. It is still connected, but average shortest-path length rises from 2.5 to 4.57 steps. Removing these positions therefore increases the distance between employees substantially without dividing the graph into separate components."
         },
         {
-          "at": 67,
-          "text": "The caution is part of the result: this is a sensitivity analysis, because people could form new ties after departures. The planted brokers top the ranking. Their ranks are stable under this event-resampling perturbation. The observed structure departs strongly from the degree-preserving null, and removing the central set lengthens routes. Each result addresses a different source of uncertainty. Only the recovery result depends on planted ground truth."
+          "at": 57,
+          "text": "This calculation holds the remaining relationships fixed. In an actual organization, employees might establish replacement connections or reorganize communication after someone leaves. The analyses so far answer different questions. Betweenness identifies intermediary positions. Resampling examines ranking sensitivity. Random-network comparisons establish a structural baseline. Recovery checks compare the analysis with planted truth. Removal tests the network's dependence on selected positions. None of those results independently establishes how an organization would adapt."
         }
       ]
     },
@@ -1101,24 +1101,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Siloed, seed 7, then Groups and Time"
       },
-      "heading": "Holding the population fixed isolates a different planted history.",
-      "duration": 92,
+      "heading": "A different generated history allows us to study changes in siloing.",
+      "duration": 74,
       "paragraphs": [
         {
           "at": 0,
-          "text": "So far the workplace analysis has mostly treated the observation period as one pooled network. Siloing is a temporal question, so this example holds the population fixed and changes the planted history. Generate uses the same Slack workplace, 120 people, 180 days and random seed 7. Only the scenario changes."
+          "text": "The next scenario concerns change over time. I retain the same workplace size, observation period, medium, and random seed. Only the generating scenario changes."
         },
         {
-          "at": 23,
-          "text": "The scenario is siloed: cross-department traffic collapses at 40% of the period. The generator encodes siloing as a change in cross-department interaction, which lets us ask whether an analysis can recover both the pattern and its timing."
+          "at": 13,
+          "text": "The siloed scenario sharply reduces cross-department communication forty percent of the way through the observation period. This creates two questions: whether the analysis identifies strong separation among departments and whether it detects when that separation increased."
         },
         {
-          "at": 41,
-          "text": "The check reports 8 of 9 planted features recovered and 1 partly. The partial one is the brokers, with 2 of the 4 among the top 4 on betweenness. The silo planted on 19 Mar 2025 cuts cross-department interaction to about 12% of its earlier rate, and a shift was detected within 2 days of it."
+          "at": 31,
+          "text": "The recovery check identifies eight of nine planted features and partially recovers one. The broker check is the partial result, with two of four planted brokers appearing among the four highest betweenness positions. The generator reduces cross-department interaction to approximately twelve percent of its earlier rate beginning March 19, 2025. The analysis detects a shift within two days."
         },
         {
-          "at": 66,
-          "text": "The siloed network has 120 people and 1,346 ties, with modularity 0.746. The map looks divided. The bridge-dependent map did too, so appearance alone does not identify the temporal change. This view pools the whole period, and every tie formed before the change still counts. Pooling accumulates the past and dilutes a change that occurs partway through the period."
+          "at": 56,
+          "text": "The resulting network contains 120 people and 1,346 ties, with modularity of 0.746. The departments appear strongly separated. But the earlier bridge-dependent network also contained visible departmental clusters. A whole-period map cannot establish when the separation arose."
         }
       ]
     },
@@ -1131,28 +1131,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Siloed, seed 7, then Groups and Time"
       },
-      "heading": "Group separation needs a baseline before it becomes evidence of siloing.",
-      "duration": 113,
+      "heading": "Group separation must be interpreted relative to a baseline.",
+      "duration": 104,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Groups by department opens with cautions. These whole-period numbers mix earlier and later parts of the scenario, as the Time view will show. Each person's department is one recorded value, a snapshot rather than a history. If people had moved, a change in crossing ties could come from those moves alone."
+          "text": "The Groups view summarizes ties within and between the workplace's departments. The departmental attributes are recorded at one point in time. If employees had changed departments, a change in cross-department ties could reflect reclassification as well as communication behavior. That possibility matters for empirical longitudinal analysis."
         },
         {
-          "at": 23,
-          "text": "Assortativity by department is 0.736. Random networks with the same numbers of ties average −0.00892, placing the observed value far outside the degree-preserving baseline. Assortativity uses the category marginals at the ends of ties, so it is less mechanically driven by group prevalence than a raw within-group share. It remains a summary of this particular grouping and network."
+          "at": 21,
+          "text": "Department assortativity is 0.736. Degree-preserving reference networks average −0.00892. The observed result therefore shows considerably stronger within-department mixing than the specified random-network procedure produces."
         },
         {
-          "at": 49,
-          "text": "The overall E-I index is −0.557 against a random 0.69. With eight departments most possible partners are elsewhere, so random mixing pushes the index well above zero. Departmental homophily can arise from the organization of work itself. A silo claim needs an explicit baseline, such as degree-preserving rewiring or the organization's own earlier level."
+          "at": 34,
+          "text": "The E-I index is −0.557, compared with a random-network average of 0.69. With eight departments, many potential contacts belong to other departments. An E-I index near zero is consequently not the appropriate reference for all questions. The observed index shows strong within-department concentration relative to this baseline."
         },
         {
-          "at": 73,
-          "text": "Each department's E-I is read against its own random value: Operations is −0.43 against 0.70 and Design −0.10 against 0.93. Executive, one person, is 1.00 by definition, since all of that person's ties cross. Group-level values depend on size, so departments should not be compared with one another directly."
+          "at": 56,
+          "text": "The department-specific comparisons also differ. Operations has an E-I index of −0.43 against a random value of 0.70. Design has −0.10 against 0.93. Executive contains only one employee and therefore has an E-I index of +1 by construction, because that employee cannot form within-department ties. Group size and composition must be considered before interpreting differences among these indexes."
         },
         {
-          "at": 96,
-          "text": "The mixing matrix shows tie density between every pair of departments. The diagonal dominates, from 0.362 in Operations to 0.673 in Design, while most other cells are a few hundredths. It cannot say when that structure arose."
+          "at": 82,
+          "text": "The mixing matrix shows the density of ties within and between each pair of departments. Within-department densities range from 0.362 in Operations to 0.673 in Design. Most cross-department densities are only a few hundredths. This establishes separation in the pooled network. It does not identify when the pattern developed."
         }
       ]
     },
@@ -1165,24 +1165,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Siloed, seed 7, then Groups and Time"
       },
-      "heading": "Siloing becomes a temporal question when separation changes.",
-      "duration": 118,
+      "heading": "A temporal analysis distinguishes sustained separation from a static pattern.",
+      "duration": 115,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Time rebuilds the network for each window, here each week, with the same construction settings. Holding construction fixed removes one source of change in the measurement. The remaining series can then be interpreted with attention to other changes in exposure, composition and activity."
+          "text": "The Time view constructs a network for each week using the same rules. Keeping the construction procedure fixed allows changes in the resulting measurements to be compared over time, subject to changes in activity, composition, and observation."
         },
         {
-          "at": 20,
-          "text": "Week by week, events range from 2,381 to 2,941 and ties from 804 to 1,010 with no dramatic break, and density drifts down slightly. Transitivity rises from a low of 0.343 to a high of 0.487 later on. In the planted scenario, reduced cross-department interaction is consistent with a larger share of remaining ties lying inside locally dense groups. The series alone would not identify that mechanism."
+          "at": 18,
+          "text": "Weekly event counts range from 2,381 to 2,941, while the number of ties ranges from 804 to 1,010. There is no comparably abrupt break in overall activity. Transitivity increases from approximately 0.343 to 0.487 over the observed range. In the generated scenario, fewer cross-department interactions leave a greater proportion of ties within relatively cohesive groups. The temporal association alone would not identify that mechanism in an empirical organization."
         },
         {
-          "at": 49,
-          "text": "Detected shifts compares each week with the median of the 8 weeks before it, scaled by their median absolute deviation. The cross-department share first breaks in the week of 17 Mar 2025, from a typical 0.177 to 0.116. That transition week straddles the planted change, and the following weeks settle at a much lower level, a median of 0.0502. Because 138 measures are scanned, this is an exploratory detection step. Any inferential test that follows must account for how the measure and date were selected."
+          "at": 47,
+          "text": "The shift detector compares each week with the preceding eight weeks using a median and median-absolute-deviation rule. Cross-department tie share first changes sharply in the week beginning March 17, 2025. Its earlier reference value is approximately 0.177, compared with 0.116 in the transition week. Following the transition, the series settles around a median of 0.0502. The detector searches 138 measurements, so the selected change is an exploratory result. A confirmatory procedure must account for selecting both the measure and the date from the same observations."
         },
         {
-          "at": 85,
-          "text": "Opened, the shift persists to the end of the period, although only the first few weeks are flagged because a sustained new level eventually becomes the baseline. The weekly binary tie share does not fall as far as the planted interaction rate. Once a pair exchanges at least one message in a week, additional volume no longer changes the binary tie count. This series therefore measures the presence of weekly cross-department ties rather than message volume."
+          "at": 83,
+          "text": "The decline persists after the transition, although later weeks cease to be flagged once the lower level becomes the new reference. The weekly tie share does not fall as much as the planted message rate. This follows from the binary construction. Once two people exchange at least one qualifying message during a week, additional messages do not change whether their tie exists. The weekly statistic measures the presence of cross-department relationships, not total communication volume."
         }
       ]
     },
@@ -1195,24 +1195,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#generate",
         "label": "Generate › Siloed, seed 7, then Groups and Time"
       },
-      "heading": "Before-and-after inference depends on how the split date was chosen.",
-      "duration": 120,
+      "heading": "Selecting a change date from the data changes the interpretation of the test.",
+      "duration": 117,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Before and after compares the same measures on either side of a date, preset here to the strongest detected shift. The events are reassigned to before or after at random and the observed change is compared with those random splits. Because this date was selected from the same series, the resulting comparison is conditional on a data-chosen split. A confirmatory p-value would require a prespecified or held-out date, or a permutation procedure that repeats the full shift-selection step."
+          "text": "The before-and-after analysis divides the records at the date selected by the shift detector. It then compares the observed difference with differences generated by randomly reassigning events to the two periods. Because the split date was chosen after examining the same time series, this is a conditional, exploratory comparison. A confirmatory significance test would require a date specified independently or a procedure that repeats the complete date-selection process within each randomization."
         },
         {
-          "at": 33,
-          "text": "The periods are 6 Jan 2025 to 16 Mar 2025 and 17 Mar 2025 to 24 May 2025. Afterward, ties stayed inside department lines more: the E-I index moved from −0.557 to −0.656 and crossing ties from 22% to 17%. Those crossing percentages pool each whole period, so they need not match the one-week shares in Time. None of the 2,000 random reassignments produced a change this large under this conditional split. That result should be read with the date-selection caveat from the previous step."
+          "at": 31,
+          "text": "The periods run from January 6 to March 16 and from March 17 to May 24, 2025. The E-I index changes from −0.557 to −0.656. The share of cross-department ties falls from 22 to 17 percent. These percentages aggregate ties over each period and therefore differ from the weekly proportions examined earlier. None of the 2,000 random reassignments produces a difference as large as the observed one under the selected split. That result is conditional on the date-selection procedure and should not be interpreted as an independently calibrated significance test."
         },
         {
-          "at": 69,
-          "text": "Density falls from 0.0942 to 0.0887. 1,265 ties persisted, 1 formed and 80 dissolved. The planted change operates mainly through loss of crossing ties, while the pooled network still contains ties formed earlier. That helps explain why the whole-period map changes less dramatically than the temporal series."
+          "at": 68,
+          "text": "Density falls from 0.0942 to 0.0887. The comparison reports 1,265 persistent ties, one newly formed tie, and eighty dissolved ties. The planted change primarily reduces cross-department interaction. Earlier relationships can still appear in a network pooled over several weeks, making the longer-period comparison less sensitive to an abrupt decline in event frequency."
         },
         {
-          "at": 91,
-          "text": "Per person, total ties fell on average from 22.4 to 21.1 with an effect size of −0.79 under the same random-split comparison. In this synthetic case, the series locates a sustained decline around the week of 17 Mar 2025 and quantifies its observed size. The generator tells us the cause. With empirical data, the same temporal alignment would remain compatible with any other change occurring around that date."
+          "at": 92,
+          "text": "Average individual degree falls from 22.4 to 21.1, with a reported effect size of −0.79 under the same random-split procedure. In this generated world, the planted history establishes what caused the transition. With empirical data, an observed change around the same date would remain compatible with organizational, technological, or contextual events not represented by the network measures."
         }
       ]
     },
@@ -1225,28 +1225,28 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#learn",
         "label": "Learn › Classic datasets › Zachary’s karate club"
       },
-      "heading": "A classic dataset supplies an external result to compare with the analysis.",
-      "duration": 105,
+      "heading": "Published networks provide results independent of the current analysis.",
+      "duration": 88,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Can structure predict how a group splits? Learn lists the classic datasets with their citations, context and reference results. Generated worlds test a method against structure we planted. Classic datasets test it against structure other researchers documented, in groups that existed."
+          "text": "The earlier generated networks were designed with known answers. A published empirical dataset provides another form of reference: observed relationships and substantive outcomes documented by previous researchers."
         },
         {
-          "at": 19,
-          "text": "Zachary's karate club (1977) records friendships among 34 members of a university karate club that split after a conflict between the instructor and the administrator. Zachary recorded ties outside formal club activities and modeled how the split would fall. The data became a reference case for community detection."
+          "at": 14,
+          "text": "Zachary's 1977 study describes a university karate club whose members divided after a conflict between an instructor and an administrator. The dataset records relationships among 34 members. The eventual division provides an outcome against which structural descriptions can be compared."
         },
         {
-          "at": 41,
-          "text": "Loaded, the header reads 34 people and 78 ties, the published counts. Reproducing them is the first check on any classic dataset."
+          "at": 33,
+          "text": "The imported network contains 34 people and 78 ties. Reproducing those basic counts is the first check on the import and representation."
         },
         {
-          "at": 54,
-          "text": "Who stands out finds the two leaders. John A., the administrator, has the most contacts with 17 and Mr. Hi, the instructor, has 16. Mr. Hi has the highest betweenness at 0.438 and John A. the second at 0.304. Closeness barely separates them. The two conflict leaders also occupy the two most central positions by these measures, which is consistent with the later division being organized around them."
+          "at": 45,
+          "text": "John A., the administrator, has seventeen contacts. Mr. Hi, the instructor, has sixteen. Mr. Hi has the highest betweenness at 0.438, followed by John A. at 0.304. Both leaders occupied important positions in the recorded friendship network, which is relevant to the subsequent division."
         },
         {
-          "at": 83,
-          "text": "The card states the reference value, the faction each member joined after the split, and what to look for: density 0.139, 4 communities, and 33 of the 34 members sharing a community with mostly their own faction. It leaves the exception as a question for the reader."
+          "at": 66,
+          "text": "The reference card records the observed factions and expected analytical results: density of 0.139, four detected communities, and 33 of 34 members assigned to communities predominantly associated with their eventual faction. The comparison is between a partition derived from friendship structure and an independently documented group outcome."
         }
       ]
     },
@@ -1259,32 +1259,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#learn",
         "label": "Learn › Classic datasets › Zachary’s karate club"
       },
-      "heading": "Detected communities can be compared with the documented split.",
-      "duration": 144,
+      "heading": "Community detection can be compared with a documented group division.",
+      "duration": 119,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Colored by detected community, the map shows 4 communities found by Louvain from the ties alone: two of 14 and 11 members and two of 5 and 4. The algorithm knows nothing about the conflict. Four is where its search settles for this network and seed."
+          "text": "Louvain community detection identifies four groups in the friendship network. Their sizes are fourteen, eleven, five, and four members. The algorithm uses the recorded ties, not the eventual faction assignments."
         },
         {
-          "at": 21,
-          "text": "Modularity is 0.444 with weights and 0.419 on the ties alone, against 0.294 for random networks with the same degrees. z is 7.2. The random value is far from zero, consistent with Guimerà and colleagues' warning that random graphs can have substantial modularity. Transitivity is close to its rewiring baseline. Community separation and triangle closure therefore give different evidence in this network."
+          "at": 15,
+          "text": "Observed modularity is 0.444 with weights and 0.419 using the ties alone. Degree-preserving random networks produce an average of 0.294, with a reported standardized difference of 7.2. The nonzero random baseline matters because community-detection algorithms can identify partitions with substantial modularity even in random networks. Transitivity, by contrast, is close to its rewiring baseline. Community separation and local triangle closure provide different structural information here."
         },
         {
-          "at": 49,
-          "text": "Colored by faction, the map shows the club each member joined after the split, 17 with Mr. Hi and 17 with the officers. The faction outcome was recorded separately from the friendship network. Agreement between the observed friendship structure and the later faction outcome therefore has evidentiary value beyond redescribing the same labels."
+          "at": 44,
+          "text": "The map is now colored by the faction each member joined. Seventeen went with Mr. Hi, and seventeen with the officers. The faction labels describe a documented outcome rather than categories used to generate the structural partition."
         },
         {
-          "at": 72,
-          "text": "Groups by faction gives an E-I index of −0.718 against 0.0313 for random networks, and assortativity of 0.718. Most ties stay inside the side each member later joined. The observed friendship structure is strongly aligned with the later faction outcome."
+          "at": 62,
+          "text": "Using those faction labels, the E-I index is −0.718, compared with 0.0313 for degree-preserving random networks. Assortativity is 0.718. Friendship ties are strongly concentrated among people who later joined the same side of the conflict."
         },
         {
-          "at": 91,
-          "text": "Mr. Hi's side has 35 ties within and 11 across, the officers' side 32 within and the same 11 across. Within-faction densities are 0.257 and 0.235 against 0.038 between. Each side was loosely knit inside and sparsely tied to the other."
+          "at": 79,
+          "text": "Mr. Hi's faction contains 35 within-group ties, and the officers' faction contains 32. Eleven ties cross the faction boundary. Within-faction densities are 0.257 and 0.235, compared with 0.038 between factions."
         },
         {
-          "at": 111,
-          "text": "Grouped by community, each of the four is mostly one faction. Member 9 is the exception: he joined Mr. Hi's side but sits in a community dominated by John A.'s faction. Zachary observed the friendship network while the conflict developed, and his flow model assigned all but one member correctly. The detected communities and the two historical factions are different partitions. This case documents strong correspondence in this group without estimating how often friendship structure predicts fission elsewhere."
+          "at": 94,
+          "text": "The four detected communities correspond closely, though not perfectly, to the two later factions. Member 9 joined Mr. Hi's side but appears in a community dominated by the officers' faction. The example demonstrates substantial correspondence between a recorded network and a documented outcome. It does not establish how accurately community detection predicts group division in other organizations."
         }
       ]
     },
@@ -1297,24 +1297,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?perceived=krackhardt:advice",
         "label": "Build › Perceived › Krackhardt’s managers"
       },
-      "heading": "Each manager reported the whole advice network.",
-      "duration": 88,
+      "heading": "A cognitive social structure records how members perceive the network.",
+      "duration": 76,
       "paragraphs": [
         {
           "at": 0,
-          "text": "How similarly do people see the same network? Krackhardt's high-tech managers is a study of 21 managers in a small firm. Loaded here is a reference advice network constructed from managers' reports of their own advice ties: 190 directed ties answering who goes to whom for advice."
+          "text": "Krackhardt's high-tech managers dataset concerns 21 managers in a small firm. The reference advice network contains 190 directed ties constructed from their reports of their own advice relationships."
         },
         {
-          "at": 22,
-          "text": "Manager 15 has the most contacts with 20 and Manager 2 has 19. Manager 18 lies most often between others at 0.234, and Manager 2 is closest to everyone at 0.950. On a directed network closeness counts distances toward the person, so nearly everyone can reach Manager 2 for advice in few steps."
+          "at": 15,
+          "text": "Manager 15 has the most direct contacts, twenty, followed by Manager 2 with nineteen. Manager 18 leads betweenness at 0.234. Manager 2 leads closeness at 0.950. The network is directed, so the interpretation of distance depends on whether we measure routes toward or away from a person."
         },
         {
-          "at": 46,
-          "text": "Manager 2 is asked for advice by 18 of the 20 others, and advice reciprocity is 0.474: fewer than half the ties are returned. Advice is asymmetric, so the relation keeps its direction. The card also names the study's distinctive feature: each manager reported every other pair as well."
+          "at": 36,
+          "text": "Manager 2 is named as an advice source by eighteen of the other twenty managers. Reciprocity is 0.474, meaning that fewer than half the observed directed advice ties are reciprocated. Advice need not be symmetric. The direction of each report is part of the substantive measurement."
         },
         {
-          "at": 68,
-          "text": "That design is what Krackhardt (1987) called a cognitive social structure, the network as each member perceives it. Advice perceptions in Build opens the reports. The question shifts from who is tied to whom to who knows who is tied to whom."
+          "at": 57,
+          "text": "The study also asked each manager about advice relationships between other members of the organization. That produces a cognitive social structure: a collection of networks as perceived by different informants. The next question concerns differences among those perceptions."
         }
       ]
     },
@@ -1327,24 +1327,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?perceived=krackhardt:advice",
         "label": "Build › Perceived › Krackhardt’s managers"
       },
-      "heading": "A cognitive social structure preserves one whole-network report per informant.",
-      "duration": 73,
+      "heading": "Different informants can describe different versions of the same network.",
+      "duration": 63,
       "paragraphs": [
         {
           "at": 0,
-          "text": "The perceived-networks workflow keeps each informant's whole-network report separately, to compare, combine into a consensus, and score. Averaging at the outset would discard the variation the design exists to measure."
+          "text": "The perceived-networks workflow retains each informant's complete report. Keeping the reports separate is important because differences among informants are themselves part of the phenomenon being studied."
         },
         {
-          "at": 15,
-          "text": "The roster holds the 21 managers. Every perceived network is defined over the same people, so reports can be compared pair by pair."
+          "at": 14,
+          "text": "All reports concern the same roster of 21 managers. This fixed boundary makes it possible to compare reports tie by tie."
         },
         {
-          "at": 28,
-          "text": "Every manager is an informant who filled in the whole grid of who goes to whom, including ties between others. Freeman, Romney and Freeman (1987) found that informants can recover recurring group structure better than particular interactions. The variation among reports can therefore contain stable shared structure as well as error."
+          "at": 26,
+          "text": "Each manager reports which advice relationships exist among the organization's members, including relationships that do not directly involve the respondent. The reports therefore contain claims about the wider organizational network, not only the respondent's own ties."
         },
         {
-          "at": 51,
-          "text": "Manager 1's report is a grid, with advice seekers in the rows and the people they go to in the columns: 277 ties entered. Reports differ sharply in volume, from 277 for Manager 1 to 43 for Manager 17. That variation may reflect substantive perception, response thresholds, or both."
+          "at": 43,
+          "text": "Manager 1 reports 277 directed ties. Manager 17 reports only 43. That difference may reflect actual variation in what the informants know, different thresholds for reporting a tie, or broader response tendencies. The reports do not by themselves identify which explanation applies."
         }
       ]
     },
@@ -1357,32 +1357,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#build?perceived=krackhardt:advice",
         "label": "Build › Perceived › Krackhardt’s managers"
       },
-      "heading": "Consensus scores agreement among informants.",
+      "heading": "Agreement with consensus is not the same as perceptual accuracy.",
       "duration": 168,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Compare scores each informant against the consensus of the others. Manager 8 agrees most with the leave-one-out consensus, with Jaccard similarity 0.58: ties in both the report and the consensus, divided by ties in either. Each informant is scored against the consensus of the other 20 with their own report left out. This is agreement with a consensus benchmark, not accuracy against an independently observed network."
+          "text": "The comparison evaluates each manager's report against a consensus formed from the other twenty reports. Manager 8 has the highest Jaccard similarity, 0.58. Jaccard similarity counts ties present in both the report and the benchmark, divided by ties present in either. Because the manager's own report is excluded from the consensus used to score it, the procedure avoids directly including the observation in its reference."
         },
         {
-          "at": 29,
-          "text": "The consensus threshold is 50%: a tie belongs to the consensus when at least half the informants report it, following Krackhardt's consensus structure. A stricter threshold would give a sparser consensus and different scores. Krackhardt treated consensus as a possible approximation to an underlying relation under additional assumptions. Here it is best read directly as shared perception, which can include shared error."
+          "at": 28,
+          "text": "A tie belongs to the consensus when at least half the relevant informants report it. Changing that threshold would change the consensus network and potentially alter the ranking of informants. Consensus is a measure of shared perception. It can approximate an underlying relation under additional assumptions, but it can also contain errors shared by many respondents."
         },
         {
-          "at": 56,
-          "text": "Hits are reported ties in the others' consensus, and the table calls reported ties outside it false alarms. Those labels are defined relative to the consensus benchmark. They do not establish that a tie outside consensus is objectively false. Hit rate is the share of consensus ties reported, so an informant who ticked every box would score perfectly on that metric."
+          "at": 53,
+          "text": "The table reports hits, false alarms, hit rate, and Jaccard similarity. Here a hit is a tie present in both an informant's report and the consensus. A false alarm is a reported tie absent from that consensus. Those terms are defined relative to the benchmark. They do not establish that the relationship was objectively present or absent. Hit rate also rewards broad reporting. Someone who marked every possible tie would recover every consensus tie while reporting many additional relationships."
         },
         {
-          "at": 83,
-          "text": "Manager 8 reported 134 ties with 87 hits and 47 false alarms, a hit rate of 85%. Manager 1 reported 277 with 86 hits and 191 false alarms, a hit rate of 90%. Because each informant is left out when the benchmark is formed, these two rows are scored against slightly different consensus networks. Jaccard scores Manager 1 at 0.30 and Manager 8 at 0.58 because it penalizes both missing consensus ties and reporting ties outside consensus."
+          "at": 87,
+          "text": "Manager 8 reports 134 ties, with 87 hits and 47 false alarms. The reported hit rate is 85 percent, and Jaccard similarity is 0.58. Manager 1 reports 277 ties, with 86 hits and 191 false alarms. The hit rate is 90 percent, but Jaccard similarity is only 0.30. Because each informant is excluded when their benchmark is constructed, the two are compared against slightly different consensus networks. The contrast shows why a higher hit rate need not indicate closer agreement overall."
         },
         {
-          "at": 116,
-          "text": "The ties informants disagree about most are listed with the share reporting each and a disagreement score, 4p(1 − p), which is 1 at an even split. Several here are reported by 52% or 48% of informants. These are the parts of the network the group itself does not agree on."
+          "at": 121,
+          "text": "The disagreement measure is 4p(1 − p), where p is the proportion of informants reporting a tie. It reaches one when half report the tie and half do not. Several relationships have reporting proportions around 48 or 52 percent. They represent parts of the perceived network where the group is most divided."
         },
         {
-          "at": 139,
-          "text": "The network to analyze can be the consensus, one informant's view, or a locally aggregated structure in which each tie is judged from reports by the two people involved. These are different reductions of the cognitive social structure. The comparison here shows that perceptions vary substantially and that some informants align more closely with the others' consensus. It does not establish objective perceptual accuracy without an external criterion."
+          "at": 145,
+          "text": "The analysis can use one informant's report, a consensus network, or relationships defined from the reports of the people directly involved. Each procedure creates a different analytical object. The available evidence establishes variation in perceptions and differences in agreement with a consensus benchmark. Objective perceptual accuracy would require an appropriate independent criterion."
         }
       ]
     },
@@ -1395,32 +1395,32 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#learn",
         "label": "Learn › About and limits"
       },
-      "heading": "A defensible analysis records relation, boundary, construction and comparisons.",
-      "duration": 128,
+      "heading": "A defensible network analysis makes its construction reproducible.",
+      "duration": 123,
       "paragraphs": [
         {
           "at": 0,
-          "text": "How do you get from an analysis to a claim you can defend? A defensible analysis states its relation, boundary, construction and comparisons clearly enough for someone else to reproduce, inspect and contest them. Methods and Export records how the network was constructed and analyzed, and exports it."
+          "text": "The final question is how to document a network analysis so another researcher can understand, reproduce, and challenge it. The required information begins with the population boundary, data source, relation being measured, and rules used to construct ties. It also includes the measures, formulas, reference comparisons, and missing-data decisions."
         },
         {
           "at": 22,
-          "text": "The methods appendix is generated from what was actually used, here for the bridge-dependent workplace. It begins with the data, a synthetic Slack workplace in full view, and reports 76,960 events from 121 people or accounts after identity matching. Analyses appear in it only once they have been run."
+          "text": "Methods and Export generates an appendix from the actual analysis. For the bridge-dependent workplace, it reports the synthetic Slack source, 76,960 recorded events, and 121 accounts before the analytical exclusions. Only procedures actually used enter the record."
         },
         {
-          "at": 44,
-          "text": "The construction is stated in words: replies link replier to author, mentions author to the person mentioned, direct messages sender to recipients, and reactions reactor to author. The network was directed with event-count weights. Messages to more than 25 recipients and accounts flagged as bots were excluded. Isolates were kept. The result had 120 nodes and 1,378 directed ties. A reader who disagrees can see each choice and make another."
+          "at": 40,
+          "text": "The appendix describes each rule in ordinary language. Replies connect repliers to the authors they answer. Mentions connect authors to named recipients. Direct messages connect senders to recipients. Reactions connect the people reacting to message authors. Direction and event-count weights are retained. Broadcasts addressed to more than 25 recipients and accounts marked as bots are excluded, while isolates remain. The resulting network contains 120 nodes and 1,378 directed ties."
         },
         {
-          "at": 75,
-          "text": "Network files carry the network as constructed, with attributes, measures, communities and per-rule tie evidence, as GraphML, GEXF, GML, Pajek, UCINET or plain tables. Contact details are left out by default."
+          "at": 70,
+          "text": "The network can be exported in formats used by other analytical software, including GraphML, GEXF, GML, Pajek, UCINET, and tabular formats. The exports contain the constructed relationships, relevant attributes, and measures. Contact details are excluded by default."
         },
         {
-          "at": 90,
-          "text": "Figures and a summary report are generated deterministically from computed results, so the same data and settings always give the same report, which prints to PDF."
+          "at": 88,
+          "text": "Figures and summaries are generated from the computed results. The same source, construction, and analysis settings produce the same analytical output, which can be printed or exported."
         },
         {
-          "at": 104,
-          "text": "A project file saves the session, data and settings included, to reopen later or hand to someone else. It contains message text and contact details and needs the same care as the original exports. Reproducibility and confidentiality pull in different directions, and the app states that trade-off rather than resolving it silently."
+          "at": 102,
+          "text": "A project file preserves the data and settings needed to resume the analysis. It may also contain message text and identifying information. Preserving reproducibility does not eliminate the need to protect those records. The export procedure must therefore reflect the confidentiality requirements of the original data."
         }
       ]
     },
@@ -1433,24 +1433,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#learn",
         "label": "Learn › About and limits"
       },
-      "heading": "Method limits determine where inference stops.",
-      "duration": 93,
+      "heading": "Numerical validation and substantive validity require different evidence.",
+      "duration": 108,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Learn ends with About Org Signal and its limits. It describes the design: one engine across every kind of source, so that measures and construction choices can be examined in transparent settings before they meet more complex data."
+          "text": "Org Signal uses the same analytical engine for drawings, survey networks, generated examples, communication records, and published datasets. That common framework allows small, transparent cases to establish the meaning of calculations before those calculations are applied to more complex evidence."
         },
         {
-          "at": 18,
-          "text": "Files are read locally. The optional Ask feature sends information to a model provider only when someone supplies an API key, lists what is sent, and can replace names with codes."
+          "at": 19,
+          "text": "Files are processed locally in the browser. The optional Ask function is different: when enabled with a model-provider API key, it may send specified information to that provider. The application discloses what is transmitted and can replace names with coded identifiers."
         },
         {
-          "at": 34,
-          "text": "The numbers are checked against NetworkX, exact linear algebra and closed-form cases across approximately 21 million comparisons, and statistical procedures are calibrated by simulation. These procedures evaluate numerical accuracy. Substantive validity depends on the relationship between the source data, the construction rules and the quantity being studied, and no numerical test establishes it."
+          "at": 38,
+          "text": "The engine has been checked against NetworkX, exact calculations, and mathematical reference cases across approximately 21 million comparisons. The classic datasets also reproduce their published counts and reference values. Simulation also supports calibration of selected statistical procedures. These checks concern implementation and the performance of specified methods under tested conditions. They do not determine whether an imported record adequately measures an organizational relationship."
         },
         {
-          "at": 58,
-          "text": "Above approximately 3,000 people, betweenness and closeness are estimated by sampling. In simulation, rank intervals for contacts cover about 88 percent rather than 95 percent. Event resampling cannot introduce ties absent from the observed data, which is one reason to treat those intervals as sensitivity summaries rather than nominal confidence intervals. An undetected shift is weak evidence of stability. Recovery is weaker in some generated contexts. Usability testing has used simulated first-course workflows, while live classroom use has not yet been evaluated."
+          "at": 66,
+          "text": "Several limits affect particular analyses. Above approximately 3,000 nodes, betweenness and closeness may be estimated through sampling. In simulation, rank intervals for degree cover approximately 88 percent of their targets rather than the nominal 95 percent. Event resampling also cannot recover missing relationships that never appeared in the input data. The shift detector is exploratory, and the absence of a detected shift does not establish stability. Some generated contexts are harder to recover than others. The instructional workflows have been exercised with synthetic students, but formal classroom evaluation with recruited participants has not yet established their usability or pedagogical effects."
         }
       ]
     },
@@ -1463,24 +1463,24 @@ window.TIMELINE = {
         "href": "https://orgsignal.graystoneindustries.co/#learn",
         "label": "Learn › About and limits"
       },
-      "heading": "Defensible claims state the relation, construction, baseline and limits.",
-      "duration": 111,
+      "heading": "A network claim depends on the relationship it measures.",
+      "duration": 102,
       "paragraphs": [
         {
           "at": 0,
-          "text": "Find it in the app lists the questions of a first course, in the arc of this talk. Students begin with networks they make themselves, where every tie is visible. They move to generated and published networks, where there is structure to check against. Only then do they work with empirical records, whose construction requires substantive decisions."
+          "text": "The application organizes the material around questions that can be investigated in sequence. Students begin with networks they can draw and calculate by hand. They move to reported relationships, generated organizations, and published networks. They then examine records whose conversion into ties requires explicit choices."
         },
         {
-          "at": 25,
-          "text": "The worked examples are small networks to compute by hand: the broker, the path and the star, a ring and a small world, the class with its isolate, students and clubs, an ego network. A useful teaching sequence is to predict a result before running it, then use any gap between prediction and software output to identify a definitional or construction choice."
+          "at": 21,
+          "text": "The worked examples allow a result to be predicted before the software calculates it. The broker, path, star, ring, small-world, classroom, affiliation, and ego examples make different properties of network structure visible. A disagreement between prediction and output becomes an opportunity to check the formula, observation boundary, or construction rule."
         },
         {
-          "at": 53,
-          "text": "The concepts give each measure in plain words, where it appears, how to interpret it, a caution, and a formula. The tie entry summarizes the construction problem: messages become ties only through a rule, and several messages between a pair can produce one tie with a larger event-count weight."
+          "at": 44,
+          "text": "The concepts explain each measure, its calculation, where it appears, and common interpretation problems. The distinction between messages and ties is particularly important. Events become edges only through rules. Many events can support one relationship, and different rules can produce different networks from the same records."
         },
         {
-          "at": 75,
-          "text": "We end where a course would begin, on Data. How do you get from an analysis to a claim you can defend? State the relation, boundary and construction. Compare the result with a relevant baseline, whether a hand calculation, random networks, planted structure or a documented study. Then state what the data cannot show. Org Signal describes structure and reported ties. It does not evaluate individuals. Its results depend on the construction behind them, which is why I built it to keep that construction in view."
+          "at": 65,
+          "text": "A defensible analysis states what relationship was measured, who belonged to the network, how ties were constructed, which comparisons were made, and what remains unresolved. Hand calculations test definitions. Generated networks test recovery against planted structure. Random networks provide explicit structural baselines. Published data allow reproduction and comparison with documented findings. None substitutes for evidence that the constructed network represents the social process being investigated. That is the purpose of Org Signal: to make the relationship between recorded evidence, network measurement, and substantive interpretation visible throughout the analysis."
         }
       ]
     }

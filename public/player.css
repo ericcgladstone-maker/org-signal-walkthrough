@@ -235,3 +235,7 @@ html.sp-maxed, html.sp-maxed body { overflow: hidden; }
 }
 .sp .sp-app { white-space: nowrap; flex: none; }
 .sp.sp--max .sp-hint { display: none; }
+
+/* App label (2026-10-09): says the left panel is Org Signal itself */
+.sp .sp-applabel{position:absolute;top:10px;right:10px;z-index:3;margin:0;padding:.4rem .75rem;font:500 .74rem/1.35 var(--mono);letter-spacing:.03em;color:#cfe8e1;background:rgba(5,21,33,.92);border:1px solid rgba(111,216,190,.45);border-radius:6px;max-width:46%}
+.sp .sp-applabel b{color:#6FD8BE;font-weight:600}
